@@ -18,8 +18,8 @@ class ProjectMenuItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ButtonStyle raisedButtonStyle = ElevatedButton.styleFrom(
-      primary: Get.theme.cardColor,
-      onPrimary: Get.theme.textTheme.button!.color,
+      foregroundColor: Get.theme.textTheme.labelLarge!.color,
+      backgroundColor: Get.theme.cardColor,
       padding: const EdgeInsets.symmetric(vertical: 10),
       // shape: const RoundedRectangleBorder(
       //   borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -43,7 +43,7 @@ class ProjectMenuItemWidget extends StatelessWidget {
 
     XElevatedButton(
       backgroundColor: Get.theme.cardColor,
-      foregroundColor: Get.theme.textTheme.button!.color,
+      foregroundColor: Get.theme.textTheme.labelLarge!.color,
       onPressed: onPressed,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

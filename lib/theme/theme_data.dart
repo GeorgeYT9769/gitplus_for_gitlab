@@ -32,7 +32,7 @@ class ThemeConfig with ChangeNotifier {
       bottomNavigationBarTheme:
           BottomNavigationBarThemeData(backgroundColor: background),
 
-      accentColor: secondary,
+      hintColor: secondary,
 
       colorScheme: ColorScheme.fromSwatch(
         // primarySwatch:

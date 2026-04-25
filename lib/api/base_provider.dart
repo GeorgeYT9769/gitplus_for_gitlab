@@ -16,9 +16,9 @@ class BaseProvider {
     dio = d.Dio();
 
     dio.options = BaseOptions(
-      connectTimeout: 8000,
-      sendTimeout: 8000,
-      receiveTimeout: 8000,
+      connectTimeout: Duration(seconds: 8),
+      sendTimeout:  Duration(seconds: 8),
+      receiveTimeout:  Duration(seconds: 8),
     );
 
     dio.interceptors.add(d.InterceptorsWrapper(

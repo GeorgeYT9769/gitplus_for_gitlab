@@ -44,7 +44,7 @@ class AppHighlightView extends StatelessWidget {
                 ),
               GestureDetector(
                 onDoubleTap: () {
-                  Clipboard.setData(ClipboardData(text: content));
+                  Clipboard.setData(ClipboardData(text: content!));
                   CommonWidget.toast('Copied to Clipboard');
                 },
                 child: HighlightView(
