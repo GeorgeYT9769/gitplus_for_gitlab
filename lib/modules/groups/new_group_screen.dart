@@ -6,10 +6,10 @@ import 'package:gitplus_for_gitlab/shared/shared.dart';
 import 'groups_controller.dart';
 
 class NewGroupScreen extends StatefulWidget {
-  const NewGroupScreen({Key? key}) : super(key: key);
+  const NewGroupScreen({super.key});
 
   @override
-  _NewGroupScreenState createState() => _NewGroupScreenState();
+  State<NewGroupScreen> createState() => _NewGroupScreenState();
 }
 
 class _NewGroupScreenState extends State<NewGroupScreen>
@@ -19,11 +19,6 @@ class _NewGroupScreenState extends State<NewGroupScreen>
   @override
   void initState() {
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override
@@ -41,8 +36,8 @@ class _NewGroupScreenState extends State<NewGroupScreen>
         onPressed: () {
           _controller.onAddGroup();
         },
-        child: const Icon(Icons.add),
         tooltip: 'Create group',
+        child: const Icon(Icons.add),
       ),
     );
   }

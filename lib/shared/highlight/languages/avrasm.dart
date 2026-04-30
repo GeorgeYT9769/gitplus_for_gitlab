@@ -5,7 +5,7 @@ import '../src/common_modes.dart';
 
 final avrasm = Mode(
     refs: {},
-    case_insensitive: true,
+    caseInsensitive: true,
     lexemes: "\\.?[a-zA-Z]\\w*",
     keywords: {
       "keyword":

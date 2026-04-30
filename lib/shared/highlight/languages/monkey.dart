@@ -5,7 +5,7 @@ import '../src/common_modes.dart';
 
 final monkey = Mode(
     refs: {},
-    case_insensitive: true,
+    caseInsensitive: true,
     keywords: {
       "keyword":
           "public private property continue exit extern new try catch eachin not abstract final select case default const local global field end if then else elseif endif while wend repeat until forever for to step next return module inline throw import",

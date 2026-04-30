@@ -5,7 +5,7 @@ import '../src/common_modes.dart';
 
 final css = Mode(
     refs: {},
-    case_insensitive: true,
+    caseInsensitive: true,
     illegal: "[=\\/|'\\\$]",
     contains: [
       C_BLOCK_COMMENT_MODE,

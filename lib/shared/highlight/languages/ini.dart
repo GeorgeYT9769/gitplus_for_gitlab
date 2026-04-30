@@ -41,7 +41,7 @@ final ini = Mode(
       ]),
     },
     aliases: ["toml"],
-    case_insensitive: true,
+    caseInsensitive: true,
     illegal: "\\S",
     contains: [
       Mode(ref: '~contains~0'),

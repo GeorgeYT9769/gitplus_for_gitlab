@@ -6,7 +6,7 @@ import '../src/common_modes.dart';
 final inform7 = Mode(
     refs: {},
     aliases: ["i7"],
-    case_insensitive: true,
+    caseInsensitive: true,
     keywords: {
       "keyword":
           "thing room person man woman animal container supporter backdrop door scenery open closed locked inside gender is are say understand kind of rule"

@@ -37,8 +37,10 @@ class MergeRequestController extends GetxController
     _mrUpdateSubscription = repository.mergeRequestsUpdate.listen((p0) async {
       if (_dontReloadMR) return;
       await getMergeRequest();
+      await getDetailedMergeRequest();
     });
     await getMergeRequest();
+    await getDetailedMergeRequest();
   }
 
   @override
@@ -62,6 +64,16 @@ class MergeRequestController extends GetxController
               repository.mergeRequest.value.iid ??
                   repository.mergeRequestIid) ??
           MergeRequest();
+    });
+  }
+
+  Future<void> getDetailedMergeRequest() async {
+    await runWithErrorHandlingWithoutState(() async {
+      repository.detailedMergeRequest.value = await apiRepository.getDetailedMergeRequest(
+          repository.project.value.id ?? repository.projectId,
+          repository.mergeRequest.value.iid ??
+              repository.mergeRequestIid) ??
+          DetailedMergeRequest();
     });
   }
 
@@ -116,7 +128,7 @@ class MergeRequestController extends GetxController
         );
         break;
       case MergeRequestScreenPopupActions.share:
-        Share.share(repository.mergeRequest.value.webUrl!);
+        SharePlus.instance.share(ShareParams(text: repository.mergeRequest.value.webUrl!));
         break;
       case MergeRequestScreenPopupActions.openWeb:
         launchUrl(Uri.parse((repository.mergeRequest.value.webUrl!)));
@@ -126,5 +138,6 @@ class MergeRequestController extends GetxController
 
   onRefresh() async {
     await getMergeRequest();
+    await getDetailedMergeRequest();
   }
 }

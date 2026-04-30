@@ -29,7 +29,7 @@ final lang1C = Mode(
             relevance: 0)
       ]),
     },
-    case_insensitive: true,
+    caseInsensitive: true,
     lexemes: "[A-Za-zА-Яа-яёЁ_][A-Za-zА-Яа-яёЁ_0-9]+",
     keywords: {
       "keyword":

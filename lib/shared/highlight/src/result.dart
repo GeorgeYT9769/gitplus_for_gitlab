@@ -26,7 +26,7 @@ class Result {
   String toHtml() {
     var str = '';
 
-    void _traverse(Node node) {
+    void traverse(Node node) {
       final shouldAddSpan = node.className != null &&
           ((node.value != null && node.value!.isNotEmpty) ||
               (node.children != null && node.children!.isNotEmpty));
@@ -39,7 +39,7 @@ class Result {
       if (node.value != null) {
         str += _escape(node.value!);
       } else if (node.children != null) {
-        node.children!.forEach(_traverse);
+        node.children!.forEach(traverse);
       }
 
       if (shouldAddSpan) {
@@ -47,7 +47,7 @@ class Result {
       }
     }
 
-    nodes!.forEach(_traverse);
+    nodes!.forEach(traverse);
     return str;
   }
 }

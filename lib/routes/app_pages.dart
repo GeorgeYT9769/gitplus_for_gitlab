@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:get/get.dart';
 import 'package:gitplus_for_gitlab/modules/about/about_binding.dart';
 import 'package:gitplus_for_gitlab/modules/accounts_intern/account_details_screen.dart';
@@ -30,6 +28,8 @@ import 'package:gitplus_for_gitlab/modules/issues/issues.dart';
 import 'package:gitplus_for_gitlab/modules/md_view/md_view.dart';
 import 'package:gitplus_for_gitlab/modules/member_details/member_details.dart';
 import 'package:gitplus_for_gitlab/modules/merge_request/merge_request.dart';
+import 'package:gitplus_for_gitlab/modules/merge_request_notes/merge_request_notes_binding.dart';
+import 'package:gitplus_for_gitlab/modules/merge_request_notes/merge_request_notes_screen.dart';
 import 'package:gitplus_for_gitlab/modules/merge_requests/merge_requests.dart';
 import 'package:gitplus_for_gitlab/modules/milestone/milestone.dart';
 import 'package:gitplus_for_gitlab/modules/milestones/milestones.dart';
@@ -43,6 +43,7 @@ import 'package:gitplus_for_gitlab/modules/project_activity/project_activity_scr
 import 'package:gitplus_for_gitlab/modules/project_details/project_details.dart';
 import 'package:gitplus_for_gitlab/modules/project_labels/project_labels.dart';
 import 'package:gitplus_for_gitlab/modules/project_members/project_members.dart';
+import 'package:gitplus_for_gitlab/modules/project_pipelines/project_pipelines.dart';
 import 'package:gitplus_for_gitlab/modules/project_snippet/project_snippet.dart';
 import 'package:gitplus_for_gitlab/modules/project_snippets/project_snippets.dart';
 import 'package:gitplus_for_gitlab/modules/projects/projects.dart';
@@ -243,5 +244,13 @@ class AppPages {
           GetPage(
               name: Routes.accountDetails, page: () => AccountDetailsScreen()),
         ]),
+    GetPage(
+        name: Routes.pipelines,
+        page: () => const PipelinesScreen(),
+        binding: PipelinesBindings()),
+    GetPage(
+        name: Routes.mergeRequestNotes,
+        page: () => const MergeRequestNotesScreen(),
+        binding: MergeRequestNotesBindings())
   ];
 }

@@ -5,7 +5,7 @@ import '../src/common_modes.dart';
 
 final basic = Mode(
     refs: {},
-    case_insensitive: true,
+    caseInsensitive: true,
     illegal: "^.",
     lexemes: "[a-zA-Z][a-zA-Z0-9_\$%!#]*",
     keywords: {

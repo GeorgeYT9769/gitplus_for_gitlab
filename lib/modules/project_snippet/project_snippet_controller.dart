@@ -85,10 +85,10 @@ class ProjectSnippetController extends GetxController
         );
         break;
       case ProjectSnippetScreenPopupActions.share:
-        Share.share(repository.snippet.value.webUrl ?? '');
+        SharePlus.instance.share(ShareParams(text: repository.snippet.value.webUrl ?? ''));
         break;
       case ProjectSnippetScreenPopupActions.web:
-        launch(repository.snippet.value.webUrl!);
+        launchUrl(Uri.parse(repository.snippet.value.webUrl!));
         break;
     }
   }

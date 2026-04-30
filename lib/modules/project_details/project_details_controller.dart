@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:gitplus_for_gitlab/api/api.dart';
 import 'package:gitplus_for_gitlab/models/models.dart';
+import 'package:gitplus_for_gitlab/models/request/latest_pipeline_request.dart';
 import 'package:gitplus_for_gitlab/modules/project_details/project_details.dart';
 import 'package:gitplus_for_gitlab/routes/routes.dart';
 import 'package:gitplus_for_gitlab/shared/shared.dart';
@@ -49,6 +50,7 @@ class ProjectDetailsController extends GetxController
     });
 
     getProject();
+    getPipelineStatus();
     getReadme();
     listStarrers();
   }
@@ -81,6 +83,7 @@ class ProjectDetailsController extends GetxController
 
   Future<void> onRefreshAll() async {
     await getProject();
+    await getPipelineStatus();
     listStarrers();
     getReadme();
   }
@@ -155,10 +158,10 @@ class ProjectDetailsController extends GetxController
         Get.toNamed(Routes.editProject);
         break;
       case ProjectDetailsScreenPopup.share:
-        Share.share(repository.project.value.webUrl!);
+        SharePlus.instance.share(ShareParams(text: repository.project.value.webUrl!));
         break;
       case ProjectDetailsScreenPopup.webUrl:
-        launch(repository.project.value.webUrl!);
+        launchUrl(Uri.parse(repository.project.value.webUrl!));
         break;
       case ProjectDetailsScreenPopup.delete:
         showDialog(
@@ -181,5 +184,13 @@ class ProjectDetailsController extends GetxController
         );
         break;
     }
+  }
+
+  Future<void> getPipelineStatus() async {
+    await runWithErrorHandlingWithoutState(() async {
+      repository.latestPipeline.value = await apiRepository.getLatestPipeline(
+          repository.project.value.id ?? repository.projectId,
+          LatestPipelineRequest()) ?? Pipeline(status: "success");
+    });
   }
 }

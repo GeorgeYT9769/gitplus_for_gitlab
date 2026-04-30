@@ -75,7 +75,7 @@ final lasso = Mode(
           relevance: 0),
     },
     aliases: ["ls", "lassoscript"],
-    case_insensitive: true,
+    caseInsensitive: true,
     lexemes: "[a-zA-Z_][\\w.]*|&[lg]t;",
     keywords: {
       "literal":

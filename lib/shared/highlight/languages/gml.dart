@@ -6,7 +6,7 @@ import '../src/common_modes.dart';
 final gml = Mode(
     refs: {},
     aliases: ["gml", "GML"],
-    case_insensitive: false,
+    caseInsensitive: false,
     keywords: {
       "keyword":
           "begin end if then else while do for break continue with until repeat exit and or xor not return mod div switch case default var globalvar enum #macro #region #endregion",

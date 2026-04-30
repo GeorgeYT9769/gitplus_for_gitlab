@@ -13,12 +13,15 @@ MergeRequest _$MergeRequestFromJson(Map<String, dynamic> json) => MergeRequest(
       title: json['title'] as String?,
       description: json['description'] as String?,
       state: json['state'] as String?,
-      mergedBy: json['merged_by'] == null
+      mergeUser: json['merge_user'] == null
           ? null
-          : Author.fromJson(json['merged_by'] as Map<String, dynamic>),
+          : Author.fromJson(json['merge_user'] as Map<String, dynamic>),
       mergedAt: json['merged_at'] == null
           ? null
           : DateTime.parse(json['merged_at'] as String),
+      preparedAt: json['prepared_at'] == null
+          ? null
+          : DateTime.parse(json['prepared_at'] as String),
       closedBy: json['closed_by'] == null
           ? null
           : Author.fromJson(json['closed_by'] as Map<String, dynamic>),
@@ -89,14 +92,16 @@ Map<String, dynamic> _$MergeRequestToJson(MergeRequest instance) =>
       'title': instance.title,
       'description': instance.description,
       'state': instance.state,
-      'merged_by': instance.mergedBy,
+      'merge_user': instance.mergeUser,
       'merged_at': instance.mergedAt?.toIso8601String(),
+      'prepared_at': instance.preparedAt?.toIso8601String(),
       'closed_by': instance.closedBy,
       'closed_at': instance.closedAt?.toIso8601String(),
       'created_at': instance.createdAt?.toIso8601String(),
       'updated_at': instance.updatedAt?.toIso8601String(),
       'target_branch': instance.targetBranch,
       'source_branch': instance.sourceBranch,
+      'user_notes_count': instance.userNotesCount,
       'upvotes': instance.upvotes,
       'downvotes': instance.downvotes,
       'author': instance.author,
@@ -114,7 +119,6 @@ Map<String, dynamic> _$MergeRequestToJson(MergeRequest instance) =>
       'sha': instance.sha,
       'merge_commit_sha': instance.mergeCommitSha,
       'squash_commit_sha': instance.squashCommitSha,
-      'user_notes_count': instance.userNotesCount,
       'discussion_locked': instance.discussionLocked,
       'should_remove_source_branch': instance.shouldRemoveSourceBranch,
       'force_remove_source_branch': instance.forceRemoveSourceBranch,

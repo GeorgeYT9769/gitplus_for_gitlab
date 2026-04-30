@@ -5,7 +5,7 @@ import '../src/common_modes.dart';
 
 final haml = Mode(
     refs: {},
-    case_insensitive: true,
+    caseInsensitive: true,
     contains: [
       Mode(
           className: "meta",

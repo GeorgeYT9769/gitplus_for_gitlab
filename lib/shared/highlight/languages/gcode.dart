@@ -6,7 +6,7 @@ import '../src/common_modes.dart';
 final gcode = Mode(
     refs: {},
     aliases: ["nc"],
-    case_insensitive: true,
+    caseInsensitive: true,
     lexemes: "[A-Z_][A-Z0-9_.]*",
     keywords:
         "IF DO WHILE ENDWHILE CALL ENDIF SUB ENDSUB GOTO REPEAT ENDREPEAT EQ LT GT NE GE LE OR XOR",

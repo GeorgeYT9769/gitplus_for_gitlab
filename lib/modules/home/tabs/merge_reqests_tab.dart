@@ -6,7 +6,7 @@ import 'package:gitplus_for_gitlab/shared/shared.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class MergeRequestsTab extends GetView<HomeController> {
-  const MergeRequestsTab({Key? key}) : super(key: key);
+  const MergeRequestsTab({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -54,11 +54,11 @@ Widget _buildListItem(
               TextSpan(
                 children: [
                   TextSpan(
-                      text: item.author!.name! + " ",
+                      text: "${item.author!.name!} ",
                       style: const TextStyle(
                           fontWeight: CommonConstants.fontWeightListTile)),
                   TextSpan(
-                      text: "authored " + timeago.format(item.createdAt!),
+                      text: "authored ${timeago.format(item.createdAt!)}",
                       style: const TextStyle(fontSize: 14)),
                 ],
               ),
@@ -77,9 +77,17 @@ Widget _buildListItem(
 }
 
 Widget _stateWidget(MergeRequest item) {
-  return ColorLabel(
-    color: item.state == MergeRequestState.opened ? Colors.green : Colors.red,
-    text: item.state == MergeRequestState.opened ? "Open".tr : "Closed".tr,
-    fontSize: 12,
-  );
+
+  switch(item.state) {
+    case MergeRequestState.opened:
+      return ColorLabel(color: Colors.green, text: "Open".tr);
+    case MergeRequestState.closed:
+      return ColorLabel(color: Colors.red, text: "Closed".tr);
+    case MergeRequestState.locked:
+      return ColorLabel(color: Colors.yellow, text: "Locked".tr);
+    case MergeRequestState.merged:
+      return ColorLabel(color: Colors.purple, text: "Merged".tr);
+  }
+
+  return ColorLabel(color: Colors.white, text: "Unknown".tr);
 }

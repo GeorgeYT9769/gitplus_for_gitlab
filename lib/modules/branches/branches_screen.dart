@@ -19,10 +19,10 @@ class BranchesScreenArgs {
 }
 
 class BranchesScreen extends StatefulWidget {
-  const BranchesScreen({Key? key}) : super(key: key);
+  const BranchesScreen({super.key});
 
   @override
-  _BranchesScreenState createState() => _BranchesScreenState();
+  State<BranchesScreen> createState() => _BranchesScreenState();
 }
 
 class _BranchesScreenState extends State<BranchesScreen>
@@ -237,7 +237,7 @@ Widget _listBranchesWidget(List<Branch> branches, BranchesController controller,
                       title: Wrap(
                         crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
-                          Text(b.name! + " ",
+                          Text("${b.name!} ",
                               style:
                                   const TextStyle(fontFamily: 'SourceCodePro')),
                           def,
@@ -298,7 +298,7 @@ Widget _listTagsWidget(
                       title: Wrap(
                         crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
-                          Text(b.name! + " ",
+                          Text("${b.name!} ",
                               style:
                                   const TextStyle(fontFamily: 'SourceCodePro')),
                           def,

@@ -7,12 +7,12 @@ class XElevatedButton extends StatelessWidget {
   final Color? foregroundColor;
 
   const XElevatedButton({
-    Key? key,
+    super.key,
     required this.onPressed,
     required this.child,
     this.backgroundColor,
     this.foregroundColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +20,9 @@ class XElevatedButton extends StatelessWidget {
         style: ButtonStyle(
           // overlayColor: MaterialStateProperty.all(backgroundColor),
           // shadowColor: MaterialStateProperty.all(backgroundColor),
-          backgroundColor: MaterialStateProperty.all(backgroundColor),
-          foregroundColor: MaterialStateProperty.all(foregroundColor),
-          padding: MaterialStateProperty.resolveWith(
+          backgroundColor: WidgetStateProperty.all(backgroundColor),
+          foregroundColor: WidgetStateProperty.all(foregroundColor),
+          padding: WidgetStateProperty.resolveWith(
             (states) {
               return const EdgeInsets.symmetric(horizontal: 10, vertical: 12);
             },

@@ -14,7 +14,7 @@ final sql = Mode(
             relevance: 0)
       ]),
     },
-    case_insensitive: true,
+    caseInsensitive: true,
     illegal: "[<>{}*]",
     contains: [
       Mode(

@@ -14,7 +14,7 @@ import 'project_details.dart';
 enum ProjectDetailsScreenPopup { edit, share, webUrl, delete }
 
 class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
-  const ProjectDetailsScreen({Key? key}) : super(key: key);
+  const ProjectDetailsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,18 +30,25 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
       );
     }
 
+    if (controller.repository.latestPipeline.value.status == "") {
+      return Scaffold(
+        appBar: AppBar(),
+        body: const LoadingWidget(),
+      );
+    }
+
     const spacing = 8.0;
 
     Widget visibility = Container();
     switch (project.visibility) {
       case GitLabVisibility.public:
-        visibility = _iconLabel(Icons.public, "Public".tr);
+        visibility = _iconLabel(Icons.public, "Public".tr,context);
         break;
       case GitLabVisibility.internal:
-        visibility = _iconLabel(Icons.lock_outline, "Internal".tr);
+        visibility = _iconLabel(Icons.lock_outline, "Internal".tr,context);
         break;
       case GitLabVisibility.private:
-        visibility = _iconLabel(Icons.lock_outline, "Private".tr);
+        visibility = _iconLabel(Icons.lock_outline, "Private".tr,context);
         break;
     }
 
@@ -50,8 +57,84 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
       avatar = ListAvatar(avatarUrl: project.avatarUrl!);
     } else {
       avatar = CircleAvatar(
-          child: Text(project.name!.toUpperCase().substring(0, 2)));
+          minRadius: 20,
+      maxRadius: 40,
+          child: Text(project.name!.toUpperCase().substring(0, 2),textScaler: const TextScaler.linear(1.8),),);
     }
+
+    var pipelineStatusExists = controller.repository.latestPipeline.value
+        .status != "";
+
+    IconData statusIcon = Octicons.question;
+    String statusString = "";
+    if (controller.repository.latestPipeline.value.status != "") {
+      switch (controller.repository.latestPipeline.value.status) {
+        case "success":
+          statusIcon = Octicons.check;
+          break;
+        case "failed":
+          statusIcon = Octicons.x;
+          break;
+        case "created":
+        case "waiting_for_resource":
+        case "preparing":
+        case "pending":
+        case "scheduled":
+          statusIcon = Octicons.clock;
+          break;
+        case "skipped":
+        case "canceled":
+          statusIcon = Octicons.dash;
+          break;
+        case "running":
+        case "manual":
+          statusIcon = Octicons.dot_fill;
+          break;
+        default:
+          statusIcon = Octicons.question;
+          break;
+      }
+
+      switch (controller.repository.latestPipeline.value.status) {
+        case "success":
+          statusString = "Success";
+          break;
+        case "failed":
+          statusString = "Failed";
+          break;
+        case "created":
+          statusString = "Created";
+          break;
+        case "waiting_for_resource":
+          statusString = "Waiting for Resource";
+          break;
+        case "preparing":
+          statusString = "Preparing";
+          break;
+        case "pending":
+          statusString = "Pending";
+          break;
+        case "scheduled":
+          statusString = "Scheduled";
+          break;
+        case "skipped":
+          statusString = "Skipped";
+          break;
+        case "canceled":
+          statusString = "Canceled";
+          break;
+        case "running":
+          statusString = "Running";
+          break;
+        case "manual":
+          statusString = "Manual";
+          break;
+        default:
+          statusString = "";
+          break;
+      }
+    }
+
 
     return Scaffold(
       appBar: AppBar(
@@ -59,7 +142,7 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
         actions: [
           PopupMenuButton(
             itemBuilder: (context) =>
-                <PopupMenuEntry<ProjectDetailsScreenPopup>>[
+            <PopupMenuEntry<ProjectDetailsScreenPopup>>[
               if (controller.canModifyOrDelete.value)
                 PopupMenuItem(
                     value: ProjectDetailsScreenPopup.edit,
@@ -93,16 +176,20 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
               child: Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    Align(alignment: Alignment.center,child:avatar),
+                    const SizedBox(height: 10),
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        avatar,
-                        const SizedBox(width: 10),
                         Expanded(
-                          child: Text(project.nameWithNamespace!,
-                              style: const TextStyle(fontSize: 16)),
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Text(project.nameWithNamespace!,
+                                style: const TextStyle(fontSize: 16)),
+                          ),
                         ),
                       ],
                     ),
@@ -112,29 +199,15 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                       children: [
                         visibility,
                         const SizedBox(width: 10),
-
-                        /// stars
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                                padding: EdgeInsets.zero,
-                                constraints: const BoxConstraints(),
-                                onPressed: () {
-                                  controller.starUnstar();
-                                },
-                                icon: Icon(controller.starred.value
-                                    ? Icons.star
-                                    : Icons.star_border)),
-                            const SizedBox(width: 5),
-                            Text(project.starCount.toString() + " stars"),
-                          ],
-                        ),
-
-                        /// forks
+                        // stars
+                        _iconLabel(Octicons.star,
+                            "${project.starCount} stars",context),
+                        // forks
                         const SizedBox(width: 10),
                         _iconLabel(Octicons.git_branch,
-                            project.forksCount.toString() + " forks"),
+                            "${project.forksCount} forks",context),
+                        if(pipelineStatusExists) const SizedBox(width: 10),
+                        if(pipelineStatusExists) _iconLabel(statusIcon, statusString,context)
                       ],
                     ),
                     const SizedBox(height: 10),
@@ -147,115 +220,123 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
 
             SafeArea(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15),
+                padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Column(children: [
                   IntrinsicHeight(
                     child: Flex(direction: Axis.horizontal, children: [
                       Expanded(
                           child: ProjectMenuItemWidget(
-                        icon: Icons.event,
-                        text: 'Activity',
-                        onPressed: () {
-                          Get.toNamed(Routes.projectActivity);
-                        },
-                      )),
-                      SizedBox(width: spacing),
+                            icon: Icons.event,
+                            text: 'Activity',
+                            onPressed: () {
+                              Get.toNamed(Routes.projectActivity);
+                            },
+                          )),
+                      const SizedBox(width: spacing),
                       Expanded(
                           child: ProjectMenuItemWidget(
-                        icon: Octicons.issue_opened,
-                        text: 'Issues',
-                        onPressed: () {
-                          Get.toNamed(Routes.issues);
-                        },
-                      )),
-                      SizedBox(width: spacing),
+                            icon: Octicons.issue_opened,
+                            text: 'Issues',
+                            onPressed: () {
+                              Get.toNamed(Routes.issues);
+                            },
+                          )),
+                      const SizedBox(width: spacing),
                       Expanded(
                           child: ProjectMenuItemWidget(
-                        icon: Octicons.milestone,
-                        text: 'Milestones',
-                        onPressed: () {
-                          Get.toNamed(Routes.milestones);
-                        },
-                      )),
+                            icon: Octicons.milestone,
+                            text: 'Milestones',
+                            onPressed: () {
+                              Get.toNamed(Routes.milestones);
+                            },
+                          )),
                     ]),
                   ),
-                  SizedBox(height: spacing),
+                  const SizedBox(height: spacing),
                   IntrinsicHeight(
                     child: Flex(direction: Axis.horizontal, children: [
                       Expanded(
                           child: ProjectMenuItemWidget(
-                        icon: Octicons.git_merge,
-                        text: 'MR',
-                        onPressed: () {
-                          Get.toNamed(Routes.mergeRequests);
-                        },
-                      )),
-                      SizedBox(width: spacing),
+                            icon: Octicons.git_merge,
+                            text: 'MR',
+                            onPressed: () {
+                              Get.toNamed(Routes.mergeRequests);
+                            },
+                          )),
+                      const SizedBox(width: spacing),
                       Expanded(
                           child: ProjectMenuItemWidget(
-                        icon: Icons.label_outline,
-                        text: 'Labels',
-                        onPressed: () {
-                          Get.toNamed(Routes.labels);
-                        },
-                      )),
-                      SizedBox(width: spacing),
+                            icon: Icons.label_outline,
+                            text: 'Labels',
+                            onPressed: () {
+                              Get.toNamed(Routes.labels);
+                            },
+                          )),
+                      const SizedBox(width: spacing),
                       Expanded(
                           child: ProjectMenuItemWidget(
-                        icon: Icons.text_snippet_outlined,
-                        text: 'Snippets',
-                        onPressed: () {
-                          Get.toNamed(Routes.projectSnippets);
-                        },
-                      )),
+                            icon: Icons.text_snippet_outlined,
+                            text: 'Snippets',
+                            onPressed: () {
+                              Get.toNamed(Routes.projectSnippets);
+                            },
+                          )),
                     ]),
                   ),
-                  SizedBox(height: spacing),
+                  const SizedBox(height: spacing),
                   IntrinsicHeight(
                     child: Flex(direction: Axis.horizontal, children: [
                       Expanded(
                           child: ProjectMenuItemWidget(
-                        icon: Icons.star,
-                        text: 'Starrers',
-                        onPressed: () {
-                          Get.toNamed(Routes.starrers);
-                        },
-                      )),
-                      SizedBox(width: spacing),
+                            icon: Icons.star_border_outlined,
+                            text: 'Starrers',
+                            onPressed: () {
+                              Get.toNamed(Routes.starrers);
+                            },
+                          )),
+                      const SizedBox(width: spacing),
                       Expanded(
                           child: ProjectMenuItemWidget(
-                        icon: Icons.people,
-                        text: 'Members',
-                        onPressed: () {
-                          controller.repository.membersFor = MembersFor.project;
-                          Get.toNamed(Routes.projectMembers);
-                        },
-                      )),
-                      SizedBox(width: spacing),
-                      Expanded(child: Container()),
+                            icon: Icons.people_outline_rounded,
+                            text: 'Members',
+                            onPressed: () {
+                              controller.repository.membersFor =
+                                  MembersFor.project;
+                              Get.toNamed(Routes.projectMembers);
+                            },
+                          )),
+                      const SizedBox(width: spacing),
+                      Expanded(
+                          child: ProjectMenuItemWidget(
+                            icon: Icons.check_box_outlined,
+                            text: 'Pipelines',
+                            onPressed: () {
+                              Get.toNamed(Routes.pipelines);
+                            },
+                          )),
                     ]),
                   ),
-                  SizedBox(height: spacing),
+                  const SizedBox(height: spacing),
                   Flex(direction: Axis.horizontal, children: [
                     Expanded(
                         child: ProjectMenuItemWidget(
-                      icon: Icons.code,
-                      text: 'Browse code',
-                      onPressed: () {
-                        Get.toNamed(Routes.treeViewRoot,
-                            arguments: TreeViewArgs(
-                                name: project.name ?? "", path: ""));
-                      },
-                    )),
-                    SizedBox(width: spacing),
+                          icon: Icons.code,
+                          text: 'Browse code',
+                          onPressed: () {
+                            Get.toNamed(Routes.treeViewRoot,
+                                arguments: TreeViewArgs(
+                                    name: project.name ?? "", path: ""));
+                          },
+                        )),
+                    const SizedBox(width: spacing),
                     Expanded(
                         child: ProjectMenuItemWidget(
-                      icon: Octicons.git_commit,
-                      text: 'Commits',
-                      onPressed: () {
-                        Get.toNamed(Routes.commits);
-                      },
-                    )),
+                          icon: Octicons.git_commit,
+                          text: 'Commits',
+                          onPressed: () {
+                            Get.toNamed(Routes.commits);
+                          },
+                        )),
                   ]),
                 ]),
               ),
@@ -301,13 +382,13 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
     );
   }
 
-  Widget _iconLabel(IconData icon, String text) {
+  Widget _iconLabel(IconData icon, String text,BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon),
+        Icon(icon,color: Theme.of(context).colorScheme.onSurface),
         const SizedBox(width: 5),
-        Text(text),
+        Text(text,style: TextStyle(color: Theme.of(context).colorScheme.onSurface),),
       ],
     );
   }

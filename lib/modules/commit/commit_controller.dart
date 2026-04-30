@@ -114,7 +114,7 @@ class CommitController extends GetxController
         launchUrl(Uri.parse(repository.commit.value.webUrl!));
         break;
       case CommitScreenPopupActions.share:
-        Share.share(repository.commit.value.webUrl!);
+        SharePlus.instance.share(ShareParams(text: repository.commit.value.webUrl!));
         break;
       case CommitScreenPopupActions.settings:
         Get.toNamed(Routes.settings);

@@ -9,7 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'about.dart';
 
 class AboutScreen extends GetView<AboutController> {
-  const AboutScreen({Key? key}) : super(key: key);
+  const AboutScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,7 @@ class AboutScreen extends GetView<AboutController> {
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
                   const SizedBox(height: 3),
-                  Text('v' + controller.version.string,
+                  Text('v${controller.version.string}',
                       style: const TextStyle(fontSize: 16)),
                 ],
               )
@@ -58,7 +58,7 @@ class AboutScreen extends GetView<AboutController> {
           leading: const Icon(Octicons.link_external),
           title: const Text('Visit our web page'),
           onTap: () {
-            launchUrl(Uri.parse('https://gitplusapp.com/'));
+            launchUrl(Uri.parse('https://google.com/'));
           },
         ),
         const Divider(),
@@ -66,7 +66,7 @@ class AboutScreen extends GetView<AboutController> {
           leading: const Icon(Icons.privacy_tip),
           title: const Text('Privacy policy'),
           onTap: () {
-            launchUrl(Uri.parse(('https://gitplusapp.com/privacy-policy/')));
+            launchUrl(Uri.parse(('https://google.com')));
           },
         ),
         const Divider(),

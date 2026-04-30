@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:gitplus_for_gitlab/models/models.dart';
 import 'package:gitplus_for_gitlab/models/request/access_token_request_password.dart';
+import 'package:gitplus_for_gitlab/models/request/latest_pipeline_request.dart';
+import 'package:gitplus_for_gitlab/models/request/pipeline_jobs_request.dart';
 
 import 'api.dart';
 
@@ -277,4 +279,31 @@ class ApiProvider extends BaseProvider {
   Future<Response> removeMember(String path) {
     return dio.delete(path);
   }
+
+  /// :pipelines
+
+  Future<Response> listPipelines(String path, ListPipelinesRequest data) {
+    return dio.get(path, queryParameters: data.toJson());
+  }
+
+  Future<Response> getSinglePipeline(String path) {
+    return dio.get(path);
+  }
+
+  Future<Response> getLatestPipeline(String path, LatestPipelineRequest data) {
+    return dio.get(path,queryParameters: data.toJson());
+  }
+
+  Future<Response> listJobs(String path, ListProjectJobsRequest data) {
+    return dio.get(path,queryParameters: data.toJson());
+  }
+
+  Future<Response> listPipelineJobs(String path, ListPipelineJobsRequest data) {
+    return dio.get(path,queryParameters: data.toJson());
+  }
+
+  Future<Response> getSingleJob(String path) {
+    return dio.get(path);
+  }
 }
+

@@ -6,7 +6,7 @@ import '../src/common_modes.dart';
 final dockerfile = Mode(
     refs: {},
     aliases: ["docker"],
-    case_insensitive: true,
+    caseInsensitive: true,
     keywords: "from maintainer expose env arg user onbuild stopsignal",
     contains: [
       HASH_COMMENT_MODE,

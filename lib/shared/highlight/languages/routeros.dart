@@ -22,7 +22,7 @@ final routeros = Mode(
       ]),
     },
     aliases: ["routeros", "mikrotik"],
-    case_insensitive: true,
+    caseInsensitive: true,
     lexemes: ":?[\\w-]+",
     keywords: {
       "literal": "true false yes no nothing nil null",

@@ -14,12 +14,6 @@ Git+ lets you:
 - Browse your files and code
 - Adding multiple accounts
 
-## Android
-https://play.google.com/store/apps/details?id=com.gitlabplus.app&gl=PL
-## iOS
-https://apps.apple.com/sk/app/git-for-gitlab/id1607749970
-
-
 ## Quick start
 
 1. Install flutter https://docs.flutter.dev/get-started/install

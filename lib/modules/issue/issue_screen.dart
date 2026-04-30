@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:gitplus_for_gitlab/models/models.dart';
@@ -12,7 +13,7 @@ import 'issue.dart';
 enum IssueScreenPopupActions { edit, reopen, close, delete, share, openWeb }
 
 class IssueScreen extends GetView<IssueController> {
-  const IssueScreen({Key? key}) : super(key: key);
+  const IssueScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,7 @@ class IssueScreen extends GetView<IssueController> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('#' + title.toString()),
+        title: Text('#$title'),
         actions: [
           PopupMenuButton(
             itemBuilder: (context) => <PopupMenuEntry<IssueScreenPopupActions>>[
@@ -94,8 +95,8 @@ class IssueScreen extends GetView<IssueController> {
                                     TextSpan(
                                       children: [
                                         TextSpan(
-                                            text: project.namespace!.fullPath! +
-                                                '/',
+                                            text:
+                                                '${project.namespace!.fullPath!}/',
                                             style:
                                                 const TextStyle(fontSize: 18)),
                                         TextSpan(
@@ -122,16 +123,19 @@ class IssueScreen extends GetView<IssueController> {
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold)),
                               ),
-                              _stateWidget(item),
+                              Wrap(
+                                children: [
+                                  if (item.healthStatus != null)
+                                    _healthWidget(item),
+                                  _stateWidget(item),
+                                ],
+                              )
                             ],
                           ),
                           const SizedBox(height: 10),
                           if (item.author != null)
-                            Text(item.author!.name! +
-                                ' opened this issue ' +
-                                timeago.format(item.createdAt!) +
-                                ', updated ' +
-                                timeago.format(item.updatedAt!)),
+                            Text(
+                                '${item.author!.name!} opened this issue ${timeago.format(item.createdAt!)}, updated ${timeago.format(item.updatedAt!)}'),
                           if (item.description != null &&
                               item.description!.isNotEmpty)
                             const Divider(height: 25),
@@ -166,7 +170,25 @@ class IssueScreen extends GetView<IssueController> {
                         ),
                       ),
                     ),
-                  const SizedBox(height: 10),
+                  // const SizedBox(height: 10),
+                  if (item.assignees != null && item.assignees!.isNotEmpty)
+                    Card(
+                      margin: const EdgeInsets.only(
+                        left: 10,
+                        right: 10,
+                        bottom: 10,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _headerLabel('Assignee'),
+                            _assigneeList(item)
+                          ],
+                        ),
+                      ),
+                    ),
                   const Divider(),
                   ListTile(
                     leading: const Icon(Octicons.note),
@@ -235,5 +257,147 @@ Widget _headerLabel(String text) {
           style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
       const SizedBox(height: 5)
     ],
+  );
+}
+
+Widget _assigneeList(Issue item) {
+  if (item.assignees!.length == 1) {
+    return Container(
+      padding: const EdgeInsets.only(top: 5, bottom: 5),
+      child: Wrap(
+        spacing: 5,
+        children: [
+          Row(
+            children: [
+              Container(
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black,
+                      blurRadius: 3.0,
+                    ),
+                  ],
+                ),
+                child: item.assignees![0].avatarUrl?.isEmpty == false
+                    ? CircleAvatar(
+                        backgroundColor: Colors.transparent,
+                        child: CachedNetworkImage(
+                          color: Colors.transparent,
+                          imageUrl: item.assignees![0].avatarUrl!,
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(),
+                          httpHeaders: {
+                            'PRIVATE-TOKEN':
+                                Get.find<SecureStorage>().getToken()
+                          },
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50),
+                              image: DecorationImage(image: imageProvider),
+                            ),
+                          ),
+                        ),
+                      )
+                    : const CircleAvatar(child: Icon(Icons.person)),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text(item.assignees![0].name!,
+                    style: const TextStyle(fontSize: 16)),
+              )
+            ],
+          )
+        ],
+      ),
+    );
+  } else {
+    return Container(
+      padding: const EdgeInsets.only(top: 10),
+      child: Wrap(
+        spacing: 5,
+        children: [
+          ...item.assignees!.map(
+            (assignee) {
+              return Container(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Row(
+                  children: [
+                    Container(
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black,
+                            blurRadius: 3.0,
+                          ),
+                        ],
+                      ),
+                      child: assignee.avatarUrl?.isEmpty == false
+                          ? CircleAvatar(
+                              backgroundColor: Colors.transparent,
+                              child: CachedNetworkImage(
+                                color: Colors.transparent,
+                                imageUrl: assignee.avatarUrl!,
+                                placeholder: (context, url) =>
+                                    const CircularProgressIndicator(),
+                                httpHeaders: {
+                                  'PRIVATE-TOKEN':
+                                      Get.find<SecureStorage>().getToken()
+                                },
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                    image:
+                                        DecorationImage(image: imageProvider),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : const CircleAvatar(child: Icon(Icons.person)),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(assignee.name!,
+                          style: const TextStyle(fontSize: 16)),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+Widget _healthWidget(Issue item) {
+  ColorLabel healthLabel =
+      const ColorLabel(color: Colors.transparent, text: "");
+  switch (item.healthStatus) {
+    case IssueHealth.onTrack:
+      healthLabel = const ColorLabel(
+        color: Colors.lightGreen,
+        text: "On track",
+      );
+      break;
+    case IssueHealth.needsAttention:
+      healthLabel = const ColorLabel(
+        color: Colors.yellow,
+        text: "Needs attention",
+      );
+      break;
+    case IssueHealth.atRisk:
+      healthLabel = const ColorLabel(
+        color: Colors.red,
+        text: "At risk",
+      );
+  }
+
+  return Container(
+    padding: const EdgeInsets.only(left: 10, right: 10),
+    child: healthLabel,
   );
 }

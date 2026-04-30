@@ -23,10 +23,10 @@ class TreeViewArgs {
 }
 
 class TreeViewScreen extends StatefulWidget {
-  const TreeViewScreen({Key? key}) : super(key: key);
+  const TreeViewScreen({super.key});
 
   @override
-  _TreeViewScreenState createState() => _TreeViewScreenState();
+  State<TreeViewScreen> createState() => _TreeViewScreenState();
 }
 
 class _TreeViewScreenState extends State<TreeViewScreen> {
@@ -79,7 +79,7 @@ class _TreeViewScreenState extends State<TreeViewScreen> {
       setState(() {
         _state = HttpState.ok;
       });
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
         setState(() {
           _state = HttpState.error;

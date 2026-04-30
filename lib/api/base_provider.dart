@@ -2,7 +2,6 @@ import 'package:dio/dio.dart' as d;
 import 'package:dio/dio.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import 'package:gitplus_for_gitlab/routes/app_pages.dart';
 import 'package:gitplus_for_gitlab/shared/shared.dart';
 
 class BaseProvider {
@@ -15,10 +14,12 @@ class BaseProvider {
 
     dio = d.Dio();
 
+    const timeout = Duration(milliseconds: 8000);
+
     dio.options = BaseOptions(
-      connectTimeout: Duration(seconds: 8),
-      sendTimeout:  Duration(seconds: 8),
-      receiveTimeout:  Duration(seconds: 8),
+      connectTimeout: timeout,
+      sendTimeout: timeout,
+      receiveTimeout: timeout,
     );
 
     dio.interceptors.add(d.InterceptorsWrapper(

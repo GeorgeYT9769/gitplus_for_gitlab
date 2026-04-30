@@ -5,7 +5,7 @@ import '../src/common_modes.dart';
 
 final mipsasm = Mode(
     refs: {},
-    case_insensitive: true,
+    caseInsensitive: true,
     aliases: ["mips"],
     lexemes: "\\.?[a-zA-Z]\\w*",
     keywords: {

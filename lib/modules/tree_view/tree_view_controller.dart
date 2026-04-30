@@ -16,13 +16,6 @@ class TreeViewController extends GetxController with HttpController {
     required this.repository,
   });
 
-  final _storage = Get.find<SPStorage>();
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
   void onItemSelected(Tree item) {
     if (item.type == TreeTypes.blob) {
       var ext = extension(item.path ?? '').replaceAll(".", "");

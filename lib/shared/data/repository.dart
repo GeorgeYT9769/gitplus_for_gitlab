@@ -9,13 +9,16 @@ class Repository {
   var issueIid = 0;
   var note = Note().obs;
   var mergeRequest = MergeRequest().obs;
+  var detailedMergeRequest = DetailedMergeRequest().obs;
   var mergeRequestIid = 0;
+  var detailedMergeRequestIid = 0;
   var milestone = ProjectMilestone().obs;
   var milestoneId = 0;
   var snippet = ProjectSnippet().obs;
   var snippetContent = ''.obs;
   var issueLabels = <ProjectLabel>[].obs;
   var label = ProjectLabel().obs;
+  var latestPipeline = Pipeline().obs;
 
   var group = Group().obs;
   var ref = "".obs;
@@ -34,6 +37,7 @@ class Repository {
   var snippetsUpdate = 0.obs;
 
   var issueNotesUpdate = 0.obs;
+  var mergeRequestNotesUpdate = 0.obs;
 
   var labelsUpdate = 0.obs;
   var labelUpdate = 0.obs;

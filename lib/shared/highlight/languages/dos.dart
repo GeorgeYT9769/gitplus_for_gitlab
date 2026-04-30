@@ -19,7 +19,7 @@ final dos = Mode(
           relevance: 10),
     },
     aliases: ["bat", "cmd"],
-    case_insensitive: true,
+    caseInsensitive: true,
     illegal: "\\/\\*",
     keywords: {
       "keyword":

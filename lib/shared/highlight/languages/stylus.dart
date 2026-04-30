@@ -10,7 +10,7 @@ final stylus = Mode(
       '~contains~10': Mode(className: "variable", begin: "\\\$[a-zA-Z]\\w*"),
     },
     aliases: ["styl"],
-    case_insensitive: false,
+    caseInsensitive: false,
     keywords: "if else for in",
     illegal:
         "(\\?|(\\bReturn\\b)|(\\bEnd\\b)|(\\bend\\b)|(\\bdef\\b)|;|#\\s|\\*\\s|===\\s|\\||%)",

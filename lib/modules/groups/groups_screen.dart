@@ -7,12 +7,12 @@ import 'package:get/get.dart';
 import 'groups_controller.dart';
 
 class GroupsScreen extends GetView<GroupsController> {
-  const GroupsScreen({Key? key}) : super(key: key);
+  const GroupsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => Navigator.of(context).canPop(),
+    return PopScope(
+      canPop: Navigator.of(context).canPop(),
       child: Obx(() => _buildWidget(context)),
     );
   }

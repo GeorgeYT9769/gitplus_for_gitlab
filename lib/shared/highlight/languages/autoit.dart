@@ -47,7 +47,7 @@ final autoit = Mode(
             ])
       ]),
     },
-    case_insensitive: true,
+    caseInsensitive: true,
     illegal: "\\/\\*",
     keywords: {
       "keyword":

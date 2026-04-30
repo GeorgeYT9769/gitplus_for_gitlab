@@ -10,7 +10,7 @@ import 'package:grouped_list/grouped_list.dart';
 import 'commits.dart';
 
 class CommitsScreen extends GetView<CommitsController> {
-  const CommitsScreen({Key? key}) : super(key: key);
+  const CommitsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,11 +24,18 @@ class CommitsScreen extends GetView<CommitsController> {
       appBar: AppBar(
         title: Text("Commits".tr),
       ),
-      body: _buildList(),
+      body: _CommitsList(controller: controller),
     );
   }
+}
 
-  Widget _buildList() {
+class _CommitsList extends StatelessWidget {
+  final CommitsController controller;
+
+  const _CommitsList({required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () => controller.listCommits(),
       child: HttpFutureBuilder(
@@ -47,26 +54,41 @@ class CommitsScreen extends GetView<CommitsController> {
                     element.createdAt!.day,
                   ),
               groupSeparatorBuilder: (DateTime element) =>
-                  _buildGroupSeparator(element),
+                  _CommitsGroupSeparator(date: element),
               itemComparator: (element1, element2) =>
                   element1.createdAt!.compareTo(element2.createdAt!),
               itemBuilder: (context, element) {
-                return _buildListItem(element, context);
+                return _CommitsListItem(
+                    commit: element, controller: controller);
               }),
         ),
       ),
     );
   }
+}
 
-  Widget _buildListItem(Commit item, BuildContext context) {
+class _CommitsListItem extends StatelessWidget {
+  final Commit commit;
+  final CommitsController controller;
+
+  const _CommitsListItem({
+    required this.commit,
+    required this.controller,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    var statusString = getStatusString();
+    var statusIcon = getStatusIcon();
+
     return Column(
       children: [
         ListTile(
           // contentPadding: CommonConstants.contentPaddingLitTileLarge,
           title: Text(
-            item.title!,
+            commit.title!,
             style:
-                const TextStyle(fontWeight: CommonConstants.fontWeightListTile),
+            const TextStyle(fontWeight: CommonConstants.fontWeightListTile),
           ),
           trailing: const Icon(Icons.keyboard_arrow_right),
           subtitle: Column(
@@ -79,19 +101,28 @@ class CommitsScreen extends GetView<CommitsController> {
                 TextSpan(
                   children: [
                     TextSpan(
-                        text: item.authorName! + " ",
+                        text: "${commit.authorName!} ",
                         style: const TextStyle(
                             fontWeight: CommonConstants.fontWeightListTile)),
                     TextSpan(
-                        text: "authored " + timeago.format(item.createdAt!),
+                        text: "authored ${timeago.format(commit.createdAt!)}",
                         style: const TextStyle(fontSize: 14)),
                   ],
                 ),
               ),
+              Row(
+                children: [
+                  if (statusIcon != null) statusIcon,
+                  const SizedBox(
+                    width: 10.0,
+                  ),
+                  if (statusIcon != null) Text(statusString)
+                ],
+              )
             ],
           ),
           onTap: () {
-            controller.onCommitSelected(item);
+            controller.onCommitSelected(commit);
           },
         ),
         const Divider(),
@@ -99,8 +130,75 @@ class CommitsScreen extends GetView<CommitsController> {
     );
   }
 
-  Widget _buildGroupSeparator(DateTime element) {
-    final String formatted = DateFormat('dd MMMM, yyyy').format(element);
+  String getStatusString() {
+    switch (commit.status) {
+      case "success":
+        return "Success";
+      case "failed":
+        return "Failed";
+      case "created":
+        return "Created";
+      case "waiting_for_resource":
+        return "Waiting for Resource";
+      case "preparing":
+        return "Preparing";
+      case "pending":
+        return "Pending";
+      case "scheduled":
+        return "Scheduled";
+      case "skipped":
+        return "Skipped";
+      case "canceled":
+        return "Canceled";
+      case "running":
+        return "Running";
+      case "manual":
+        return "Manual";
+      default:
+        return "";
+    }
+  }
+
+  getStatusIcon() {
+    if (commit.lastPipeline != null) {
+      switch (commit.status) {
+        case "success":
+          return const Icon(Icons.check, color: Colors.green);
+        case "failed":
+          return const Icon(Icons.close, color: Colors.red);
+        case "created":
+          return const Icon(Icons.schedule_outlined, color: Colors.yellow);
+        case "waiting_for_resource":
+          return const Icon(Icons.schedule_outlined, color: Colors.yellow);
+        case "preparing":
+          return const Icon(Icons.schedule_outlined, color: Colors.yellow);
+        case "pending":
+          return const Icon(Icons.schedule_outlined, color: Colors.yellow);
+        case "scheduled":
+          return const Icon(Icons.schedule_outlined, color: Colors.yellow);
+        case "skipped":
+          return const Icon(Icons.remove, color: Colors.grey);
+        case "canceled":
+          return const Icon(Icons.remove, color: Colors.grey);
+        case "running":
+          return const Icon(Icons.cached, color: Colors.blue);
+        case "manual":
+          return const Icon(Icons.cached, color: Colors.blue);
+        default:
+          return const Icon(Icons.question_mark);
+      }
+    }
+  }
+}
+
+class _CommitsGroupSeparator extends StatelessWidget {
+  final DateTime date;
+
+  const _CommitsGroupSeparator({required this.date});
+
+  @override
+  Widget build(BuildContext context) {
+    final String formatted = DateFormat('dd MMMM, yyyy').format(date);
 
     return Column(
       children: [

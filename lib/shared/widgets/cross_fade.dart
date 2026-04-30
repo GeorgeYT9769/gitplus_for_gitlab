@@ -8,16 +8,16 @@ class CrossFade<T> extends StatefulWidget {
   final VoidCallback? onFadeComplete;
 
   const CrossFade({
-    Key? key,
+    super.key,
     required this.initialData,
     required this.data,
     required this.builder,
     this.duration = const Duration(milliseconds: 300),
     this.onFadeComplete,
-  }) : super(key: key);
+  });
 
   @override
-  _CrossFadeState<T> createState() => _CrossFadeState<T>();
+  State<CrossFade<T>> createState() => _CrossFadeState<T>();
 }
 
 class _CrossFadeState<T> extends State<CrossFade<T>>
@@ -71,6 +71,6 @@ class _CrossFadeState<T> extends State<CrossFade<T>>
   @override
   Widget build(BuildContext context) => Opacity(
         opacity: 1.0 - _animation!.value,
-        child: widget.builder(_dataToShow!),
+        child: widget.builder(_dataToShow as T),
       );
 }

@@ -12,18 +12,23 @@ class AppHighlightView extends StatelessWidget {
   final String? theme;
   final bool? lineNumbers;
 
+
   const AppHighlightView({
-    Key? key,
+    super.key,
     this.content,
     required this.lang,
     this.fontSize,
     this.theme,
     this.lineNumbers = true,
-  }) : super(key: key);
+  });
+
 
   @override
   Widget build(BuildContext context) {
     final numLines = '\n'.allMatches(content ?? '').length + 1;
+
+    final supportedLanguages = ['dart', 'python', 'javascript', 'plaintext']; // etc.
+    final safeLang = supportedLanguages.contains(lang) ? lang : 'plaintext';
 
     return content == null || content!.isEmpty
         ? Container()
@@ -44,12 +49,12 @@ class AppHighlightView extends StatelessWidget {
                 ),
               GestureDetector(
                 onDoubleTap: () {
-                  Clipboard.setData(ClipboardData(text: content!));
+                  Clipboard.setData(ClipboardData(text: content as String));
                   CommonWidget.toast('Copied to Clipboard');
                 },
                 child: HighlightView(
                   content!,
-                  language: lang,
+                  language: safeLang,
                   theme: themeMap[theme] ?? {},
                   padding: const EdgeInsets.all(15),
                   textStyle: TextStyle(

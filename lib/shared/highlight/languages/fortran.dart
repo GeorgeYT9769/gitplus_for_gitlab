@@ -5,7 +5,7 @@ import '../src/common_modes.dart';
 
 final fortran = Mode(
     refs: {},
-    case_insensitive: true,
+    caseInsensitive: true,
     aliases: ["f90", "f95"],
     keywords: {
       "literal": ".False. .True.",

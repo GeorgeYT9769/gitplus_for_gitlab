@@ -10,7 +10,7 @@ final scss = Mode(
       '~contains~11~contains~1':
           Mode(className: "number", begin: "#[0-9A-Fa-f]+"),
     },
-    case_insensitive: true,
+    caseInsensitive: true,
     illegal: "[=/|']",
     contains: [
       C_LINE_COMMENT_MODE,

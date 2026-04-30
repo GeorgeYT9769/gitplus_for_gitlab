@@ -13,7 +13,7 @@ final sqf = Mode(
           contains: [Mode(begin: "\"\"", relevance: 0)]),
     },
     aliases: ["sqf"],
-    case_insensitive: true,
+    caseInsensitive: true,
     keywords: {
       "keyword":
           "case catch default do else exit exitWith for forEach from if private switch then throw to try waitUntil while with",

@@ -5,7 +5,7 @@ import '../src/common_modes.dart';
 
 final yaml = Mode(
     refs: {},
-    case_insensitive: true,
+    caseInsensitive: true,
     aliases: ["yml", "YAML", "yaml"],
     contains: [
       Mode(className: "attr", variants: [

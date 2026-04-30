@@ -24,6 +24,7 @@ abstract class Routes {
   static const editMilestone = '/edit_milestone';
   static const mergeRequests = '/merge_requests';
   static const mergeRequest = '/merge_request';
+  static const mergeRequestNotes = '/merge_request_notes';
   static const editMergeRequest = '/edit_merge_request';
   static const createMergeRequest = '/create_merge_request';
   static const labels = '/labels';
@@ -51,4 +52,5 @@ abstract class Routes {
   static const accountDetails = '/account_details';
   static const upgrade = '/upgrade';
   static const testPage = '/test_page';
+  static const pipelines = '/pipelines';
 }

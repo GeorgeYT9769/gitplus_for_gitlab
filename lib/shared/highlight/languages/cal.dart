@@ -52,7 +52,7 @@ final cal = Mode(
           end: "'",
           contains: [Mode(begin: "''")]),
     },
-    case_insensitive: true,
+    caseInsensitive: true,
     keywords: {
       "keyword":
           "div mod in and or not xor asserterror begin case do downto else end exit for if of repeat then to until while with var",

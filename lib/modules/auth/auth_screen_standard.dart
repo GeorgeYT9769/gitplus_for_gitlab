@@ -10,7 +10,7 @@ import 'package:gitplus_for_gitlab/shared/shared.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AuthScreenStandard extends GetView<AuthController> {
-  const AuthScreenStandard({Key? key}) : super(key: key);
+  const AuthScreenStandard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class AuthScreenStandard extends GetView<AuthController> {
                     height: 80,
                   ),
                   const SizedBox(height: 10),
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
@@ -61,7 +61,7 @@ class AuthScreenStandard extends GetView<AuthController> {
                           controller.prefix.value = "https";
                         },
                       ),
-                      SizedBox(width: 5),
+                      const SizedBox(width: 5),
                       FilterChip(
                         label: Text('HTTP'.tr),
                         selected: !controller.isHttps.value,
@@ -86,7 +86,7 @@ class AuthScreenStandard extends GetView<AuthController> {
                     keyboardType: TextInputType.text,
                     textInputAction: TextInputAction.next,
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   CupertinoSlidingSegmentedControl(
                     padding: const EdgeInsets.all(0),
                     // thumbColor: AppColors.selectedButton,
@@ -102,7 +102,7 @@ class AuthScreenStandard extends GetView<AuthController> {
                       controller.onTabChanged(i as int);
                     },
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   if (controller.selectedTab.value == 0)
                     Column(
                       children: [
@@ -246,10 +246,10 @@ class AuthScreenStandard extends GetView<AuthController> {
     );
   }
 
-  void _register() {
+/*  void _register() {
     var baseUrl = controller.prefix + "://" + controller.textcontroller.text;
     launchUrl(Uri.parse(('$baseUrl/users/sign_up')));
-  }
+  }*/
 
   IconData platformPopIcon() {
     if (Platform.isIOS) {

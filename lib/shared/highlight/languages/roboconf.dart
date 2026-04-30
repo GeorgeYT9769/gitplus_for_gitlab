@@ -16,7 +16,7 @@ final roboconf = Mode(
           ])),
     },
     aliases: ["graph", "instances"],
-    case_insensitive: true,
+    caseInsensitive: true,
     keywords: "import",
     contains: [
       Mode(

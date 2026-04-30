@@ -5,7 +5,7 @@ import '../src/common_modes.dart';
 
 final n1Ql = Mode(
     refs: {},
-    case_insensitive: true,
+    caseInsensitive: true,
     contains: [
       Mode(
           beginKeywords:

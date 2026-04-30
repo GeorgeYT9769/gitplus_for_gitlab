@@ -9,7 +9,7 @@ final apache = Mode(
           Mode(className: "number", begin: "[\\\$%]\\d+"),
     },
     aliases: ["apacheconf"],
-    case_insensitive: true,
+    caseInsensitive: true,
     contains: [
       HASH_COMMENT_MODE,
       Mode(className: "section", begin: "</?", end: ">"),

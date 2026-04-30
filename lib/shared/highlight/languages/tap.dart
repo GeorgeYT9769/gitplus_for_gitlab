@@ -5,7 +5,7 @@ import '../src/common_modes.dart';
 
 final tap = Mode(
     refs: {},
-    case_insensitive: true,
+    caseInsensitive: true,
     contains: [
       HASH_COMMENT_MODE,
       Mode(className: "meta", variants: [

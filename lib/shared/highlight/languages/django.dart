@@ -15,7 +15,7 @@ final django = Mode(
       ]),
     },
     aliases: ["jinja"],
-    case_insensitive: true,
+    caseInsensitive: true,
     subLanguage: ["xml"],
     contains: [
       Mode(

@@ -11,14 +11,16 @@ class MergeRequest {
   final String? title;
   final String? description;
   final String? state; // MergeRequestState
-  final Author? mergedBy;
+  final Author? mergeUser;
   final DateTime? mergedAt;
+  final DateTime? preparedAt;
   final Author? closedBy;
   final DateTime? closedAt;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final String? targetBranch;
   final String? sourceBranch;
+  final int? userNotesCount;
   final int? upvotes;
   final int? downvotes;
   final Author? author;
@@ -36,7 +38,6 @@ class MergeRequest {
   final String? sha;
   final String? mergeCommitSha;
   final String? squashCommitSha;
-  final int? userNotesCount;
   final bool? discussionLocked;
   final bool? shouldRemoveSourceBranch;
   final bool? forceRemoveSourceBranch;
@@ -55,8 +56,9 @@ class MergeRequest {
     this.title,
     this.description,
     this.state,
-    this.mergedBy,
+    this.mergeUser,
     this.mergedAt,
+    this.preparedAt,
     this.closedBy,
     this.closedAt,
     this.createdAt,

@@ -15,15 +15,15 @@ class Highlight {
   }
 
   List<Mode> _expandMode(Mode mode) {
-    if (mode.variants != null && mode.cached_variants == null) {
-      mode.cached_variants = mode.variants!.map((variant) {
+    if (mode.variants != null && mode.cachedVariants == null) {
+      mode.cachedVariants = mode.variants!.map((variant) {
         if (variant!.ref != null) {
           variant = _languageMode!.refs![variant.ref!];
         }
         return Mode.inherit(mode, variant)..variants = null;
       }).toList();
     }
-    return mode.cached_variants ??
+    return mode.cachedVariants ??
         (mode.endsWithParent == true ? [Mode.inherit(mode)] : [mode]);
   }
 
@@ -31,7 +31,7 @@ class Highlight {
     return RegExp(
       value,
       multiLine: true,
-      caseSensitive: _languageMode!.case_insensitive != true,
+      caseSensitive: _languageMode!.caseInsensitive != true,
     );
   }
 
@@ -55,7 +55,7 @@ class Highlight {
         ret += substring(re, 0, match.start);
         re = substring(re, match.start + match[0]!.length);
         if (match[0]![0] == '\\' && match[1] != null) {
-          ret += '\\' + (int.parse(match[1]!) + offset).toString();
+          ret += '\\${int.parse(match[1]!) + offset}';
         } else {
           ret += match[0]!;
           if (match[0] == '(') {
@@ -76,8 +76,8 @@ class Highlight {
     if (mode.keywords != null) {
       var compiledKeywords = {}.cast<String, dynamic>();
 
-      void _flatten(String className, String? str) {
-        if (_languageMode!.case_insensitive == true) {
+      void flatten(String className, String? str) {
+        if (_languageMode!.caseInsensitive == true) {
           str = str!.toLowerCase();
         }
         str!.split(' ').forEach((kw) {
@@ -92,9 +92,9 @@ class Highlight {
       }
 
       if (mode.keywords is String) {
-        _flatten('keyword', mode.keywords);
+        flatten('keyword', mode.keywords);
       } else if (mode.keywords is Map<String, String>) {
-        (mode.keywords as Map<String, String>).forEach(_flatten);
+        (mode.keywords as Map<String, String>).forEach(flatten);
       }
       mode.keywords = compiledKeywords;
     }
@@ -103,25 +103,25 @@ class Highlight {
 
     if (parent != null) {
       if (mode.beginKeywords != null) {
-        mode.begin = '\\b(' + mode.beginKeywords!.split(' ').join('|') + ')\\b';
+        mode.begin = '\\b(${mode.beginKeywords!.split(' ').join('|')})\\b';
       }
       mode.begin ??= r'\B|\b';
       mode.beginRe = _langRe(mode.begin!);
       if (mode.endSameAsBegin == true) mode.end = mode.begin;
       if (mode.end == null && mode.endsWithParent != true) mode.end = r'\B|\b';
       if (mode.end != null) mode.endRe = _langRe(mode.end!);
-      mode.terminator_end = mode.end ?? '';
-      if (mode.endsWithParent == true && parent.terminator_end != null) {
-        mode.terminator_end = mode.terminator_end! +
+      mode.terminatorEnd = mode.end ?? '';
+      if (mode.endsWithParent == true && parent.terminatorEnd != null) {
+        mode.terminatorEnd = mode.terminatorEnd! +
             (mode.end != null ? '|' : '') +
-            parent.terminator_end!;
+            parent.terminatorEnd!;
       }
     }
     if (mode.illegal != null) mode.illegalRe = _langRe(mode.illegal!);
     mode.relevance ??= 1;
     mode.contains ??= [];
 
-    Mode? _pointToRef(Mode? m) {
+    Mode? pointToRef(Mode? m) {
       if (m!.ref != null) {
         return _languageMode!.refs![m.ref!];
       }
@@ -129,24 +129,24 @@ class Highlight {
     }
 
     if (mode.contains != null) {
-      mode.contains = mode.contains!.map(_pointToRef).toList();
+      mode.contains = mode.contains!.map(pointToRef).toList();
     }
     if (mode.variants != null) {
-      mode.variants = mode.variants!.map(_pointToRef).toList();
+      mode.variants = mode.variants!.map(pointToRef).toList();
     }
     if (mode.starts != null) {
-      mode.starts = _pointToRef(mode.starts);
+      mode.starts = pointToRef(mode.starts);
     }
 
     var contains = [].cast<Mode>();
-    mode.contains!.forEach((c) {
+    for (var c in mode.contains!) {
       contains.addAll(_expandMode(c!.self == true ? mode : c));
-    });
+    }
 
     mode.contains = contains;
-    mode.contains!.forEach((c) {
+    for (var c in mode.contains!) {
       _compileMode(c!, mode);
-    });
+    }
 
     if (mode.starts != null) {
       _compileMode(mode.starts!, parent);
@@ -154,10 +154,10 @@ class Highlight {
 
     var terminators = (mode.contains!.map((c) {
       return c!.beginKeywords != null
-          ? '\\.?(?:' + c.begin! + ')\\.?'
+          ? '\\.?(?:${c.begin!})\\.?'
           : c.begin;
     }).toList()
-          ..addAll([mode.terminator_end, mode.illegal]))
+          ..addAll([mode.terminatorEnd, mode.illegal]))
         .where((x) => x != null && x.isNotEmpty)
         .toList();
 
@@ -187,7 +187,7 @@ class Highlight {
   }
 
   RegExp _escapeRe(String value) {
-    return RegExp(value.replaceAll(RegExp(r'[-\/\\^$*+?.()|[\]{}]'), r'\$&'),
+    return RegExp(value.replaceAll(RegExp(r'[-/\\^$*+?.()|[\]{}]'), r'\$&'),
         multiLine: true);
   }
 
@@ -219,7 +219,7 @@ class Highlight {
   }
 
   void _addNodes(List<Node> nodes, List<Node>? result) {
-    nodes.forEach((node) {
+    for (var node in nodes) {
       if (result!.isEmpty ||
           result.last.children != null ||
           node.className != null) {
@@ -227,7 +227,7 @@ class Highlight {
       } else {
         result.last.value = result.last.value! + node.value!;
       }
-    });
+    }
   }
 
   void _addText(String? text, List<Node> result) {
@@ -272,11 +272,11 @@ class Highlight {
     // }
 
     // FIXME: Move inside highlight to use lang reference
-    dynamic _keywordMatch(Mode mode, RegExpMatch match) {
-      var match_str = langMode.case_insensitive == true
+    dynamic keywordMatch(Mode mode, RegExpMatch match) {
+      var matchStr = langMode.caseInsensitive == true
           ? match[0]!.toLowerCase()
           : match[0];
-      return mode.keywords[match_str];
+      return mode.keywords[matchStr];
     }
 
     _compileMode(_languageMode!);
@@ -287,7 +287,7 @@ class Highlight {
     List<Node>? currentChildren = children;
     var stack = [].cast<List<Node>?>();
 
-    void _pop() {
+    void pop() {
       currentChildren = stack.isEmpty ? children : stack.removeLast();
     }
 
@@ -299,14 +299,14 @@ class Highlight {
         currentChildren = currentChildren!.last.children;
       }
     }
-    var mode_buffer = '';
+    var modeBuffer = '';
     var relevance = 0;
 
-    bool _isIllegal(String lexeme, Mode? mode) {
+    bool isIllegal(String lexeme, Mode? mode) {
       return !ignoreIllegals && _testRe(mode!.illegalRe, lexeme);
     }
 
-    void _startNewMode(Mode mode) {
+    void startNewMode(Mode mode) {
       if (_classNameExists(mode.className)) {
         currentChildren!.add(Node(className: mode.className, children: []));
         stack.add(currentChildren);
@@ -315,48 +315,48 @@ class Highlight {
       top = Mode.inherit(mode)..parent = top;
     }
 
-    List<Node> _processKeywords() {
-      if (top!.keywords == null) return [Node(value: mode_buffer)];
+    List<Node> processKeywords() {
+      if (top!.keywords == null) return [Node(value: modeBuffer)];
 
-      var keyword_match;
+      var keywordMatch;
       RegExpMatch? match;
       var result = [].cast<Node>();
-      var last_index = 0;
+      var lastIndex = 0;
 
-      match = top!.lexemesRe!.firstMatch(mode_buffer);
+      match = top!.lexemesRe!.firstMatch(modeBuffer);
 
       while (match != null) {
-        _addText(substring(mode_buffer, last_index, match.start), result);
-        keyword_match = _keywordMatch(top!, match);
-        if (keyword_match != null) {
-          relevance += keyword_match[1] as int;
+        _addText(substring(modeBuffer, lastIndex, match.start), result);
+        keywordMatch = keywordMatch(top!, match);
+        if (keywordMatch != null) {
+          relevance += keywordMatch[1] as int;
           _addNodes(
-              _buildSpan(keyword_match[0], [Node(value: match[0])])!, result);
+              _buildSpan(keywordMatch[0], [Node(value: match[0])])!, result);
         } else {
           _addText(match[0], result);
         }
-        last_index = match.start + match[0]!.length;
+        lastIndex = match.start + match[0]!.length;
         match = top!.lexemesRe!
-            .allMatches(mode_buffer, last_index)
+            .allMatches(modeBuffer, lastIndex)
             .firstWhereOrNull((m) => true);
       }
 
-      _addText(substring(mode_buffer, last_index), result);
+      _addText(substring(modeBuffer, lastIndex), result);
       return result;
     }
 
-    List<Node>? _processSubLanguage() {
+    List<Node>? processSubLanguage() {
       var explicit = top!.subLanguage!.length == 1;
       if (explicit && _languages[top!.subLanguage!.first] == null) {
-        return [Node(value: mode_buffer)];
+        return [Node(value: modeBuffer)];
       }
 
       var result = explicit
-          ? _parse(mode_buffer,
+          ? _parse(modeBuffer,
               language: top!.subLanguage!.first,
               ignoreIllegals: true,
               continuation: continuations[top!.subLanguage!.first])
-          : _parseAuto(mode_buffer,
+          : _parseAuto(modeBuffer,
               languageSubset:
                   top!.subLanguage!.isNotEmpty ? top!.subLanguage : null);
 
@@ -369,82 +369,78 @@ class Highlight {
       return _buildSpan(result.language, result.nodes, noPrefix: true);
     }
 
-    void _processBuffer() {
+    void processBuffer() {
       _addNodes(
           top!.subLanguage != null
-              ? _processSubLanguage()!
-              : _processKeywords(),
+              ? processSubLanguage()!
+              : processKeywords(),
           currentChildren);
-      mode_buffer = '';
+      modeBuffer = '';
     }
 
-    int _processLexeme(String buffer, [String? lexeme]) {
-      mode_buffer += buffer;
+    int processLexeme(String buffer, [String? lexeme]) {
+      modeBuffer += buffer;
 
       if (lexeme == null) {
-        _processBuffer();
+        processBuffer();
         return 0;
       }
 
-      var new_mode = _subMode(lexeme, top!);
+      var newMode = _subMode(lexeme, top!);
 
-      if (new_mode != null) {
-        if (new_mode.skip == true) {
-          mode_buffer += lexeme;
+      if (newMode != null) {
+        if (newMode.skip == true) {
+          modeBuffer += lexeme;
         } else {
-          if (new_mode.excludeBegin == true) {
-            mode_buffer += lexeme;
+          if (newMode.excludeBegin == true) {
+            modeBuffer += lexeme;
           }
-          _processBuffer();
-          if (new_mode.returnBegin != true && new_mode.excludeBegin != true) {
-            mode_buffer = lexeme;
+          processBuffer();
+          if (newMode.returnBegin != true && newMode.excludeBegin != true) {
+            modeBuffer = lexeme;
           }
         }
-        _startNewMode(new_mode);
-        return new_mode.returnBegin == true ? 0 : lexeme.length;
+        startNewMode(newMode);
+        return newMode.returnBegin == true ? 0 : lexeme.length;
       }
 
-      var end_mode = _endOfMode(top!, lexeme);
-      if (end_mode != null) {
+      var endMode = _endOfMode(top!, lexeme);
+      if (endMode != null) {
         var origin = top!;
         if (origin.skip == true) {
-          mode_buffer += lexeme;
+          modeBuffer += lexeme;
         } else {
           if (!(origin.returnEnd == true || origin.excludeEnd == true)) {
-            mode_buffer += lexeme;
+            modeBuffer += lexeme;
           }
-          _processBuffer();
+          processBuffer();
           if (origin.excludeEnd == true) {
-            mode_buffer = lexeme;
+            modeBuffer = lexeme;
           }
         }
         do {
           if (_classNameExists(top!.className)) {
-            _pop();
+            pop();
           }
           if (top!.skip != true && top!.subLanguage == null) {
             relevance += top!.relevance!;
           }
           top = top!.parent;
-        } while (top != end_mode.parent);
-        if (end_mode.starts != null) {
-          if (end_mode.endSameAsBegin == true) {
-            end_mode.starts!.endRe = end_mode.endRe;
+        } while (top != endMode.parent);
+        if (endMode.starts != null) {
+          if (endMode.endSameAsBegin == true) {
+            endMode.starts!.endRe = endMode.endRe;
           }
-          _startNewMode(end_mode.starts!);
+          startNewMode(endMode.starts!);
         }
         return origin.returnEnd == true ? 0 : lexeme.length;
       }
 
-      if (_isIllegal(lexeme, top)) {
-        throw 'Illegal lexeme "' +
-            lexeme +
-            '" for mode "' +
-            (top!.className ?? '<unnamed>') +
-            '"';
+      if (isIllegal(lexeme, top)) {
+        throw 'Illegal lexeme "$lexeme" for mode "${top!.className ?? '<unnamed>'}"';
       }
 
-      mode_buffer += lexeme;
+      modeBuffer += lexeme;
       return lexeme.isEmpty ? 1 : lexeme.length;
     }
 
@@ -465,13 +461,13 @@ class Highlight {
         // print(result);
         // print('');
 
-        count = _processLexeme(substring(source, index, match.start), match[0]);
+        count = processLexeme(substring(source, index, match.start), match[0]);
         index = count + match.start;
       }
-      _processLexeme(substring(source, index));
+      processLexeme(substring(source, index));
       for (current = top; current!.parent != null; current = current.parent) {
         if (_classNameExists(current.className)) {
-          _pop();
+          pop();
         }
       }
       // print(relevance);
@@ -500,9 +496,9 @@ class Highlight {
   void registerLanguage(String name, Mode languageMode) {
     _languages[name] = languageMode;
     if (languageMode.aliases != null) {
-      languageMode.aliases!.forEach((a) {
+      for (var a in languageMode.aliases!) {
         _aliases[a] = name;
-      });
+      }
     }
   }
 
@@ -519,9 +515,9 @@ class Highlight {
     );
     var secondBest = result;
     // languageSubset = ['json'];
-    languageSubset.forEach((language) {
+    for (var language in languageSubset) {
       var lang = _getLanguage(language);
-      if (lang == null || lang.disableAutodetect == true) return;
+      if (lang == null || lang.disableAutodetect == true) continue;
 
       var current = _parse(source, language: language, ignoreIllegals: false);
       current.language = language;
@@ -532,7 +528,7 @@ class Highlight {
         secondBest = result;
         result = current;
       }
-    });
+    }
     if (secondBest.language != null) {
       result.secondBest = secondBest;
     }

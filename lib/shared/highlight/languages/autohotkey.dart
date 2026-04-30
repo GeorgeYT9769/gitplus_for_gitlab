@@ -7,7 +7,7 @@ final autohotkey = Mode(
     refs: {
       '~contains~0': Mode(begin: "`[\\s\\S]"),
     },
-    case_insensitive: true,
+    caseInsensitive: true,
     aliases: ["ahk"],
     keywords: {
       "keyword":
