@@ -49,7 +49,7 @@ class AppDrawer extends StatelessWidget {
                               ),
                             ),
                             placeholder: (context, url) =>
-                                const CircularProgressIndicator(),
+                                const CircularProgressIndicator(year2023: false,),
                             errorWidget: (context, url, error) =>
                                 const Icon(Icons.person),
                           ),

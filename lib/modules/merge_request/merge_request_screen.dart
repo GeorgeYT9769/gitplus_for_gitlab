@@ -347,7 +347,7 @@ class _AssigneeList extends StatelessWidget {
                             color: Colors.transparent,
                             imageUrl: item.assignees![0].avatarUrl!,
                             placeholder: (context, url) =>
-                                const CircularProgressIndicator(),
+                                const CircularProgressIndicator(year2023: false,),
                             httpHeaders: {
                               'PRIVATE-TOKEN':
                                   Get.find<SecureStorage>().getToken()
@@ -401,7 +401,7 @@ class _AssigneeList extends StatelessWidget {
                                   color: Colors.transparent,
                                   imageUrl: assignee.avatarUrl!,
                                   placeholder: (context, url) =>
-                                      const CircularProgressIndicator(),
+                                      const CircularProgressIndicator(year2023: false,),
                                   httpHeaders: {
                                     'PRIVATE-TOKEN':
                                         Get.find<SecureStorage>().getToken()

@@ -182,7 +182,7 @@ class TimelineItem extends StatelessWidget {
                           color: Colors.transparent,
                           imageUrl: note.author!.avatarUrl!,
                           placeholder: (context, url) =>
-                              const CircularProgressIndicator(),
+                              const CircularProgressIndicator(year2023: false,),
                           httpHeaders: {
                             'PRIVATE-TOKEN':
                                 Get.find<SecureStorage>().getToken()

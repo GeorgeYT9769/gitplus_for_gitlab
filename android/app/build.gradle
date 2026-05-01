@@ -31,7 +31,7 @@ if (flutterVersionName == null) {
 android {
     namespace "com.gitlabplus.app"
     compileSdkVersion flutter.compileSdkVersion
-    ndkVersion "29.0.13846066"
+    ndkVersion "30.0.14904198"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_21
@@ -77,8 +77,8 @@ android {
             storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
             storePassword keystoreProperties['storePassword']
         }
-   }
-   
+    }
+
     buildTypes {
         release {
             signingConfig signingConfigs.release

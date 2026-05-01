@@ -26,43 +26,59 @@ class AppHighlightView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final numLines = '\n'.allMatches(content ?? '').length + 1;
-
-    final supportedLanguages = ['dart', 'python', 'javascript', 'plaintext']; // etc.
-    final safeLang = supportedLanguages.contains(lang) ? lang : 'plaintext';
+    final themeData = themeMap[theme] ?? {};
+    final style = TextStyle(
+      fontFamily: 'SourceCodePro',
+      fontSize: fontSize,
+      height: 1.5,
+      leadingDistribution: TextLeadingDistribution.even,
+    );
 
     return content == null || content!.isEmpty
         ? Container()
-        : Row(
-            children: [
-              if (lineNumbers!) const SizedBox(width: 10),
-              if (lineNumbers!)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    for (var i = 1; i < numLines + 1; i++)
-                      Text(i.toString(),
-                          style: TextStyle(
-                              fontFamily: 'SourceCodePro',
-                              fontSize: fontSize,
-                              color: Get.theme.hintColor)),
-                  ],
+        : Container(
+            color: themeData['root']?.backgroundColor ?? const Color(0xffffffff),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (lineNumbers!)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 15, left: 10),
+                    child: Text(
+                      List.generate(numLines, (i) => (i + 1).toString())
+                          .join('\n'),
+                      textAlign: TextAlign.right,
+                      textHeightBehavior: const TextHeightBehavior(
+                        applyHeightToFirstAscent: false,
+                        applyHeightToLastDescent: false,
+                      ),
+                      strutStyle: StrutStyle(
+                        fontFamily: style.fontFamily,
+                        fontSize: style.fontSize,
+                        height: style.height,
+                        leadingDistribution: style.leadingDistribution,
+                        forceStrutHeight: true,
+                      ),
+                      style: style.copyWith(
+                          color: Get.theme.hintColor.withValues(alpha: 0.5)),
+                    ),
+                  ),
+                GestureDetector(
+                  onDoubleTap: () {
+                    Clipboard.setData(ClipboardData(text: content as String));
+                    CommonWidget.toast('Copied to Clipboard');
+                  },
+                  child: HighlightView(
+                    content!,
+                    language: lang,
+                    theme: themeData,
+                    padding: const EdgeInsets.all(15),
+                    textStyle: style,
+                    tabSize: 4,
+                  ),
                 ),
-              GestureDetector(
-                onDoubleTap: () {
-                  Clipboard.setData(ClipboardData(text: content as String));
-                  CommonWidget.toast('Copied to Clipboard');
-                },
-                child: HighlightView(
-                  content!,
-                  language: safeLang,
-                  theme: themeMap[theme] ?? {},
-                  padding: const EdgeInsets.all(15),
-                  textStyle: TextStyle(
-                      fontSize: fontSize, fontFamily: 'SourceCodePro'),
-                  tabSize: 4,
-                ),
-              ),
-            ],
+              ],
+            ),
           );
   }
 }

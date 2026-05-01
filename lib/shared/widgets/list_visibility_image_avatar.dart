@@ -29,7 +29,7 @@ class ListVisibilityImageAvatar extends StatelessWidget {
         CircleAvatar(
           backgroundColor: Colors.transparent,
           child: CachedNetworkImage(
-            placeholder: (context, url) => const CircularProgressIndicator(),
+            placeholder: (context, url) => const CircularProgressIndicator(year2023: false,),
             color: Colors.transparent,
             imageUrl: avatarUrl,
             httpHeaders: {'PRIVATE-TOKEN': Get.find<SecureStorage>().getToken()},

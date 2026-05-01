@@ -318,7 +318,7 @@ class Highlight {
     List<Node> processKeywords() {
       if (top!.keywords == null) return [Node(value: modeBuffer)];
 
-      var keywordMatch;
+      dynamic kwMatch;
       RegExpMatch? match;
       var result = [].cast<Node>();
       var lastIndex = 0;
@@ -327,11 +327,10 @@ class Highlight {
 
       while (match != null) {
         _addText(substring(modeBuffer, lastIndex, match.start), result);
-        keywordMatch = keywordMatch(top!, match);
-        if (keywordMatch != null) {
-          relevance += keywordMatch[1] as int;
-          _addNodes(
-              _buildSpan(keywordMatch[0], [Node(value: match[0])])!, result);
+        kwMatch = keywordMatch(top!, match);
+        if (kwMatch != null) {
+          relevance += kwMatch[1] as int;
+          _addNodes(_buildSpan(kwMatch[0], [Node(value: match[0])])!, result);
         } else {
           _addText(match[0], result);
         }

@@ -11,7 +11,7 @@ class AccountsScreen extends GetView<AccountsController> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => _buildWidget(context));
+    return _buildWidget(context);
   }
 
   Widget _buildWidget(context) {

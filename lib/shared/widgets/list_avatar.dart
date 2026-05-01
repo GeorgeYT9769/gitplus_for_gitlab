@@ -20,7 +20,7 @@ class ListAvatar extends StatelessWidget {
       child: CachedNetworkImage(
         color: Colors.transparent,
         imageUrl: avatarUrl,
-        placeholder: (context, url) => const CircularProgressIndicator(),
+        placeholder: (context, url) => const CircularProgressIndicator(year2023: false,),
         httpHeaders: {'PRIVATE-TOKEN': Get.find<SecureStorage>().getToken()},
         imageBuilder: (context, imageProvider) => Container(
           decoration: BoxDecoration(

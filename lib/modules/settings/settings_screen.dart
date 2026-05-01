@@ -124,15 +124,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: AppHighlightView(
-                content: '''#include <iostream>
-using namespace std;
-
-int main() {
-  // This is a comment
-  cout << "Hello World!";
-  return 0;
-}''',
-                lang: 'cpp',
+                content:
+'''
+void main()
+{
+    var name = "John";
+    print(name);
+}
+''',
+                lang: 'dart',
                 fontSize: _controller.fontSize.value,
                 theme: code,
                 lineNumbers: _controller.spStorage.getShowLineNumbers().value,
@@ -173,7 +173,7 @@ int main() {
               const EdgeInsets.only(left: 15, top: 15, bottom: 5, right: 15),
           child: Row(
             children: [
-              const Text('Font size', style: TextStyle(fontSize: 16)),
+              const Text('Font size:', style: TextStyle(fontSize: 16)),
               const SizedBox(width: 5),
               Text(_controller.fontSize.value.toInt().toString(),
                   style: const TextStyle(fontSize: 16)),
@@ -182,6 +182,7 @@ int main() {
         ),
         Slider(
           value: _controller.fontSize.value,
+          year2023: false,
           onChangeEnd: (value) {
             _controller.onFontSizeChangedEnd(value);
           },

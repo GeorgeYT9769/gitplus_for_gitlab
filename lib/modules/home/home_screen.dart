@@ -315,19 +315,27 @@ class _HomeScreenState extends State<HomeScreen> {
         repository: _controller.repository,
       ),
       body: _buildContent(_controller.currentTab.value),
-      bottomNavigationBar: BottomNavigationBar(
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _controller.getCurrentIndex(_controller.currentTab.value),
-        elevation: 10,
-        items: [
-          _buildNavigationBarItem("Projects", MaterialCommunityIcons.git),
-          _buildNavigationBarItem("Events", Icons.event),
-          _buildNavigationBarItem("Issues", Octicons.issue_opened),
-          _buildNavigationBarItem("MR", Octicons.git_merge),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _controller.getCurrentIndex(_controller.currentTab.value),
+        onDestinationSelected: (index) => _controller.switchTab(index),
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(MaterialCommunityIcons.git),
+            label: "Projects",
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.event),
+            label: "Events",
+          ),
+          NavigationDestination(
+            icon: Icon(Octicons.issue_opened),
+            label: "Issues",
+          ),
+          NavigationDestination(
+            icon: Icon(Octicons.git_merge),
+            label: "MR",
+          ),
         ],
-        onTap: (index) => _controller.switchTab(index),
       ),
     );
   }
@@ -345,12 +353,5 @@ class _HomeScreenState extends State<HomeScreen> {
       default:
         return _controller.projectsTab;
     }
-  }
-
-  BottomNavigationBarItem _buildNavigationBarItem(String label, IconData icon) {
-    return BottomNavigationBarItem(
-      icon: Icon(icon),
-      label: label,
-    );
   }
 }

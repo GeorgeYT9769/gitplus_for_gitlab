@@ -82,20 +82,33 @@ class HighlightView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var textStyle = TextStyle(
+    var style = TextStyle(
       fontFamily: _defaultFontFamily,
       color: theme[_rootKey]?.color ?? _defaultFontColor,
     );
-    textStyle = textStyle.merge(textStyle);
+    if (textStyle != null) {
+      style = style.merge(textStyle);
+    }
 
     return Container(
       color: theme[_rootKey]?.backgroundColor ?? _defaultBackgroundColor,
       padding: padding,
-      child: RichText(
-        text: TextSpan(
-          style: textStyle,
+      child: Text.rich(
+        TextSpan(
+          style: style,
           children:
               _convert(highlight.parse(source, language: language).nodes!),
+        ),
+        textHeightBehavior: const TextHeightBehavior(
+          applyHeightToFirstAscent: false,
+          applyHeightToLastDescent: false,
+        ),
+        strutStyle: StrutStyle(
+          fontFamily: style.fontFamily,
+          fontSize: style.fontSize,
+          height: style.height,
+          leadingDistribution: style.leadingDistribution,
+          forceStrutHeight: true,
         ),
       ),
     );
