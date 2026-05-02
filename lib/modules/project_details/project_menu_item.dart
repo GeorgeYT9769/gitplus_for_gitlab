@@ -22,6 +22,7 @@ class ProjectMenuItemWidget extends StatelessWidget {
       // shape: const RoundedRectangleBorder(
       //   borderRadius: BorderRadius.all(Radius.circular(5)),
       // ),
+      elevation: 10,
     );
 
     return ElevatedButton(
@@ -36,13 +37,15 @@ class ProjectMenuItemWidget extends StatelessWidget {
             color: Theme.of(context).colorScheme.onSurface,
           ),
           const SizedBox(height: 5),
-          Text(text,
+          Text(
+              text,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
                 color: Theme.of(context).colorScheme.onSurface,
-              )),
+              )
+          ),
         ],
       ),
     );

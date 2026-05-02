@@ -342,7 +342,7 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
               ),
             ),
 
-            if (controller.readmeConent.isNotEmpty)
+            if (controller.readmeContent.isNotEmpty)
               SafeArea(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
@@ -368,11 +368,11 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                   ),
                 ),
               ),
-            if (controller.readmeConent.isNotEmpty)
+            if (controller.readmeContent.isNotEmpty)
               SafeArea(
                 child: Padding(
                   padding: const EdgeInsets.all(15.0),
-                  child: AppMarkdown(content: controller.readmeConent.string),
+                  child: AppMarkdown(content: controller.readmeContent.string),
                 ),
               ),
             const SizedBox(height: 15),

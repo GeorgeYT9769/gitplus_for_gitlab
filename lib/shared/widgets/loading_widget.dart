@@ -12,7 +12,7 @@ class LoadingWidget extends StatelessWidget {
     return Stack(children: [
       Center(
         child: ExpressiveLoadingIndicator(
-          color: Theme.of(context).colorScheme.tertiary,
+          color: Theme.of(context).colorScheme.primary,
           constraints: const BoxConstraints(
             minWidth: 64.0,
             minHeight: 64.0,

@@ -86,6 +86,20 @@ class AddMembersScreen extends GetView<AddMembersController> {
                                     ),
                                   ),
                                 ),
+                                errorWidget: (context, url, error) => Row(
+                                  children: [
+                                    Icon(Icons.error),
+                                    Text(
+                                        'Failed to load image.',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600,
+                                          color: Theme.of(context).colorScheme.onSurface,
+                                        )
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                             trailing: IconButton(
@@ -197,6 +211,20 @@ Widget _listWidget(BuildContext context, AddMembersController controller) {
                               image: imageProvider,
                             ),
                           ),
+                        ),
+                        errorWidget: (context, url, error) => Row(
+                          children: [
+                            Icon(Icons.error),
+                            Text(
+                                'Failed to load image.',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: Theme.of(context).colorScheme.onSurface,
+                                )
+                            ),
+                          ],
                         ),
                       ),
                     ),

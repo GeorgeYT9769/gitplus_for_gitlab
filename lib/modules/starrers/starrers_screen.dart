@@ -46,6 +46,20 @@ class StarrersScreen extends GetView<StarrersController> {
                                 ),
                               ),
                             ),
+                            errorWidget: (context, url, error) => Row(
+                              children: [
+                                Icon(Icons.error),
+                                Text(
+                                    'Failed to load image.',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      color: Theme.of(context).colorScheme.onSurface,
+                                    )
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         title: Text(item.user!.name ?? ''),

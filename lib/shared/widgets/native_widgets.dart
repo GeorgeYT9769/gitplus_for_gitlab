@@ -22,7 +22,7 @@ class AppSwitch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Platform.isAndroid
-        ? Switch(value: value, onChanged: onChanged)
+        ? Switch(value: value, onChanged: onChanged, thumbIcon: WidgetStateProperty.all(Icon(value ? Icons.check : Icons.close)))
         : CupertinoSwitch(value: value, onChanged: onChanged);
   }
 }

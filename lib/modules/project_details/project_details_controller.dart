@@ -31,7 +31,7 @@ class ProjectDetailsController extends GetxController
   late PagingResponse<Starrer> _starrersRes;
 
   var readmeFilename = "".obs;
-  var readmeConent = "".obs;
+  var readmeContent = "".obs;
   var starred = false.obs;
   var canModifyOrDelete = false.obs;
 
@@ -142,7 +142,7 @@ class ProjectDetailsController extends GetxController
       var md = await apiRepository.getFile(repository.project.value.id ?? -1,
           f ?? "", FileRequest(ref: repository.ref.string));
 
-      readmeConent.value = utf8.decode(base64.decode(md!.content ?? ""));
+      readmeContent.value = utf8.decode(base64.decode(md!.content ?? ""));
       readmeFilename.value = md.fileName ?? "README.md";
     });
   }

@@ -160,7 +160,7 @@ class MergeRequestScreen extends GetView<MergeRequestController> {
                           if (item.mergeUser != null)
                             Row(
                               children: [
-                                const Text('Merged by'),
+                                const Text('Merged by:'),
                                 const SizedBox(width: 5),
                                 Flexible(
                                   child: ColorLabel(
@@ -174,7 +174,7 @@ class MergeRequestScreen extends GetView<MergeRequestController> {
                           if (item.sourceBranch != null)
                             Row(
                               children: [
-                                const Text('Source branch'),
+                                const Text('Source branch:'),
                                 const SizedBox(width: 5),
                                 Flexible(
                                   child: ColorLabel(
@@ -188,7 +188,7 @@ class MergeRequestScreen extends GetView<MergeRequestController> {
                           if (item.targetBranch != null)
                             Row(
                               children: [
-                                const Text('Target branch'),
+                                const Text('Target branch:'),
                                 const SizedBox(width: 5),
                                 Flexible(
                                   child: ColorLabel(
@@ -358,6 +358,20 @@ class _AssigneeList extends StatelessWidget {
                                 image: DecorationImage(image: imageProvider),
                               ),
                             ),
+                            errorWidget: (context, url, error) => Row(
+                              children: [
+                                Icon(Icons.error),
+                                Text(
+                                    'Failed to load image.',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      color: Theme.of(context).colorScheme.onSurface,
+                                    )
+                                ),
+                              ],
+                            ),
                           ),
                         )
                       : const CircleAvatar(child: Icon(Icons.person)),
@@ -413,6 +427,20 @@ class _AssigneeList extends StatelessWidget {
                                       image:
                                           DecorationImage(image: imageProvider),
                                     ),
+                                  ),
+                                  errorWidget: (context, url, error) => Row(
+                                    children: [
+                                      Icon(Icons.error),
+                                      Text(
+                                          'Failed to load image.',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w600,
+                                            color: Theme.of(context).colorScheme.onSurface,
+                                          )
+                                      ),
+                                    ],
                                   ),
                                 ),
                               )
