@@ -130,7 +130,7 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
           statusString = "Manual";
           break;
         default:
-          statusString = "";
+          statusString = "Unknown";
           break;
       }
     }
@@ -341,7 +341,7 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                 ]),
               ),
             ),
-
+            SizedBox(height: 30),
             if (controller.readmeContent.isNotEmpty)
               SafeArea(
                 child: Padding(
@@ -352,12 +352,10 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                         child: Row(
                           children: [
                             FileIcon(controller.readmeFilename.value, size: 30),
-                            const SizedBox(width: 15),
+                            const SizedBox(width: 5),
                             Flexible(
                               child: Text(
                                 controller.readmeFilename.value,
-                                style: const TextStyle(
-                                    fontFamily: 'SourceCodePro'),
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),

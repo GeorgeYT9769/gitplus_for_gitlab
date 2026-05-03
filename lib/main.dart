@@ -4,6 +4,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:gitplus_for_gitlab/shared/shared.dart';
 import 'package:get/get.dart';
+import 'package:dynamic_color/dynamic_color.dart';
 
 import 'app_binding.dart';
 import 'di.dart';
@@ -42,19 +43,37 @@ class App extends StatelessWidget {
           initilized = true;
           return MaterialApp(home: Container());
         } else {
-          return GetMaterialApp(
-            debugShowCheckedModeBanner: false,
-            enableLog: false,
-            initialRoute: auth ? Routes.auth : Routes.home,
-            getPages: AppPages.routes,
-            initialBinding: AppBinding(),
-            smartManagement: SmartManagement.keepFactory,
-            theme: ThemeConfig.lightTheme,
-            darkTheme: ThemeConfig.darkTheme,
-            locale: TranslationService.locale,
-            fallbackLocale: TranslationService.fallbackLocale,
-            translations: TranslationService(),
-            builder: EasyLoading.init(),
+          final spStorage = Get.find<SPStorage>();
+          return DynamicColorBuilder(
+            builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
+              return Obx(() {
+                final useDynamicColor = spStorage.getUseDynamicColor().value;
+                final customSeedColor = Color(spStorage.getCustomColorSeed().value);
+                return GetMaterialApp(
+                  key: Key('app_${useDynamicColor}_${customSeedColor.toARGB32()}'),
+                  debugShowCheckedModeBanner: false,
+                  enableLog: false,
+                  initialRoute: auth ? Routes.auth : Routes.home,
+                  getPages: AppPages.routes,
+                  initialBinding: AppBinding(),
+                  smartManagement: SmartManagement.keepFactory,
+                  theme: ThemeConfig.lightTheme(
+                    dynamicColorScheme: lightDynamic,
+                    customSeedColor: customSeedColor,
+                    useDynamicColor: useDynamicColor,
+                  ),
+                  darkTheme: ThemeConfig.darkTheme(
+                    dynamicColorScheme: darkDynamic,
+                    customSeedColor: customSeedColor,
+                    useDynamicColor: useDynamicColor,
+                  ),
+                  locale: TranslationService.locale,
+                  fallbackLocale: TranslationService.fallbackLocale,
+                  translations: TranslationService(),
+                  builder: EasyLoading.init(),
+                );
+              });
+            },
           );
         }
       },

@@ -70,7 +70,15 @@ class SettingsController extends GetxController {
     spStorage.setFontSize(value.toInt());
   }
 
-  onResetDefault() async {
+  void onUseDynamicColorChanged(bool value) {
+    spStorage.setUseDynamicColor(value);
+  }
+
+  void onCustomColorSeedChanged(Color color) {
+    spStorage.setCustomColorSeed(color.toARGB32());
+  }
+
+  Future<void> onResetDefault() async {
     await spStorage.resetSettings();
     changeThemeValue(spStorage.getTheme().value);
     fontSize.value = spStorage.getFontSize().value.toDouble();

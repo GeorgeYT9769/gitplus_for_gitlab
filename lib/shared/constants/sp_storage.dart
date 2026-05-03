@@ -9,4 +9,6 @@ class SPStorageConstants {
   static const String mergeRequestFilterState = 'merge_request_filter_state';
   static const String issuesFilterScope = 'issues_filter_scope';
   static const String issuesFilterState = 'issues_filter_state';
+  static const String useDynamicColor = 'use_dynamic_color';
+  static const String customColorSeed = 'custom_color_seed';
 }

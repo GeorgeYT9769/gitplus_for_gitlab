@@ -8,9 +8,15 @@ class EmptyWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(children: [
       Center(
-        child: Text(
-          'Empty',
-          style: TextStyle(color: Get.theme.hintColor, fontSize: 18),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.question_mark, color: Get.theme.hintColor, size: 100),
+            Text(
+              'Empty',
+              style: TextStyle(color: Get.theme.hintColor, fontSize: 35),
+            ),
+          ],
         ),
       ),
       ListView()

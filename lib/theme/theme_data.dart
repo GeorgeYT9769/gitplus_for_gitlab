@@ -1,51 +1,60 @@
 import 'package:flutter/material.dart';
-import 'package:gitplus_for_gitlab/shared/shared.dart';
+import 'package:dynamic_color/dynamic_color.dart';
 
 class ThemeConfig with ChangeNotifier {
   static ThemeData createTheme({
     required Brightness brightness,
-    required Color background,
-    required Color secondary,
-    required Color chipSelectedColor,
-    Color? appBarColor,
-    Color? iconColor,
+    ColorScheme? dynamicColorScheme,
+    required Color customSeedColor,
+    required bool useDynamicColor,
   }) {
+    ColorScheme colorScheme;
+    if (useDynamicColor) {
+      if (dynamicColorScheme != null) {
+        colorScheme = dynamicColorScheme.harmonized();
+      } else {
+        // Fallback to default seed if dynamic is requested but unavailable
+        colorScheme = ColorScheme.fromSeed(
+          seedColor: Colors.lightBlue,
+          brightness: brightness,
+        );
+      }
+    } else {
+      colorScheme = ColorScheme.fromSeed(
+        seedColor: customSeedColor,
+        brightness: brightness,
+      );
+    }
+
     return ThemeData(
+      useMaterial3: true,
       brightness: brightness,
-      appBarTheme: AppBarTheme(centerTitle: true, backgroundColor: appBarColor),
-      bottomNavigationBarTheme:
-          BottomNavigationBarThemeData(backgroundColor: background),
-/*      colorScheme: ColorScheme.fromSwatch(
-              brightness: brightness,
-              backgroundColor: background)
-          .copyWith(secondary: secondary, primary: secondary),*/
-      colorScheme:
-          ColorScheme.fromSeed(seedColor: Colors.lightBlue, brightness: brightness),
+      colorScheme: colorScheme,
+      appBarTheme: const AppBarTheme(centerTitle: true),
       dividerTheme: const DividerThemeData(
         space: 0,
       ),
-      iconTheme: IconThemeData(color: iconColor ?? secondary),
       floatingActionButtonTheme:
-          const FloatingActionButtonThemeData(foregroundColor: Colors.white), tabBarTheme: TabBarThemeData(indicatorColor: Colors.white),
+          FloatingActionButtonThemeData(foregroundColor: colorScheme.onPrimary),
+      tabBarTheme: TabBarThemeData(indicatorColor: colorScheme.primary),
     );
   }
 
-  static ThemeData get lightTheme => createTheme(
+  static ThemeData lightTheme({ColorScheme? dynamicColorScheme, Color? customSeedColor, bool? useDynamicColor}) => 
+      createTheme(
         brightness: Brightness.light,
-        background: ColorConstants.lightScaffoldBackgroundColor,
-        secondary: Colors.lightBlue,
-        chipSelectedColor: Colors.lightGreen,
-        appBarColor: Colors.lightBlue,
-        iconColor: Colors.black,
+        dynamicColorScheme: dynamicColorScheme,
+        customSeedColor: customSeedColor ?? Colors.lightBlue,
+        useDynamicColor: useDynamicColor ?? true,
       );
 
-  static ThemeData get darkTheme => createTheme(
-      brightness: Brightness.dark,
-      background: ColorConstants.darkScaffoldBackgroundColor,
-      secondary: Colors.lightBlue,
-      chipSelectedColor: Colors.green,
-      appBarColor: Colors.lightBlue,
-      iconColor: Colors.white);
+  static ThemeData darkTheme({ColorScheme? dynamicColorScheme, Color? customSeedColor, bool? useDynamicColor}) => 
+      createTheme(
+        brightness: Brightness.dark,
+        dynamicColorScheme: dynamicColorScheme,
+        customSeedColor: customSeedColor ?? Colors.lightBlue,
+        useDynamicColor: useDynamicColor ?? true,
+      );
 
-  static switchTheme() {}
+  static void switchTheme() {}
 }

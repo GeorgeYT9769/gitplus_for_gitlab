@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:get/get.dart';
 import 'package:gitplus_for_gitlab/shared/shared.dart';
 
@@ -19,7 +20,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Obx(() => _buildWidget(context));
   }
 
-  Widget _buildWidget(context) {
+  Widget _buildWidget(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: CrossFade<String>(
@@ -32,7 +33,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildContent(context) {
+  Widget _buildContent(BuildContext context) {
     var code = "";
     code = Get.isDarkMode ? AppCodeTheme.dark : AppCodeTheme.light;
     // ignore: unused_local_variable
@@ -103,6 +104,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   );
                 },
               );
+            },
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.wallpaper),
+            title: const Text('Use wallpaper colors'),
+            subtitle: const Text('Use system dynamic color'),
+            trailing: AppSwitch(
+                value: _controller.spStorage.getUseDynamicColor().value,
+                onChanged: (value) {
+                  _controller.onUseDynamicColorChanged(value);
+                }),
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.palette),
+            title: const Text('Custom app color'),
+            subtitle: const Text('Choose a custom seed color'),
+            trailing: Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                color: Color(_controller.spStorage.getCustomColorSeed().value),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Theme.of(context).dividerColor,
+                  width: 1.5,
+                ),
+              ),
+            ),
+            enabled: !_controller.spStorage.getUseDynamicColor().value,
+            onTap: () {
+              _showColorPicker(context);
             },
           ),
           const Divider(),
@@ -202,6 +236,45 @@ void main()
       padding: const EdgeInsets.all(15),
       child: Text(text,
           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+    );
+  }
+
+  void _showColorPicker(BuildContext context) {
+    Color pickerColor = Color(_controller.spStorage.getCustomColorSeed().value);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Pick a color'.tr),
+          content: SingleChildScrollView(
+            child: ColorPicker(
+              pickerColor: pickerColor,
+              onColorChanged: (Color color) {
+                pickerColor = color;
+              },
+              paletteType: PaletteType.hueWheel,
+              displayThumbColor: true,
+              enableAlpha: false,
+              pickerAreaHeightPercent: 0.8,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Get.back();
+              },
+              child: Text('Cancel'.tr),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                _controller.onCustomColorSeedChanged(pickerColor);
+                Get.back();
+              },
+              child: Text('Apply'.tr),
+            ),
+          ],
+        );
+      },
     );
   }
 }

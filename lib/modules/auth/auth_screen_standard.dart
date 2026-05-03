@@ -87,19 +87,16 @@ class AuthScreenStandard extends GetView<AuthController> {
                     textInputAction: TextInputAction.next,
                   ),
                   const SizedBox(height: 10),
-                  CupertinoSlidingSegmentedControl(
-                    padding: const EdgeInsets.all(0),
-                    // thumbColor: AppColors.selectedButton,
-                    // backgroundColor: AppColors.button,
-                    groupValue: controller.selectedTab.value,
-
-                    children: const <int, Widget>{
-                      0: Text('Basic Auth'),
-                      1: Text('Access Token'),
-                      // 2: Text('Wheel'),
-                    },
-                    onValueChanged: (i) async {
-                      controller.onTabChanged(i as int);
+                  SegmentedButton<int>(
+                    segments: const <ButtonSegment<int>>[
+                      ButtonSegment<int>(value: 0, label: Text('Basic Auth')),
+                      ButtonSegment<int>(value: 1, label: Text('Access Token')),
+                    ],
+                    selected: {controller.selectedTab.value},
+                    onSelectionChanged: (Set<int> newSelection) {
+                      if (newSelection.isNotEmpty) {
+                        controller.onTabChanged(newSelection.first);
+                      }
                     },
                   ),
                   const SizedBox(height: 10),

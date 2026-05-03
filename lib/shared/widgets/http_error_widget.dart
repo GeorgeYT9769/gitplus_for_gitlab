@@ -8,9 +8,17 @@ class HttpErrorWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(children: [
       Center(
-        child: Text(
-          'Error',
-          style: TextStyle(color: Get.theme.hintColor, fontSize: 18),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(Icons.error, color: Get.theme.hintColor, size: 100),
+            Text(
+              'Error',
+              style: TextStyle(color: Get.theme.hintColor, fontSize: 35,),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
       ),
       ListView()

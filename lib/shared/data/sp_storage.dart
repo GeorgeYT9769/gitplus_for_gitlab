@@ -12,6 +12,8 @@ class SPStorage {
   late final _theme = 0.obs;
   late final _showLineNumbers = false.obs;
   late final _fontSize = 0.obs;
+  late final _useDynamicColor = true.obs;
+  late final _customColorSeed = 0.obs;
 
   /// auth
   late int _authDefaultTab;
@@ -34,6 +36,8 @@ class SPStorage {
     _showLineNumbers.value =
         _storage.getBool(SPStorageConstants.showLineNumbers) ?? true;
     _fontSize.value = _storage.getInt(SPStorageConstants.fontSize) ?? 14;
+    _useDynamicColor.value = _storage.getBool(SPStorageConstants.useDynamicColor) ?? true;
+    _customColorSeed.value = _storage.getInt(SPStorageConstants.customColorSeed) ?? 4280391411; // Colors.lightBlue.value
 
     /// auth
 
@@ -57,69 +61,83 @@ class SPStorage {
 
   /// settings
 
-  setTheme(int value) {
+  Future<void> setTheme(int value) async {
     _theme.value = value;
-    _storage.setInt(SPStorageConstants.theme, value);
+    await _storage.setInt(SPStorageConstants.theme, value);
   }
 
   RxInt getTheme() => _theme;
 
-  setShowLineNumbers(bool value) {
+  Future<void> setShowLineNumbers(bool value) async {
     _showLineNumbers.value = value;
-    _storage.setBool(SPStorageConstants.showLineNumbers, value);
+    await _storage.setBool(SPStorageConstants.showLineNumbers, value);
   }
 
   RxBool getShowLineNumbers() => _showLineNumbers;
 
-  setFontSize(int value) {
+  Future<void> setFontSize(int value) async {
     _fontSize.value = value;
-    _storage.setInt(SPStorageConstants.fontSize, value);
+    await _storage.setInt(SPStorageConstants.fontSize, value);
   }
 
   RxInt getFontSize() => _fontSize;
 
+  Future<void> setUseDynamicColor(bool value) async {
+    _useDynamicColor.value = value;
+    await _storage.setBool(SPStorageConstants.useDynamicColor, value);
+  }
+
+  RxBool getUseDynamicColor() => _useDynamicColor;
+
+  Future<void> setCustomColorSeed(int value) async {
+    _customColorSeed.value = value;
+    await _storage.setInt(SPStorageConstants.customColorSeed, value);
+  }
+
+  RxInt getCustomColorSeed() => _customColorSeed;
+
   /// auth
 
-  setAuthDefaultTab(int value) {
+  Future<void> setAuthDefaultTab(int value) async {
     _authDefaultTab = value;
-    _storage.setInt(SPStorageConstants.authDefaultTab, value);
+    await _storage.setInt(SPStorageConstants.authDefaultTab, value);
   }
 
   int getAuthDefaultTab() => _authDefaultTab;
 
   /// home
 
-  setHomeDefaultTab(int value) {
+  Future<void> setHomeDefaultTab(int value) async {
     _homeDefaultTab = value;
-    _storage.setInt(SPStorageConstants.homeDefaultTab, value);
+    await _storage.setInt(SPStorageConstants.homeDefaultTab, value);
   }
 
   int getHomeDefaultTab() => _homeDefaultTab;
 
-  setMergeRequestFilterScope(String value) {
+  Future<void> setMergeRequestFilterScope(String value) async {
     _mergeRequestFilterScope = value;
-    _storage.setString(SPStorageConstants.mergeRequestFilterScope, value);
+    await _storage.setString(SPStorageConstants.mergeRequestFilterScope, value);
   }
 
   String getMergeRequestFilterScope() => _mergeRequestFilterScope;
 
-  setMergeRequestFilterState(String value) {
+  Future<void> setMergeRequestFilterState(String value) async {
     _mergeRequestFilterState = value;
-    _storage.setString(SPStorageConstants.mergeRequestFilterState, value);
+    await _storage.setString(SPStorageConstants.mergeRequestFilterState, value);
   }
 
   String getMergeRequestFilterState() => _mergeRequestFilterState;
 
-  setIssuesFilterScope(String value) {
+  Future<void> setIssuesFilterScope(String value) async {
     _issuesFilterScope = value;
-    _storage.setString(SPStorageConstants.issuesFilterScope, value);
+    await _storage.setString(SPStorageConstants.issuesFilterScope, value);
   }
 
   String getIssuesFilterScope() => _issuesFilterScope;
 
-  setIssuesFilterState(String value) {
+  Future<void> setIssuesFilterState(String value) async {
     _issuesFilterState = value;
-    _storage.setString(SPStorageConstants.issuesFilterState, value);
+    await _storage.setString(SPStorageConstants.issuesFilterState, value);
   }
 
   String getIssuesFilterState() => _issuesFilterState;
@@ -128,6 +146,8 @@ class SPStorage {
     await setTheme(AppTheme.system);
     await setShowLineNumbers(true);
     await setFontSize(14);
+    await setUseDynamicColor(true);
+    await setCustomColorSeed(4280391411);
   }
 }
 
