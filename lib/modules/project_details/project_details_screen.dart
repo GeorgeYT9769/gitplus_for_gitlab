@@ -308,7 +308,7 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                       const SizedBox(width: spacing),
                       Expanded(
                           child: ProjectMenuItemWidget(
-                            icon: Icons.check_box_outlined,
+                            icon: Icons.build,
                             text: 'Pipelines',
                             onPressed: () {
                               Get.toNamed(Routes.pipelines);

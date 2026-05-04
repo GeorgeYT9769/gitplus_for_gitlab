@@ -33,6 +33,10 @@ class AppMarkdown extends StatelessWidget {
           } else if (imageUrl.contains('shields.io')) {
             imageUrl = imageUrl.replaceAll('shields.io', 'raster.shields.io');
           }
+          // Add scale=2 for higher resolution PNGs
+          if (!imageUrl.contains('scale=')) {
+            imageUrl += '${imageUrl.contains('?') ? '&' : '?'}scale=3';
+          }
         }
 
         final isSvg = (imageUrl.endsWith('.svg') ||

@@ -15,6 +15,44 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   final _controller = Get.find<SettingsController>();
 
+  final Map<String, String> _codeSnippets = {
+    'Dart': '''
+void main() {
+  var name = "John";
+  print(name);
+}
+''',
+    'Python': '''
+def main():
+    name = "John"
+    print(name)
+''',
+    'Java': '''
+public class Main {
+    public static void main(String[] args) {
+        String name = "John";
+        System.out.println(name);
+    }
+}
+''',
+    'C': '''
+#include <stdio.h>
+int main() {
+    char name[] = "John";
+    printf("%s\\n", name);
+    return 0;
+}
+''',
+  };
+
+  String _selectedLang = 'Dart';
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedLang = _controller.spStorage.getSelectedLanguage().value;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Obx(() => _buildWidget(context));
@@ -46,7 +84,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _sectionHeader('General'),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.color_lens),
+            leading: const Icon(Icons.dark_mode),
             title: const Text('Dark mode'),
             subtitle: Text(_controller.theme.value),
             trailing: const Icon(Icons.keyboard_arrow_right),
@@ -154,24 +192,83 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const Divider(),
           _fontSize(),
           const Divider(),
-          SafeArea(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: AppHighlightView(
-                content:
-'''
-void main()
-{
-    var name = "John";
-    print(name);
-}
-''',
-                lang: 'dart',
-                fontSize: _controller.fontSize.value,
-                theme: code,
-                lineNumbers: _controller.spStorage.getShowLineNumbers().value,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: DropdownMenu<String>(
+                  initialSelection: _selectedLang,
+                  onSelected: (String? newLang) {
+                    if (newLang != null) {
+                      setState(() {
+                        _selectedLang = newLang;
+                      });
+                      _controller.onSelectedLanguageChanged(newLang);
+                    }
+                  },
+                  dropdownMenuEntries: _codeSnippets.keys
+                      .map((lang) => DropdownMenuEntry<String>(
+                    value: lang,
+                    label: lang,
+                    style: ButtonStyle(
+                      textStyle: WidgetStateProperty.all(
+                        Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                    ),
+                  ))
+                      .toList(),
+                  width: double.infinity,
+                  menuStyle: MenuStyle(
+                    backgroundColor: WidgetStateProperty.all(
+                      Theme.of(context).colorScheme.surface,
+                    ),
+                    elevation: WidgetStateProperty.all(3),
+                    shape: WidgetStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                  textStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  inputDecorationTheme: InputDecorationTheme(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.primary,
+                        width: 2,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.primary,
+                        width: 2,
+                      ),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  ),
+                ),
               ),
-            ),
+              SafeArea(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: AppHighlightView(
+                    content: _codeSnippets[_selectedLang]!,
+                    lang: _selectedLang.toLowerCase(),
+                    fontSize: _controller.fontSize.value,
+                    theme: code,
+                    lineNumbers: _controller.spStorage.getShowLineNumbers().value,
+                  ),
+                ),
+              ),
+            ],
           ),
           const Divider(),
           ListTile(
@@ -227,6 +324,7 @@ void main()
           max: 30,
           // divisions: 45,
         ),
+        const SizedBox(height: 10),
       ],
     );
   }

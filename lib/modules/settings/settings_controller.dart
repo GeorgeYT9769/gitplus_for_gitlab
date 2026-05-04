@@ -9,6 +9,7 @@ class SettingsController extends GetxController {
 
   var theme = "".obs;
   var fontSize = 0.0.obs;
+  var selectedLanguage = "Dart".obs;
   var updateUI = 0.obs;
 
   Timer? _updateTimer;
@@ -18,6 +19,7 @@ class SettingsController extends GetxController {
     super.onInit();
     changeTheme();
     fontSize.value = spStorage.getFontSize().toDouble();
+    selectedLanguage.value = spStorage.getSelectedLanguage().value;
   }
 
   @override
@@ -78,9 +80,15 @@ class SettingsController extends GetxController {
     spStorage.setCustomColorSeed(color.toARGB32());
   }
 
+  void onSelectedLanguageChanged(String value) {
+    selectedLanguage.value = value;
+    spStorage.setSelectedLanguage(value);
+  }
+
   Future<void> onResetDefault() async {
     await spStorage.resetSettings();
     changeThemeValue(spStorage.getTheme().value);
     fontSize.value = spStorage.getFontSize().value.toDouble();
+    selectedLanguage.value = spStorage.getSelectedLanguage().value;
   }
 }
