@@ -32,41 +32,38 @@ class StarrersScreen extends GetView<StarrersController> {
                 itemBuilder: (context, index) {
                   var item = controller.starrers[index];
 
-                  return Column(
-                    children: [
-                      ListTile(
-                        leading: CircleAvatar(
-                          child: CachedNetworkImage(
-                            imageUrl: item.user!.avatarUrl!,
-                            imageBuilder: (context, imageProvider) => Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(50),
-                                image: DecorationImage(
-                                  image: imageProvider,
-                                ),
+                  return CardListItem(
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        child: CachedNetworkImage(
+                          imageUrl: item.user!.avatarUrl!,
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50),
+                              image: DecorationImage(
+                                image: imageProvider,
                               ),
                             ),
-                            errorWidget: (context, url, error) => Row(
-                              children: [
-                                Icon(Icons.error),
-                                Text(
-                                    'Failed to load image.',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600,
-                                      color: Theme.of(context).colorScheme.onSurface,
-                                    )
-                                ),
-                              ],
-                            ),
+                          ),
+                          errorWidget: (context, url, error) => Row(
+                            children: [
+                              Icon(Icons.error),
+                              Text(
+                                  'Failed to load image.',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: Theme.of(context).colorScheme.onSurface,
+                                  )
+                              ),
+                            ],
                           ),
                         ),
-                        title: Text(item.user!.name ?? ''),
-                        subtitle: Text(item.user!.username ?? ''),
                       ),
-                      const Divider(),
-                    ],
+                      title: Text(item.user!.name ?? ''),
+                      subtitle: Text(item.user!.username ?? ''),
+                    ),
                   );
                 }),
           ),

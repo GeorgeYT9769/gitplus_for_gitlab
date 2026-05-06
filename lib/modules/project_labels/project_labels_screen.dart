@@ -136,34 +136,31 @@ Widget _buildList(
 
 Widget _buildListItem(ProjectLabel item, BuildContext context,
     ProjectLabelsController controller, ProjectLabelsScreenArgs? args) {
-  return Column(
-    children: [
-      ListTile(
-        onTap: () {
-          if (args?.onSelected == null) {
-            controller.navigateToEditScreen(item);
-          } else {
-            args!.onSelected!(item);
-            Get.back();
-          }
-        },
-        title: Align(
-            alignment: Alignment.topLeft,
-            child: ColorLabel(
-              color: hexToColor(item.color!),
-              text: item.name!,
-              padding:
-                  const EdgeInsets.only(left: 10, top: 3, right: 10, bottom: 3),
-            )),
-        subtitle: item.description != null
-            ? Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 8),
-                child: Text(item.description!),
-              )
-            : null,
-        trailing: const Icon(Icons.keyboard_arrow_right),
-      ),
-      const Divider(),
-    ],
+  return CardListItem(
+    child: ListTile(
+      onTap: () {
+        if (args?.onSelected == null) {
+          controller.navigateToEditScreen(item);
+        } else {
+          args!.onSelected!(item);
+          Get.back();
+        }
+      },
+      title: Align(
+          alignment: Alignment.topLeft,
+          child: ColorLabel(
+            color: hexToColor(item.color!),
+            text: item.name!,
+            padding:
+                const EdgeInsets.only(left: 10, top: 3, right: 10, bottom: 3),
+          )),
+      subtitle: item.description != null
+          ? Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 8),
+              child: Text(item.description!),
+            )
+          : null,
+      trailing: const Icon(Icons.keyboard_arrow_right),
+    ),
   );
 }

@@ -37,16 +37,14 @@ class AccountsScreen extends GetView<AccountsController> {
 
   Widget _listAccounts(BuildContext context) {
     return Obx(
-      () => ListView.builder(
-        itemCount: controller.accounts.length,
-        itemBuilder: (context, index) {
-          var item = controller.accounts[index];
+      () => Scrollbar(
+        child: ListView.builder(
+          itemCount: controller.accounts.length,
+          itemBuilder: (context, index) {
+            var item = controller.accounts[index];
 
-          return Column(
-            children: [
-              ListTile(
-                // contentPadding:
-                //     const EdgeInsets.only(left: 15, top: 10, bottom: 10),
+            return CardListItem(
+              child: ListTile(
                 leading: CircleAvatar(
                   child: CachedNetworkImage(
                     imageUrl: item.avatarUrl!,
@@ -58,20 +56,7 @@ class AccountsScreen extends GetView<AccountsController> {
                         ),
                       ),
                     ),
-                    errorWidget: (context, url, error) => Row(
-                      children: [
-                        Icon(Icons.error),
-                        Text(
-                            'Failed to load image.',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: Theme.of(context).colorScheme.onSurface,
-                            )
-                        ),
-                      ],
-                    ),
+                    errorWidget: (context, url, error) => const Icon(Icons.person),
                   ),
                 ),
                 title: Text(item.username!,
@@ -90,10 +75,9 @@ class AccountsScreen extends GetView<AccountsController> {
                   controller.onAccountSelected(item);
                 },
               ),
-              const Divider(),
-            ],
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

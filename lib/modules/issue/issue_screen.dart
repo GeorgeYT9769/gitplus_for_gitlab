@@ -71,162 +71,171 @@ class IssueScreen extends GetView<IssueController> {
         bottom: false,
         child: RefreshIndicator(
           onRefresh: () => controller.onRefresh(),
-          child: ListView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Card(
-                    margin: const EdgeInsets.all(10),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          if (controller.repository.loadProjectRequired.value &&
-                              project.id != null)
-                            Row(
-                              children: [
-                                avatar,
-                                const SizedBox(width: 10),
-                                Expanded(
-                                  child: Text.rich(
-                                    TextSpan(
-                                      children: [
+          child: Scrollbar(
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    CardListItem(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            if (controller.repository.loadProjectRequired.value &&
+                                project.id != null)
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 16.0),
+                                child: Row(
+                                  children: [
+                                    avatar,
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Text.rich(
                                         TextSpan(
-                                            text:
-                                                '${project.namespace!.fullPath!}/',
-                                            style:
-                                                const TextStyle(fontSize: 18)),
-                                        TextSpan(
-                                            text: project.name,
-                                            style: const TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold)),
-                                      ],
+                                          children: [
+                                            TextSpan(
+                                                text:
+                                                    '${project.namespace!.fullPath!}/',
+                                                style: const TextStyle(
+                                                    fontSize: 16)),
+                                            TextSpan(
+                                                text: project.name,
+                                                style: const TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                          ],
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                  ],
                                 ),
+                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Flexible(
+                                  child: Text(item.title ?? '',
+                                      style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold)),
+                                ),
+                                const SizedBox(width: 8),
+                                Wrap(
+                                  children: [
+                                    if (item.healthStatus != null)
+                                      _healthWidget(item),
+                                    _stateWidget(item),
+                                  ],
+                                )
                               ],
                             ),
-                          if (controller.repository.loadProjectRequired.value &&
-                              project.id != null)
-                            const Divider(height: 25),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            const SizedBox(height: 12),
+                            if (item.author != null)
+                              Text(
+                                '${item.author!.name!} opened ${timeago.format(item.createdAt!)}',
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant,
+                                    fontSize: 13),
+                              ),
+                            if (item.description != null &&
+                                item.description!.isNotEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 16.0),
+                                child: AppMarkdown(content: item.description!),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    if (controller.repository.issueLabels.isNotEmpty)
+                      CardListItem(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Flexible(
-                                child: Text(item.title ?? '',
-                                    style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold)),
-                              ),
+                              _headerLabel('Labels'),
+                              const SizedBox(height: 8),
                               Wrap(
+                                spacing: 8,
+                                runSpacing: 8,
                                 children: [
-                                  if (item.healthStatus != null)
-                                    _healthWidget(item),
-                                  _stateWidget(item),
+                                  for (var item
+                                      in controller.repository.issueLabels)
+                                    _labelWidget(item),
                                 ],
-                              )
+                              ),
                             ],
                           ),
-                          const SizedBox(height: 10),
-                          if (item.author != null)
-                            Text(
-                                '${item.author!.name!} opened this issue ${timeago.format(item.createdAt!)}, updated ${timeago.format(item.updatedAt!)}'),
-                          if (item.description != null &&
-                              item.description!.isNotEmpty)
-                            const Divider(height: 25),
-                          if (item.description != null &&
-                              item.description!.isNotEmpty)
-                            SafeArea(
-                              child: AppMarkdown(content: item.description!),
-                            ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                  if (controller.repository.issueLabels.isNotEmpty)
-                    Card(
-                      margin: const EdgeInsets.only(
-                          left: 10, right: 10, bottom: 10),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                    if (item.assignees != null && item.assignees!.isNotEmpty)
+                      CardListItem(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _headerLabel('Assignees'),
+                              const SizedBox(height: 8),
+                              _assigneeList(item)
+                            ],
+                          ),
+                        ),
+                      ),
+                    const SizedBox(height: 8),
+                    CardListItem(
+                      padding: EdgeInsets.zero,
+                      child: ListTile(
+                        leading: const Icon(Octicons.note),
+                        title: Text('Notes'.tr,
+                            style: const TextStyle(
+                                fontWeight:
+                                    CommonConstants.fontWeightListTile)),
+                        onTap: () {
+                          Get.toNamed(Routes.issueNotes);
+                        },
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            _headerLabel('Labels'),
-                            Wrap(
-                              spacing: 5,
-                              children: [
-                                for (var item
-                                    in controller.repository.issueLabels)
-                                  _labelWidget(item),
-                              ],
-                            ),
+                            Text(item.userNotesCount.toString()),
+                            const Icon(Icons.keyboard_arrow_right),
                           ],
                         ),
                       ),
                     ),
-                  // const SizedBox(height: 10),
-                  if (item.assignees != null && item.assignees!.isNotEmpty)
-                    Card(
-                      margin: const EdgeInsets.only(
-                        left: 10,
-                        right: 10,
-                        bottom: 10,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                    CardListItem(
+                      padding: EdgeInsets.zero,
+                      child: ListTile(
+                        leading: const Icon(Octicons.git_merge),
+                        title: Text('Related merge requests'.tr,
+                            style: const TextStyle(
+                                fontWeight:
+                                    CommonConstants.fontWeightListTile)),
+                        onTap: () {
+                          Get.toNamed(Routes.issueRelatedRequests);
+                        },
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            _headerLabel('Assignee'),
-                            _assigneeList(item)
+                            Text(item.mergeRequestsCount.toString()),
+                            const Icon(Icons.keyboard_arrow_right),
                           ],
                         ),
                       ),
                     ),
-                  const Divider(),
-                  ListTile(
-                    leading: const Icon(Octicons.note),
-                    title: Text('Notes'.tr,
-                        style: const TextStyle(
-                            fontWeight: CommonConstants.fontWeightListTile)),
-                    onTap: () {
-                      Get.toNamed(Routes.issueNotes);
-                    },
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(item.userNotesCount.toString()),
-                        const Icon(Icons.keyboard_arrow_right),
-                      ],
-                    ),
-                  ),
-                  const Divider(),
-                  ListTile(
-                    leading: const Icon(Octicons.git_merge),
-                    title: Text('Related merge requests'.tr,
-                        style: const TextStyle(
-                            fontWeight: CommonConstants.fontWeightListTile)),
-                    onTap: () {
-                      Get.toNamed(Routes.issueRelatedRequests);
-                    },
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(item.mergeRequestsCount.toString()),
-                        const Icon(Icons.keyboard_arrow_right),
-                      ],
-                    ),
-                  ),
-                  const Divider(),
-                ],
-              ),
-            ],
+                    const SizedBox(height: 16),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -24,9 +24,9 @@ class IssueNotesScreen extends GetView<IssueNotesController> {
         title: Text('Notes'.tr),
       ),
       body: Column(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: MainAxisSize.max,
         children: [
-          Flexible(child: NotesTimeline(controller: controller)),
+          Expanded(child: NotesTimeline(controller: controller)),
           SafeArea(
             child: Container(
               padding: const EdgeInsets.all(10.0),
@@ -70,11 +70,16 @@ class NotesTimeline extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      child: HttpFutureBuilder(
-        state: controller.state.value,
+    return HttpFutureBuilder(
+      state: controller.state.value,
+      child: RefreshIndicator(
+        onRefresh: () => controller.listNotes(),
         child: Scrollbar(
+          controller: controller.scrollController,
           child: Timeline.tileBuilder(
+              controller: controller.scrollController,
+              physics: const AlwaysScrollableScrollPhysics(),
+              shrinkWrap: false,
               theme: TimelineTheme.of(context).copyWith(
                 nodePosition: 0.03,
                 indicatorTheme: TimelineTheme.of(context)
@@ -94,7 +99,6 @@ class NotesTimeline extends StatelessWidget {
                   itemCount: controller.notes.length)),
         ),
       ),
-      onRefresh: () => controller.listNotes(),
     );
   }
 }
@@ -161,15 +165,24 @@ class TimelineItem extends StatelessWidget {
       return Padding(
         padding:
             const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 10),
-        child: Text(note.body!,
+        child: Text(note.body ?? '',
             style: TextStyle(color: Theme.of(context).colorScheme.secondary)),
       );
     }
 
     return Card(
+      elevation: 4,
       margin: const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 10),
+      shadowColor: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.2),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(
+          color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.4),
+          width: 1,
+        ),
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -190,35 +203,16 @@ class TimelineItem extends StatelessWidget {
                           imageBuilder: (context, imageProvider) => Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(50),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.black,
-                                  blurRadius: 3.0,
-                                ),
-                              ],
                               image: DecorationImage(image: imageProvider),
                             ),
                           ),
-                          errorWidget: (context, url, error) => Row(
-                            children: [
-                              Icon(Icons.error),
-                              Text(
-                                  'Failed to load image.',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
-                                    color: Theme.of(context).colorScheme.onSurface,
-                                  )
-                              ),
-                            ],
-                          ),
+                          errorWidget: (context, url, error) => const Icon(Icons.person),
                         ),
                       )
                     : const CircleAvatar(child: Icon(Icons.person)),
                 Padding(
                   padding: const EdgeInsets.only(left: 15),
-                  child: Text(note.author!.name!),
+                  child: Text(note.author!.name!, style: const TextStyle(fontWeight: FontWeight.bold)),
                 ),
                 const Spacer(),
                 IconButton(
@@ -235,7 +229,7 @@ class TimelineItem extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            Text(note.body!,style: TextStyle(color: Theme.of(context).colorScheme.onSurface),)
+            AppMarkdown(content: note.body ?? ''),
           ],
         ),
       ),

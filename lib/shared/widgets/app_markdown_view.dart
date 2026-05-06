@@ -11,10 +11,8 @@ class AppMarkdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Markdown(
+    return MarkdownBody(
       data: content,
-      padding: EdgeInsets.zero,
-      shrinkWrap: true,
       onTapLink: (text, href, title) {
         if (href == null || !GetUtils.isURL(href)) {
           return;
@@ -66,7 +64,6 @@ class AppMarkdown extends StatelessWidget {
           return Container();
         }
       },
-      physics: const NeverScrollableScrollPhysics(),
       styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
         code: const TextStyle(fontFamily: 'SourceCodePro'),
       ),

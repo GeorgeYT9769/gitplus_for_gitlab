@@ -42,41 +42,38 @@ class ProjectsTab extends GetView<HomeController> {
                       text: name, visibility: item.visibility!);
                 }
 
-                return Column(
-                  children: [
-                    ListTile(
-                      contentPadding:
-                          CommonConstants.contentPaddingLitTileLarge,
-                      leading: avatar,
-                      title: Text.rich(
-                        TextSpan(
-                          children: [
-                            TextSpan(
-                                text: '${item.namespace!.fullPath!}/',
-                                style: const TextStyle()),
-                            TextSpan(
-                                text: item.name,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                return CardListItem(
+                  child: ListTile(
+                    contentPadding:
+                        CommonConstants.contentPaddingLitTileLarge,
+                    leading: avatar,
+                    title: Text.rich(
+                      TextSpan(
                         children: [
-                          if (item.description != null &&
-                              item.description!.isNotEmpty)
-                            Text(item.description!),
-                          const SizedBox(height: 5),
-                          Text(timeago.format(item.lastActivityAt!)),
+                          TextSpan(
+                              text: '${item.namespace!.fullPath!}/',
+                              style: const TextStyle()),
+                          TextSpan(
+                              text: item.name,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold)),
                         ],
                       ),
-                      onTap: () {
-                        controller.onProjectSelected(item);
-                      },
                     ),
-                    const Divider(),
-                  ],
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (item.description != null &&
+                            item.description!.isNotEmpty)
+                          Text(item.description!),
+                        const SizedBox(height: 5),
+                        Text(timeago.format(item.lastActivityAt!)),
+                      ],
+                    ),
+                    onTap: () {
+                      controller.onProjectSelected(item);
+                    },
+                  ),
                 );
               }),
         ),

@@ -35,60 +35,57 @@ class IssuesTab extends GetView<HomeController> {
   }
 
   Widget _buildListItem(Issue item, BuildContext context) {
-    return Column(
-      children: [
-        ListTile(
-          contentPadding: CommonConstants.contentPaddingLitTileLarge,
-          leading: ListAvatar(avatarUrl: item.author!.avatarUrl!),
-          title: Text(
-            '#${item.iid} ${item.title!}',
-            style:
-                const TextStyle(fontWeight: CommonConstants.fontWeightListTile),
-          ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text.rich(TextSpan(
-                children: [
-                  TextSpan(
-                      text: item.author!.name,
-                      style: const TextStyle(fontSize: 14)),
-                  TextSpan(
-                      text: ", authored ${timeago.format(item.createdAt!)}",
-                      style: const TextStyle(fontSize: 14)),
-                ],
-              )),
-              const SizedBox(height: 5),
-              Row(
-                children: [
-                  _stateWidget(item),
-
-                  const SizedBox(width: 15),
-
-                  /// mr
-                  const Icon(Octicons.git_merge, size: 18),
-                  const SizedBox(width: 3),
-                  Text(item.mergeRequestsCount.toString(),
-                      style: const TextStyle(fontSize: 12)),
-
-                  const SizedBox(width: 10),
-
-                  /// comments
-                  const Icon(Octicons.comment_discussion, size: 18),
-                  const SizedBox(width: 5),
-                  Text(item.userNotesCount.toString(),
-                      style: const TextStyle(fontSize: 12)),
-                ],
-              ),
-            ],
-          ),
-          trailing: const Icon(Icons.keyboard_arrow_right),
-          onTap: () {
-            controller.onNavToIssueDetails(item);
-          },
+    return CardListItem(
+      child: ListTile(
+        contentPadding: CommonConstants.contentPaddingLitTileLarge,
+        leading: ListAvatar(avatarUrl: item.author!.avatarUrl!),
+        title: Text(
+          '#${item.iid} ${item.title!}',
+          style:
+              const TextStyle(fontWeight: CommonConstants.fontWeightListTile),
         ),
-        const Divider(),
-      ],
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text.rich(TextSpan(
+              children: [
+                TextSpan(
+                    text: item.author!.name,
+                    style: const TextStyle(fontSize: 14)),
+                TextSpan(
+                    text: ", authored ${timeago.format(item.createdAt!)}",
+                    style: const TextStyle(fontSize: 14)),
+              ],
+            )),
+            const SizedBox(height: 5),
+            Row(
+              children: [
+                _stateWidget(item),
+
+                const SizedBox(width: 15),
+
+                /// mr
+                const Icon(Octicons.git_merge, size: 18),
+                const SizedBox(width: 3),
+                Text(item.mergeRequestsCount.toString(),
+                    style: const TextStyle(fontSize: 12)),
+
+                const SizedBox(width: 10),
+
+                /// comments
+                const Icon(Octicons.comment_discussion, size: 18),
+                const SizedBox(width: 5),
+                Text(item.userNotesCount.toString(),
+                    style: const TextStyle(fontSize: 12)),
+              ],
+            ),
+          ],
+        ),
+        trailing: const Icon(Icons.keyboard_arrow_right),
+        onTap: () {
+          controller.onNavToIssueDetails(item);
+        },
+      ),
     );
   }
 }

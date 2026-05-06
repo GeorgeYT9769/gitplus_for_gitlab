@@ -169,212 +169,209 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
       ),
       body: RefreshIndicator(
         onRefresh: () => controller.onRefreshAll(),
-        child: ListView(
-          shrinkWrap: true,
-          children: [
-            SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Align(alignment: Alignment.center,child:avatar),
-                    const SizedBox(height: 10),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Text(project.nameWithNamespace!,
-                                style: const TextStyle(fontSize: 16)),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 15),
-                    Wrap(
-                      crossAxisAlignment: WrapCrossAlignment.start,
-                      children: [
-                        visibility,
-                        const SizedBox(width: 10),
-                        // stars
-                        _iconLabel(Octicons.star,
-                            "${project.starCount} stars",context),
-                        // forks
-                        const SizedBox(width: 10),
-                        _iconLabel(Octicons.git_branch,
-                            "${project.forksCount} forks",context),
-                        if(pipelineStatusExists) const SizedBox(width: 10),
-                        if(pipelineStatusExists) _iconLabel(statusIcon, statusString,context)
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                  ],
-                ),
-              ),
-            ),
-
-            ///
-
-            SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Column(children: [
-                  IntrinsicHeight(
-                    child: Flex(direction: Axis.horizontal, children: [
-                      Expanded(
-                          child: ProjectMenuItemWidget(
-                            icon: Icons.event,
-                            text: 'Activity',
-                            onPressed: () {
-                              Get.toNamed(Routes.projectActivity);
-                            },
-                          )),
-                      const SizedBox(width: spacing),
-                      Expanded(
-                          child: ProjectMenuItemWidget(
-                            icon: Octicons.issue_opened,
-                            text: 'Issues',
-                            onPressed: () {
-                              Get.toNamed(Routes.issues);
-                            },
-                          )),
-                      const SizedBox(width: spacing),
-                      Expanded(
-                          child: ProjectMenuItemWidget(
-                            icon: Octicons.milestone,
-                            text: 'Milestones',
-                            onPressed: () {
-                              Get.toNamed(Routes.milestones);
-                            },
-                          )),
-                    ]),
-                  ),
-                  const SizedBox(height: spacing),
-                  IntrinsicHeight(
-                    child: Flex(direction: Axis.horizontal, children: [
-                      Expanded(
-                          child: ProjectMenuItemWidget(
-                            icon: Octicons.git_merge,
-                            text: 'MR',
-                            onPressed: () {
-                              Get.toNamed(Routes.mergeRequests);
-                            },
-                          )),
-                      const SizedBox(width: spacing),
-                      Expanded(
-                          child: ProjectMenuItemWidget(
-                            icon: Icons.label_outline,
-                            text: 'Labels',
-                            onPressed: () {
-                              Get.toNamed(Routes.labels);
-                            },
-                          )),
-                      const SizedBox(width: spacing),
-                      Expanded(
-                          child: ProjectMenuItemWidget(
-                            icon: Icons.text_snippet_outlined,
-                            text: 'Snippets',
-                            onPressed: () {
-                              Get.toNamed(Routes.projectSnippets);
-                            },
-                          )),
-                    ]),
-                  ),
-                  const SizedBox(height: spacing),
-                  IntrinsicHeight(
-                    child: Flex(direction: Axis.horizontal, children: [
-                      Expanded(
-                          child: ProjectMenuItemWidget(
-                            icon: Icons.star_border_outlined,
-                            text: 'Starrers',
-                            onPressed: () {
-                              Get.toNamed(Routes.starrers);
-                            },
-                          )),
-                      const SizedBox(width: spacing),
-                      Expanded(
-                          child: ProjectMenuItemWidget(
-                            icon: Icons.people_outline_rounded,
-                            text: 'Members',
-                            onPressed: () {
-                              controller.repository.membersFor =
-                                  MembersFor.project;
-                              Get.toNamed(Routes.projectMembers);
-                            },
-                          )),
-                      const SizedBox(width: spacing),
-                      Expanded(
-                          child: ProjectMenuItemWidget(
-                            icon: Icons.build,
-                            text: 'Pipelines',
-                            onPressed: () {
-                              Get.toNamed(Routes.pipelines);
-                            },
-                          )),
-                    ]),
-                  ),
-                  const SizedBox(height: spacing),
-                  Flex(direction: Axis.horizontal, children: [
-                    Expanded(
-                        child: ProjectMenuItemWidget(
-                          icon: Icons.code,
-                          text: 'Browse code',
-                          onPressed: () {
-                            Get.toNamed(Routes.treeViewRoot,
-                                arguments: TreeViewArgs(
-                                    name: project.name ?? "", path: ""));
-                          },
-                        )),
-                    const SizedBox(width: spacing),
-                    Expanded(
-                        child: ProjectMenuItemWidget(
-                          icon: Octicons.git_commit,
-                          text: 'Commits',
-                          onPressed: () {
-                            Get.toNamed(Routes.commits);
-                          },
-                        )),
-                  ]),
-                ]),
-              ),
-            ),
-            SizedBox(height: 30),
-            if (controller.readmeContent.isNotEmpty)
+        child: Scrollbar(
+          child: ListView(
+            shrinkWrap: true,
+            children: [
               SafeArea(
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
-                  child: Row(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      Align(alignment: Alignment.center,child:avatar),
+                      const SizedBox(height: 10),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Text(project.nameWithNamespace!,
+                                  style: const TextStyle(fontSize: 16)),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 15),
+                      Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.start,
+                        children: [
+                          visibility,
+                          const SizedBox(width: 10),
+                          // stars
+                          _iconLabel(Octicons.star,
+                              "${project.starCount} stars",context),
+                          // forks
+                          const SizedBox(width: 10),
+                          _iconLabel(Octicons.git_branch,
+                              "${project.forksCount} forks",context),
+                          if(pipelineStatusExists) const SizedBox(width: 10),
+                          if(pipelineStatusExists) _iconLabel(statusIcon, statusString,context)
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                    ],
+                  ),
+                ),
+              ),
+    
+              ///
+    
+              SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Column(children: [
+                    IntrinsicHeight(
+                      child: Flex(direction: Axis.horizontal, children: [
+                        Expanded(
+                            child: ProjectMenuItemWidget(
+                              icon: Icons.event,
+                              text: 'Activity',
+                              onPressed: () {
+                                Get.toNamed(Routes.projectActivity);
+                              },
+                            )),
+                        const SizedBox(width: spacing),
+                        Expanded(
+                            child: ProjectMenuItemWidget(
+                              icon: Octicons.issue_opened,
+                              text: 'Issues',
+                              onPressed: () {
+                                Get.toNamed(Routes.issues);
+                              },
+                            )),
+                        const SizedBox(width: spacing),
+                        Expanded(
+                            child: ProjectMenuItemWidget(
+                              icon: Octicons.milestone,
+                              text: 'Milestones',
+                              onPressed: () {
+                                Get.toNamed(Routes.milestones);
+                              },
+                            )),
+                      ]),
+                    ),
+                    const SizedBox(height: spacing),
+                    IntrinsicHeight(
+                      child: Flex(direction: Axis.horizontal, children: [
+                        Expanded(
+                            child: ProjectMenuItemWidget(
+                              icon: Octicons.git_merge,
+                              text: 'MR',
+                              onPressed: () {
+                                Get.toNamed(Routes.mergeRequests);
+                              },
+                            )),
+                        const SizedBox(width: spacing),
+                        Expanded(
+                            child: ProjectMenuItemWidget(
+                              icon: Icons.label_outline,
+                              text: 'Labels',
+                              onPressed: () {
+                                Get.toNamed(Routes.labels);
+                              },
+                            )),
+                        const SizedBox(width: spacing),
+                        Expanded(
+                            child: ProjectMenuItemWidget(
+                              icon: Icons.text_snippet_outlined,
+                              text: 'Snippets',
+                              onPressed: () {
+                                Get.toNamed(Routes.projectSnippets);
+                              },
+                            )),
+                      ]),
+                    ),
+                    const SizedBox(height: spacing),
+                    IntrinsicHeight(
+                      child: Flex(direction: Axis.horizontal, children: [
+                        Expanded(
+                            child: ProjectMenuItemWidget(
+                              icon: Icons.star_border_outlined,
+                              text: 'Starrers',
+                              onPressed: () {
+                                Get.toNamed(Routes.starrers);
+                              },
+                            )),
+                        const SizedBox(width: spacing),
+                        Expanded(
+                            child: ProjectMenuItemWidget(
+                              icon: Icons.people_outline_rounded,
+                              text: 'Members',
+                              onPressed: () {
+                                controller.repository.membersFor =
+                                    MembersFor.project;
+                                Get.toNamed(Routes.projectMembers);
+                              },
+                            )),
+                        const SizedBox(width: spacing),
+                        Expanded(
+                            child: ProjectMenuItemWidget(
+                              icon: Icons.build,
+                              text: 'Pipelines',
+                              onPressed: () {
+                                Get.toNamed(Routes.pipelines);
+                              },
+                            )),
+                      ]),
+                    ),
+                    const SizedBox(height: spacing),
+                    Flex(direction: Axis.horizontal, children: [
                       Expanded(
-                        child: Row(
+                          child: ProjectMenuItemWidget(
+                            icon: Icons.code,
+                            text: 'Browse code',
+                            onPressed: () {
+                              Get.toNamed(Routes.treeViewRoot,
+                                  arguments: TreeViewArgs(
+                                      name: project.name ?? "", path: ""));
+                            },
+                          )),
+                      const SizedBox(width: spacing),
+                      Expanded(
+                          child: ProjectMenuItemWidget(
+                            icon: Octicons.git_commit,
+                            text: 'Commits',
+                            onPressed: () {
+                              Get.toNamed(Routes.commits);
+                            },
+                          )),
+                    ]),
+                  ]),
+                ),
+              ),
+              const SizedBox(height: 20),
+              if (controller.readmeContent.isNotEmpty)
+                CardListItem(
+                  child: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
                           children: [
                             FileIcon(controller.readmeFilename.value, size: 30),
-                            const SizedBox(width: 5),
+                            const SizedBox(width: 10),
                             Flexible(
                               child: Text(
                                 controller.readmeFilename.value,
+                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
                           ],
                         ),
-                      ),
-                    ],
+                        const Divider(height: 25),
+                        AppMarkdown(content: controller.readmeContent.string),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            if (controller.readmeContent.isNotEmpty)
-              SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: AppMarkdown(content: controller.readmeContent.string),
-                ),
-              ),
-            const SizedBox(height: 15),
-          ],
+              const SizedBox(height: 15),
+            ],
+          ),
         ),
       ),
     );

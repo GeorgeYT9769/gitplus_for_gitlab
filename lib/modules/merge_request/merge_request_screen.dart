@@ -84,161 +84,182 @@ class MergeRequestScreen extends GetView<MergeRequestController> {
         bottom: false,
         child: RefreshIndicator(
           onRefresh: () => controller.onRefresh(),
-          child: ListView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Card(
-                    margin: const EdgeInsets.all(10),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (controller.repository.loadProjectRequired.value &&
-                              project.id != null)
-                            Row(
-                              children: [
-                                avatar,
-                                const SizedBox(width: 10),
-                                Expanded(
-                                  child: Text.rich(
-                                    TextSpan(
-                                      children: [
+          child: Scrollbar(
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CardListItem(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (controller.repository.loadProjectRequired.value &&
+                                project.id != null)
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 16.0),
+                                child: Row(
+                                  children: [
+                                    avatar,
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Text.rich(
                                         TextSpan(
-                                            text:
-                                                '${project.namespace!.fullPath!}/',
-                                            style:
-                                                const TextStyle(fontSize: 18)),
-                                        TextSpan(
-                                            text: project.name,
-                                            style: const TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold)),
-                                      ],
+                                          children: [
+                                            TextSpan(
+                                                text:
+                                                    '${project.namespace!.fullPath!}/',
+                                                style: const TextStyle(
+                                                    fontSize: 16)),
+                                            TextSpan(
+                                                text: project.name,
+                                                style: const TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                          ],
+                                        ),
+                                      ),
                                     ),
+                                  ],
+                                ),
+                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (item.title != null)
+                                  Flexible(
+                                    child: Text(item.title!,
+                                        style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold)),
                                   ),
-                                ),
+                                const SizedBox(width: 8),
+                                _StateWidget(mergeRequest: item),
                               ],
                             ),
-                          if (controller.repository.loadProjectRequired.value &&
-                              project.id != null)
-                            const Divider(height: 25),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              if (item.title != null)
-                                Flexible(
-                                  child: Text(item.title!,
-                                      style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold)),
+                            const SizedBox(height: 12),
+                            if (item.createdAt != null)
+                              Text(
+                                'Created ${timeago.format(item.createdAt!)} by ${item.author!.name!}',
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant,
+                                    fontSize: 13),
+                              ),
+                            const SizedBox(height: 12),
+                            if (item.closedBy != null)
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0),
+                                child: Row(
+                                  children: [
+                                    const Text('Closed by: ',
+                                        style: TextStyle(fontSize: 14)),
+                                    ColorLabel(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .outlineVariant,
+                                        text: item.closedBy!.name!),
+                                  ],
                                 ),
-                              _StateWidget(mergeRequest: item),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          if (item.createdAt != null)
-                            Text(
-                                'Created ${timeago.format(item.createdAt!)} by ${item.author!.name!}, edited ${timeago.format(item.updatedAt!)} by ${item.author!.name!}'),
-                          if (item.closedBy != null) const SizedBox(height: 10),
-                          if (item.closedBy != null)
-                            Row(
-                              children: [
-                                const Text('Closed by'),
-                                const SizedBox(width: 5),
-                                ColorLabel(
-                                    color: Colors.grey.shade200,
-                                    text: item.closedBy!.name!),
-                              ],
-                            ),
-                          if (item.mergeUser != null)
-                            const SizedBox(height: 10),
-                          if (item.mergeUser != null)
-                            Row(
-                              children: [
-                                const Text('Merged by:'),
-                                const SizedBox(width: 5),
-                                Flexible(
-                                  child: ColorLabel(
-                                      color: Colors.grey.shade200,
-                                      text: item.mergeUser!.name!),
+                              ),
+                            if (item.mergeUser != null)
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0),
+                                child: Row(
+                                  children: [
+                                    const Text('Merged by: ',
+                                        style: TextStyle(fontSize: 14)),
+                                    Flexible(
+                                      child: ColorLabel(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .outlineVariant,
+                                          text: item.mergeUser!.name!),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          if (item.sourceBranch != null)
-                            const SizedBox(height: 10),
-                          if (item.sourceBranch != null)
-                            Row(
-                              children: [
-                                const Text('Source branch:'),
-                                const SizedBox(width: 5),
-                                Flexible(
-                                  child: ColorLabel(
-                                      color: Colors.grey.shade200,
-                                      text: item.sourceBranch!),
+                              ),
+                            if (item.sourceBranch != null)
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0),
+                                child: Row(
+                                  children: [
+                                    const Text('Source: ',
+                                        style: TextStyle(fontSize: 14)),
+                                    Flexible(
+                                      child: ColorLabel(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondaryContainer,
+                                          text: item.sourceBranch!),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          if (item.targetBranch != null)
-                            const SizedBox(height: 10),
-                          if (item.targetBranch != null)
-                            Row(
-                              children: [
-                                const Text('Target branch:'),
-                                const SizedBox(width: 5),
-                                Flexible(
-                                  child: ColorLabel(
-                                      color: Colors.grey.shade200,
-                                      text: item.targetBranch!),
+                              ),
+                            if (item.targetBranch != null)
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0),
+                                child: Row(
+                                  children: [
+                                    const Text('Target: ',
+                                        style: TextStyle(fontSize: 14)),
+                                    Flexible(
+                                      child: ColorLabel(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondaryContainer,
+                                          text: item.targetBranch!),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-
-                          /// description
-
-                          if (item.description != null &&
-                              item.description!.isNotEmpty)
-                            const Divider(height: 25),
-                          if (item.description != null &&
-                              item.description!.isNotEmpty)
-                            SafeArea(
-                              bottom: false,
-                              child: AppMarkdown(content: item.description!),
-                            ),
-                        ],
+                              ),
+                            if (item.description != null &&
+                                item.description!.isNotEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 16.0),
+                                child: AppMarkdown(content: item.description!),
+                              ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  _AssigneeCard(item),
-                  pipelineExists
-                      ? _PipelineStatusCard(
+                    _AssigneeCard(item),
+                    if (pipelineExists)
+                      _PipelineStatusCard(
                           mergeRequest:
-                              controller.repository.detailedMergeRequest.value)
-                      : Container(),
-                  const Divider(),
-                  ListTile(
-                    leading: const Icon(Octicons.note),
-                    title: Text('Notes'.tr,
-                        style: const TextStyle(
-                            fontWeight: CommonConstants.fontWeightListTile)),
-                    onTap: () {
-                      Get.toNamed(Routes.mergeRequestNotes);
-                    },
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(item.userNotesCount.toString()),
-                        const Icon(Icons.keyboard_arrow_right),
-                      ],
+                              controller.repository.detailedMergeRequest.value),
+                    const SizedBox(height: 8),
+                    CardListItem(
+                      padding: EdgeInsets.zero,
+                      child: ListTile(
+                        leading: const Icon(Octicons.note),
+                        title: Text('Notes'.tr,
+                            style: const TextStyle(
+                                fontWeight:
+                                    CommonConstants.fontWeightListTile)),
+                        onTap: () {
+                          Get.toNamed(Routes.mergeRequestNotes);
+                        },
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(item.userNotesCount.toString()),
+                            const Icon(Icons.keyboard_arrow_right),
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                    const SizedBox(height: 16),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

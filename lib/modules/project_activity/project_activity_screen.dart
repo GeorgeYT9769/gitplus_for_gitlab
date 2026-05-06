@@ -47,38 +47,35 @@ class ProjectActivityScreen extends GetView<ProjectActivityController> {
   }
 
   Widget _buildListItem(Event item) {
-    return Column(
-      children: [
-        ListTile(
-          contentPadding: CommonConstants.contentPaddingLitTileLarge,
-          leading: ListAvatar(avatarUrl: item.author!.avatarUrl!),
-          title: Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(
-                    text: "${item.author!.name!} ",
-                    style: const TextStyle(
-                        fontWeight: CommonConstants.fontWeightListTile)),
-                TextSpan(
-                    text: '@${item.authorUsername!}',
-                    style: const TextStyle(fontSize: 14)),
-              ],
-            ),
-          ),
-          onTap: () {
-            controller.onItemPressed(item);
-          },
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return CardListItem(
+      child: ListTile(
+        contentPadding: CommonConstants.contentPaddingLitTileLarge,
+        leading: ListAvatar(avatarUrl: item.author!.avatarUrl!),
+        title: Text.rich(
+          TextSpan(
             children: [
-              EventDescLabel.widget(item) ?? Container(),
-              Text(timeago.format(item.createdAt!)),
-              // Text(item.id!.toString()),
+              TextSpan(
+                  text: "${item.author!.name!} ",
+                  style: const TextStyle(
+                      fontWeight: CommonConstants.fontWeightListTile)),
+              TextSpan(
+                  text: '@${item.authorUsername!}',
+                  style: const TextStyle(fontSize: 14)),
             ],
           ),
         ),
-        const Divider(),
-      ],
+        onTap: () {
+          controller.onItemPressed(item);
+        },
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            EventDescLabel.widget(item) ?? Container(),
+            Text(timeago.format(item.createdAt!)),
+            // Text(item.id!.toString()),
+          ],
+        ),
+      ),
     );
   }
 }

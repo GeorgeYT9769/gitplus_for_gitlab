@@ -171,18 +171,15 @@ class _TreeViewScreenState extends State<TreeViewScreen> {
                 itemCount: _tree.length,
                 itemBuilder: (context, index) {
                   var item = _tree[index];
-                  return Column(
-                    children: [
-                      ListTile(
-                        leading: item.type == TreeTypes.blob
-                            ? FileIcon(item.name!, size: 30)
-                            : Icon(Octicons.file_directory,
-                                color: Get.theme.colorScheme.secondary),
-                        title: Text(item.name ?? ''),
-                        onTap: () => _controller.onItemSelected(item),
-                      ),
-                      const Divider(),
-                    ],
+                  return CardListItem(
+                    child: ListTile(
+                      leading: item.type == TreeTypes.blob
+                          ? FileIcon(item.name!, size: 30)
+                          : Icon(Octicons.file_directory,
+                              color: Get.theme.colorScheme.secondary),
+                      title: Text(item.name ?? ''),
+                      onTap: () => _controller.onItemSelected(item),
+                    ),
                   );
                 }),
           ),

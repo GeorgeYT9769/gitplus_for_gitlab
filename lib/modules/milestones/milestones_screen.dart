@@ -154,53 +154,50 @@ Widget _buildList(
 
 Widget _buildListItem(MilestonesController controller, ProjectMilestone item,
     BuildContext context, MilestonesScreenArgs? args) {
-  return Column(
-    children: [
-      ListTile(
-        contentPadding: CommonConstants.contentPaddingLitTileLarge,
-        trailing: const Icon(Icons.keyboard_arrow_right),
-        onTap: () {
-          if (args?.onSelected == null) {
-            controller.onSelected(item);
-          } else {
-            args!.onSelected!(item);
-            Get.back();
-          }
-        },
-        title: Text(
-          item.title!,
-          style:
-              const TextStyle(fontWeight: CommonConstants.fontWeightListTile),
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 5),
-            if (item.expired ?? false)
-              Text("expired ${DateFormat('yyyy-MM-dd').format(item.dueDate!)}")
-            else
-              Row(
-                children: [
-                  if (item.startDate != null)
-                    Flexible(
-                        child: Text(DateFormat('MMM dd, yyyy - ')
-                            .format(item.startDate!))),
-                  if (item.dueDate != null)
-                    Flexible(
-                        child: Text(
-                            DateFormat('MMM dd, yyyy').format(item.dueDate!))),
-                ],
-              ),
-            const SizedBox(height: 5),
-            MilestoneStateLabel(
-              item: item,
-              fontSize: 12,
-            ),
-          ],
-        ),
+  return CardListItem(
+    child: ListTile(
+      contentPadding: CommonConstants.contentPaddingLitTileLarge,
+      trailing: const Icon(Icons.keyboard_arrow_right),
+      onTap: () {
+        if (args?.onSelected == null) {
+          controller.onSelected(item);
+        } else {
+          args!.onSelected!(item);
+          Get.back();
+        }
+      },
+      title: Text(
+        item.title!,
+        style:
+            const TextStyle(fontWeight: CommonConstants.fontWeightListTile),
       ),
-      const Divider(),
-    ],
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 5),
+          if (item.expired ?? false)
+            Text("expired ${DateFormat('yyyy-MM-dd').format(item.dueDate!)}")
+          else
+            Row(
+              children: [
+                if (item.startDate != null)
+                  Flexible(
+                      child: Text(DateFormat('MMM dd, yyyy - ')
+                          .format(item.startDate!))),
+                if (item.dueDate != null)
+                  Flexible(
+                      child: Text(
+                          DateFormat('MMM dd, yyyy').format(item.dueDate!))),
+              ],
+            ),
+          const SizedBox(height: 5),
+          MilestoneStateLabel(
+            item: item,
+            fontSize: 12,
+          ),
+        ],
+      ),
+    ),
   );
 }
 

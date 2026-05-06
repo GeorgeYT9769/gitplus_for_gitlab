@@ -231,60 +231,57 @@ Widget _buildList(IssuesController controller,
 
 Widget _buildListItem(
     IssuesController controller, Issue item, BuildContext context) {
-  return Column(
-    children: [
-      ListTile(
-        contentPadding: CommonConstants.contentPaddingLitTileLarge,
-        leading: ListAvatar(avatarUrl: item.author!.avatarUrl!),
-        title: Text(
-          '#${item.iid} ${item.title!}',
-          style:
-              const TextStyle(fontWeight: CommonConstants.fontWeightListTile),
-        ),
-        trailing: const Icon(Icons.keyboard_arrow_right),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text.rich(TextSpan(
-              children: [
-                TextSpan(
-                    text: item.author!.name,
-                    style: const TextStyle(fontSize: 14)),
-                TextSpan(
-                    text: " authored ${timeago.format(item.createdAt!)}",
-                    style: const TextStyle(fontSize: 14)),
-              ],
-            )),
-            const SizedBox(height: 5),
-            Row(
-              children: [
-                _stateWidget(item),
-
-                const SizedBox(width: 15),
-
-                /// mr
-                const Icon(Octicons.git_merge, size: 18),
-                const SizedBox(width: 3),
-                Text(item.mergeRequestsCount.toString(),
-                    style: const TextStyle(fontSize: 12)),
-
-                const SizedBox(width: 10),
-
-                /// comments
-                const Icon(Octicons.comment_discussion, size: 18),
-                const SizedBox(width: 5),
-                Text(item.userNotesCount.toString(),
-                    style: const TextStyle(fontSize: 12)),
-              ],
-            ),
-          ],
-        ),
-        onTap: () {
-          controller.onNavToDetails(item);
-        },
+  return CardListItem(
+    child: ListTile(
+      contentPadding: CommonConstants.contentPaddingLitTileLarge,
+      leading: ListAvatar(avatarUrl: item.author!.avatarUrl!),
+      title: Text(
+        '#${item.iid} ${item.title!}',
+        style:
+            const TextStyle(fontWeight: CommonConstants.fontWeightListTile),
       ),
-      const Divider(),
-    ],
+      trailing: const Icon(Icons.keyboard_arrow_right),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text.rich(TextSpan(
+            children: [
+              TextSpan(
+                  text: item.author!.name,
+                  style: const TextStyle(fontSize: 14)),
+              TextSpan(
+                  text: " authored ${timeago.format(item.createdAt!)}",
+                  style: const TextStyle(fontSize: 14)),
+            ],
+          )),
+          const SizedBox(height: 5),
+          Row(
+            children: [
+              _stateWidget(item),
+
+              const SizedBox(width: 15),
+
+              /// mr
+              const Icon(Octicons.git_merge, size: 18),
+              const SizedBox(width: 3),
+              Text(item.mergeRequestsCount.toString(),
+                  style: const TextStyle(fontSize: 12)),
+
+              const SizedBox(width: 10),
+
+              /// comments
+              const Icon(Octicons.comment_discussion, size: 18),
+              const SizedBox(width: 5),
+              Text(item.userNotesCount.toString(),
+                  style: const TextStyle(fontSize: 12)),
+            ],
+          ),
+        ],
+      ),
+      onTap: () {
+        controller.onNavToDetails(item);
+      },
+    ),
   );
 }
 

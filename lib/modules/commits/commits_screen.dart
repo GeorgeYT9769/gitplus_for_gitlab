@@ -81,52 +81,49 @@ class _CommitsListItem extends StatelessWidget {
     var statusString = getStatusString();
     var statusIcon = getStatusIcon();
 
-    return Column(
-      children: [
-        ListTile(
-          // contentPadding: CommonConstants.contentPaddingLitTileLarge,
-          title: Text(
-            commit.title!,
-            style:
-            const TextStyle(fontWeight: CommonConstants.fontWeightListTile),
-          ),
-          trailing: const Icon(Icons.keyboard_arrow_right),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 5),
-              // Text(item.shortId!),
-              // const SizedBox(height: 5),
-              Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                        text: "${commit.authorName!} ",
-                        style: const TextStyle(
-                            fontWeight: CommonConstants.fontWeightListTile)),
-                    TextSpan(
-                        text: "authored ${timeago.format(commit.createdAt!)}",
-                        style: const TextStyle(fontSize: 14)),
-                  ],
-                ),
-              ),
-              Row(
-                children: [
-                  if (statusIcon != null) statusIcon,
-                  const SizedBox(
-                    width: 10.0,
-                  ),
-                  if (statusIcon != null) Text(statusString)
-                ],
-              )
-            ],
-          ),
-          onTap: () {
-            controller.onCommitSelected(commit);
-          },
+    return CardListItem(
+      child: ListTile(
+        // contentPadding: CommonConstants.contentPaddingLitTileLarge,
+        title: Text(
+          commit.title!,
+          style:
+          const TextStyle(fontWeight: CommonConstants.fontWeightListTile),
         ),
-        const Divider(),
-      ],
+        trailing: const Icon(Icons.keyboard_arrow_right),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 5),
+            // Text(item.shortId!),
+            // const SizedBox(height: 5),
+            Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                      text: "${commit.authorName!} ",
+                      style: const TextStyle(
+                          fontWeight: CommonConstants.fontWeightListTile)),
+                  TextSpan(
+                      text: "authored ${timeago.format(commit.createdAt!)}",
+                      style: const TextStyle(fontSize: 14)),
+                ],
+              ),
+            ),
+            Row(
+              children: [
+                if (statusIcon != null) statusIcon,
+                const SizedBox(
+                  width: 10.0,
+                ),
+                if (statusIcon != null) Text(statusString)
+              ],
+            )
+          ],
+        ),
+        onTap: () {
+          controller.onCommitSelected(commit);
+        },
+      ),
     );
   }
 
@@ -207,7 +204,6 @@ class _CommitsGroupSeparator extends StatelessWidget {
           formatted.toString(),
           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         )),
-        const Divider(),
       ],
     );
   }

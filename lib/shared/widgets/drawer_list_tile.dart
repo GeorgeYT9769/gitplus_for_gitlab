@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gitplus_for_gitlab/shared/shared.dart';
 
 class DrawerListTile extends StatelessWidget {
   final String title;
@@ -16,12 +17,17 @@ class DrawerListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      tileColor: Colors.transparent,
-      selected: selected ?? false,
-      leading: Icon(icon),
-      title: Text(title, style: const TextStyle()),
-      onTap: () => onTap(),
+    return CardListItem(
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      child: ListTile(
+        tileColor: (selected ?? false)
+            ? Theme.of(context).colorScheme.primaryContainer
+            : Colors.transparent,
+        selected: selected ?? false,
+        leading: Icon(icon),
+        title: Text(title, style: const TextStyle()),
+        onTap: () => onTap(),
+      ),
     );
   }
 }

@@ -57,36 +57,33 @@ class ProjectSnippetsScreen extends GetView<ProjectSnippetsController> {
   }
 
   Widget _buildListItem(ProjectSnippet item, BuildContext context) {
-    return Column(
-      children: [
-        ListTile(
-          leading: FileIcon(item.fileName!, size: 30),
-          title: Text(
-            item.title!,
-            style:
-                const TextStyle(fontWeight: CommonConstants.fontWeightListTile),
-          ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                        text: "authored ${timeago.format(item.createdAt!)} by "),
-                    TextSpan(text: item.author!.name, style: const TextStyle()),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          trailing: const Icon(Icons.keyboard_arrow_right),
-          onTap: () {
-            controller.onSelected(item);
-          },
+    return CardListItem(
+      child: ListTile(
+        leading: FileIcon(item.fileName!, size: 30),
+        title: Text(
+          item.title!,
+          style:
+              const TextStyle(fontWeight: CommonConstants.fontWeightListTile),
         ),
-        const Divider(),
-      ],
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                      text: "authored ${timeago.format(item.createdAt!)} by "),
+                  TextSpan(text: item.author!.name, style: const TextStyle()),
+                ],
+              ),
+            ),
+          ],
+        ),
+        trailing: const Icon(Icons.keyboard_arrow_right),
+        onTap: () {
+          controller.onSelected(item);
+        },
+      ),
     );
   }
 }

@@ -122,31 +122,28 @@ Widget _listWidget(List<Group> groups, context, GroupsController controller,
                   name = item.name!.toUpperCase().substring(0, 1);
                 }
 
-                return Column(
-                  children: [
-                    ListTile(
-                      // contentPadding:
-                      //     const EdgeInsets.only(left: 15, top: 10, bottom: 10),
-                      leading: ListVisibilityTextAvatar(
-                          text: name, visibility: item.visibility!),
-                      title: Text(item.name ?? '',
-                          style: const TextStyle(
-                              fontWeight: CommonConstants.fontWeightListTile)),
-                      subtitle: item.fullName != item.name
-                          ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                if (item.fullName != item.name)
-                                  Text(item.fullName!),
-                              ],
-                            )
-                          : null,
-                      onTap: () {
-                        controller.onGroupSelected(item);
-                      },
-                    ),
-                    const Divider(),
-                  ],
+                return CardListItem(
+                  child: ListTile(
+                    // contentPadding:
+                    //     const EdgeInsets.only(left: 15, top: 10, bottom: 10),
+                    leading: ListVisibilityTextAvatar(
+                        text: name, visibility: item.visibility!),
+                    title: Text(item.name ?? '',
+                        style: const TextStyle(
+                            fontWeight: CommonConstants.fontWeightListTile)),
+                    subtitle: item.fullName != item.name
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (item.fullName != item.name)
+                                Text(item.fullName!),
+                            ],
+                          )
+                        : null,
+                    onTap: () {
+                      controller.onGroupSelected(item);
+                    },
+                  ),
                 );
               }),
         ),

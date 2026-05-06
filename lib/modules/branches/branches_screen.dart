@@ -231,30 +231,27 @@ Widget _listBranchesWidget(List<Branch> branches, BranchesController controller,
                           style: TextStyle(fontSize: 12)));
                 }
 
-                return Column(
-                  children: [
-                    ListTile(
-                      title: Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: [
-                          Text("${b.name!} ",
-                              style:
-                                  const TextStyle(fontFamily: 'SourceCodePro')),
-                          def,
-                        ],
-                      ),
-                      trailing: b.name == args.selectedRef
-                          ? Icon(Icons.done,
-                              color: Get.theme.colorScheme.secondary)
-                          : null,
-                      onTap: () {
-                        args.onRefSelected(b.name ?? '');
-                        Get.until(
-                            (route) => route.settings.name == args.returnRoute);
-                      },
+                return CardListItem(
+                  child: ListTile(
+                    title: Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        Text("${b.name!} ",
+                            style:
+                                const TextStyle(fontFamily: 'SourceCodePro')),
+                        def,
+                      ],
                     ),
-                    const Divider(),
-                  ],
+                    trailing: b.name == args.selectedRef
+                        ? Icon(Icons.done,
+                            color: Get.theme.colorScheme.secondary)
+                        : null,
+                    onTap: () {
+                      args.onRefSelected(b.name ?? '');
+                      Get.until(
+                          (route) => route.settings.name == args.returnRoute);
+                    },
+                  ),
                 );
               }),
         ),
@@ -292,30 +289,27 @@ Widget _listTagsWidget(
                           style: TextStyle(fontSize: 12)));
                 }
 
-                return Column(
-                  children: [
-                    ListTile(
-                      title: Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: [
-                          Text("${b.name!} ",
-                              style:
-                                  const TextStyle(fontFamily: 'SourceCodePro')),
-                          def,
-                        ],
-                      ),
-                      trailing: b.name == args.selectedRef
-                          ? Icon(Icons.done,
-                              color: Get.theme.colorScheme.secondary)
-                          : null,
-                      onTap: () {
-                        args.onRefSelected(b.name ?? '');
-                        Get.until(
-                            (route) => route.settings.name == args.returnRoute);
-                      },
+                return CardListItem(
+                  child: ListTile(
+                    title: Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        Text("${b.name!} ",
+                            style:
+                                const TextStyle(fontFamily: 'SourceCodePro')),
+                        def,
+                      ],
                     ),
-                    const Divider(),
-                  ],
+                    trailing: b.name == args.selectedRef
+                        ? Icon(Icons.done,
+                            color: Get.theme.colorScheme.secondary)
+                        : null,
+                    onTap: () {
+                      args.onRefSelected(b.name ?? '');
+                      Get.until(
+                          (route) => route.settings.name == args.returnRoute);
+                    },
+                  ),
                 );
               }),
         ),

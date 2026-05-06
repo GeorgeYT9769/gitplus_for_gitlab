@@ -34,38 +34,35 @@ class ActivityTab extends GetView<HomeController> {
   }
 
   Widget _buildListItem(Event item) {
-    return Column(
-      children: [
-        ListTile(
-          contentPadding: CommonConstants.contentPaddingLitTileLarge,
-          leading: ListAvatar(avatarUrl: item.author!.avatarUrl!),
-          title: Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(
-                    text: "${item.author!.name!} ",
-                    style: const TextStyle(
-                        fontWeight: CommonConstants.fontWeightListTile)),
-                TextSpan(
-                    text: '@${item.authorUsername!}',
-                    style: const TextStyle(fontSize: 14)),
-              ],
-            ),
-          ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return CardListItem(
+      child: ListTile(
+        contentPadding: CommonConstants.contentPaddingLitTileLarge,
+        leading: ListAvatar(avatarUrl: item.author!.avatarUrl!),
+        title: Text.rich(
+          TextSpan(
             children: [
-              EventDescLabel.widget(item) ?? Container(),
-              const SizedBox(height: 5),
-              Text(timeago.format(item.createdAt!)),
+              TextSpan(
+                  text: "${item.author!.name!} ",
+                  style: const TextStyle(
+                      fontWeight: CommonConstants.fontWeightListTile)),
+              TextSpan(
+                  text: '@${item.authorUsername!}',
+                  style: const TextStyle(fontSize: 14)),
             ],
           ),
-          onTap: () {
-            controller.onEventPressed(item);
-          },
         ),
-        const Divider(),
-      ],
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            EventDescLabel.widget(item) ?? Container(),
+            const SizedBox(height: 5),
+            Text(timeago.format(item.createdAt!)),
+          ],
+        ),
+        onTap: () {
+          controller.onEventPressed(item);
+        },
+      ),
     );
   }
 }

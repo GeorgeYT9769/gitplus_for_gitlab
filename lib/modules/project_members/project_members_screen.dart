@@ -80,35 +80,32 @@ Widget _listWidget(List<Member> members, ProjectMembersController controller) {
                   );
                 }
 
-                return Column(
-                  children: [
-                    ListTile(
-                      leading: ListAvatar(avatarUrl: item.avatarUrl!),
-                      title: Text(item.name!,
-                          style: const TextStyle(
-                              fontWeight: CommonConstants.fontWeightListTile)),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(item.username!),
-                          state,
-                        ],
-                      ),
-                      trailing: Container(
-                          padding: const EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                              color: Get.theme.highlightColor,
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(5))),
-                          child: Text(
-                              GitlabUtils.getAccessLevelName(item.accessLevel!),
-                              style: const TextStyle(fontSize: 12))),
-                      onTap: () {
-                        controller.onMemberSelected(item);
-                      },
+                return CardListItem(
+                  child: ListTile(
+                    leading: ListAvatar(avatarUrl: item.avatarUrl!),
+                    title: Text(item.name!,
+                        style: const TextStyle(
+                            fontWeight: CommonConstants.fontWeightListTile)),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(item.username!),
+                        state,
+                      ],
                     ),
-                    const Divider(),
-                  ],
+                    trailing: Container(
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                            color: Get.theme.highlightColor,
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(5))),
+                        child: Text(
+                            GitlabUtils.getAccessLevelName(item.accessLevel!),
+                            style: const TextStyle(fontSize: 12))),
+                    onTap: () {
+                      controller.onMemberSelected(item);
+                    },
+                  ),
                 );
               }),
         ),
