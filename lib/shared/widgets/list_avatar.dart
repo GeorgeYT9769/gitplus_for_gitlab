@@ -28,20 +28,7 @@ class ListAvatar extends StatelessWidget {
             image: DecorationImage(image: imageProvider),
           ),
         ),
-        errorWidget: (context, url, error) => Row(
-          children: [
-            Icon(Icons.error),
-            Text(
-                'Failed to load image.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: Theme.of(context).colorScheme.onSurface,
-                )
-            ),
-          ],
-        ),
+        errorWidget: (context, url, error) => const Icon(Icons.person),
       ),
     );
   }

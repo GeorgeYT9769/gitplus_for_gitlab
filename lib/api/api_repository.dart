@@ -1495,6 +1495,18 @@ class ApiRepository {
     return null;
   }
 
+  Future<bool> retryPipeline(int projectId, int pipelineId) async {
+    final res = await apiProvider.retryPipeline(
+        '/api/v4/projects/$projectId/pipelines/$pipelineId/retry');
+    return res.statusCode == 201 || res.statusCode == 200;
+  }
+
+  Future<bool> cancelPipeline(int projectId, int pipelineId) async {
+    final res = await apiProvider.cancelPipeline(
+        '/api/v4/projects/$projectId/pipelines/$pipelineId/cancel');
+    return res.statusCode == 200;
+  }
+
   Future<Pipeline?> getLatestPipeline(
       int projectId, LatestPipelineRequest data) async {
     final res = await apiProvider.getLatestPipeline(

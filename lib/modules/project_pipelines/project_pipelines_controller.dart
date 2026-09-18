@@ -4,8 +4,7 @@ import 'package:get/get.dart';
 import 'package:gitplus_for_gitlab/api/api_repository.dart';
 import 'package:gitplus_for_gitlab/models/models.dart';
 import 'package:gitplus_for_gitlab/shared/data/repository.dart';
-import 'package:gitplus_for_gitlab/shared/http_controller.dart';
-import 'package:gitplus_for_gitlab/shared/paging_controller.dart';
+import 'package:gitplus_for_gitlab/shared/shared.dart';
 
 class PipelinesController extends GetxController
     with HttpController, PagingController {
@@ -73,5 +72,29 @@ class PipelinesController extends GetxController
   Future<void> _scrollListener() async {
     scrollListener(
         scrollController, _pipelinesRes, (value) => listMore(value), _page);
+  }
+
+  Future<void> retryPipeline(int pipelineId) async {
+    await runWithErrorHandlingWithoutState(() async {
+      var success = await apiRepository.retryPipeline(repository.project.value.id!, pipelineId);
+      if (success) {
+        CommonWidget.toast("Pipeline retried successfully");
+        list();
+      } else {
+        CommonWidget.toast("Failed to retry pipeline");
+      }
+    });
+  }
+
+  Future<void> cancelPipeline(int pipelineId) async {
+    await runWithErrorHandlingWithoutState(() async {
+      var success = await apiRepository.cancelPipeline(repository.project.value.id!, pipelineId);
+      if (success) {
+        CommonWidget.toast("Pipeline canceled successfully");
+        list();
+      } else {
+        CommonWidget.toast("Failed to cancel pipeline");
+      }
+    });
   }
 }

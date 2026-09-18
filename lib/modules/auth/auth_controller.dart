@@ -117,10 +117,42 @@ class AuthController extends GetxController with HttpController {
     super.onClose();
   }
 
+  Future<String> _discoverBaseUrl(String serverText) async {
+    var text = serverText.trim();
+    if (text.isEmpty) return "https://gitlab.com";
+    if (text.startsWith('http://') || text.startsWith('https://')) {
+      if (text.endsWith('/')) text = text.substring(0, text.length - 1);
+      return text;
+    }
+    var candidateHttps = "https://$text";
+    if (candidateHttps.endsWith('/')) candidateHttps = candidateHttps.substring(0, candidateHttps.length - 1);
+    var candidateHttp = "http://$text";
+    if (candidateHttp.endsWith('/')) candidateHttp = candidateHttp.substring(0, candidateHttp.length - 1);
+
+    try {
+      final probeDio = Dio(BaseOptions(connectTimeout: const Duration(seconds: 3)));
+      await probeDio.get(candidateHttps);
+      return candidateHttps;
+    } on DioException catch (e) {
+      if (e.response != null) return candidateHttps;
+    } catch (_) {}
+
+    try {
+      final probeDio = Dio(BaseOptions(connectTimeout: const Duration(seconds: 3)));
+      await probeDio.get(candidateHttp);
+      return candidateHttp;
+    } on DioException catch (e) {
+      if (e.response != null) return candidateHttp;
+    } catch (_) {}
+
+    return "${prefix.value}://$text";
+  }
+
   Future<void> submitPassAuth() async {
-    _baseUrl = prefix + "://" + textcontroller.text;
+    EasyLoading.show(status: 'Discovering server...');
+    _baseUrl = await _discoverBaseUrl(textcontroller.text);
     await _prefs.setBaseUrl(_baseUrl);
-    EasyLoading.show();
+    EasyLoading.show(status: 'Logging in...');
 
     try {
       var res = await apiRepository.signInPassword(AccessTokenReqestPassword(
@@ -133,12 +165,16 @@ class AuthController extends GetxController with HttpController {
 
         var user = await apiRepository.getUser();
         if (user != null) {
+          var avatarUrl = user.avatarUrl ?? "";
+          if (avatarUrl.isNotEmpty && !avatarUrl.startsWith('http')) {
+            avatarUrl = _baseUrl + avatarUrl;
+          }
           var acc = AppAccount(
               userId: user.id,
               name: user.name,
               baseUrl: _baseUrl,
               username: user.username,
-              avatarUrl: user.avatarUrl,
+              avatarUrl: avatarUrl,
               accessToken: res.accessToken,
               refreshToken: res.refreshToken);
 
@@ -166,21 +202,26 @@ class AuthController extends GetxController with HttpController {
   }
 
   Future<void> submitAccessTokenAuth() async {
-    _baseUrl = prefix + "://" + textcontroller.text;
+    EasyLoading.show(status: 'Discovering server...');
+    _baseUrl = await _discoverBaseUrl(textcontroller.text);
     await _prefs.setBaseUrl(_baseUrl);
 
     await _prefs.setToken(accessTokenController.text);
 
-    EasyLoading.show();
+    EasyLoading.show(status: 'Authenticating...');
 
     try {
       var user = await apiRepository.getUser();
+      var avatarUrl = user?.avatarUrl ?? "";
+      if (avatarUrl.isNotEmpty && !avatarUrl.startsWith('http')) {
+        avatarUrl = _baseUrl + avatarUrl;
+      }
       var acc = AppAccount(
           userId: user!.id,
           name: user.name,
           baseUrl: _baseUrl,
           username: user.username,
-          avatarUrl: user.avatarUrl,
+          avatarUrl: avatarUrl,
           accessToken: accessTokenController.text);
       await _prefs.addUpdateAccount(acc);
 

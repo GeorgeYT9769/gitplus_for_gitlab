@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:gitplus_for_gitlab/modules/auth/auth.dart';
 import 'package:gitplus_for_gitlab/shared/shared.dart';
+import 'package:gitplus_for_gitlab/shared/utils/legal_texts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AuthScreenStandard extends GetView<AuthController> {
@@ -203,9 +204,16 @@ class AuthScreenStandard extends GetView<AuthController> {
                         if (controller.canShowExternalContent.value)
                           OutlinedButton(
                             onPressed: () {
-                              var baseUrl = controller.prefix +
-                                  "://" +
-                                  controller.textcontroller.text;
+                              var serverText = controller.textcontroller.text.trim();
+                              String baseUrl;
+                              if (serverText.startsWith('http://') || serverText.startsWith('https://')) {
+                                baseUrl = serverText;
+                              } else {
+                                baseUrl = controller.prefix.value + "://" + serverText;
+                              }
+                              if (baseUrl.endsWith('/')) {
+                                baseUrl = baseUrl.substring(0, baseUrl.length - 1);
+                              }
                               launchUrl(Uri.parse(
                                   '$baseUrl/-/profile/personal_access_tokens'));
                             },
@@ -227,6 +235,27 @@ class AuthScreenStandard extends GetView<AuthController> {
                         // ),
                       ],
                     ),
+                  const SizedBox(height: 30),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextButton(
+                        onPressed: () => _showLegalDialog(context, 'Privacy Policy', LegalTexts.privacyPolicy),
+                        child: Text(
+                          'Privacy Policy',
+                          style: TextStyle(fontSize: 13, color: Get.theme.colorScheme.primary),
+                        ),
+                      ),
+                      Container(width: 1, height: 14, color: Colors.grey.withAlpha(100)),
+                      TextButton(
+                        onPressed: () => _showLegalDialog(context, 'Terms of Service', LegalTexts.termsOfService),
+                        child: Text(
+                          'Terms of Service',
+                          style: TextStyle(fontSize: 13, color: Get.theme.colorScheme.primary),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
               if (Navigator.canPop(context))
@@ -254,5 +283,23 @@ class AuthScreenStandard extends GetView<AuthController> {
     } else {
       return Icons.arrow_back;
     }
+  }
+
+  void _showLegalDialog(BuildContext context, String title, String text) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: SingleChildScrollView(
+          child: Text(text, style: const TextStyle(fontSize: 14, height: 1.4)),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
   }
 }

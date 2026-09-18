@@ -15,23 +15,80 @@ class MergeRequestsTab extends GetView<HomeController> {
 }
 
 Widget _buildList(HomeController controller, List<MergeRequest> items) {
-  return RefreshIndicator(
-    onRefresh: () => controller.listMergeRequests(),
-    child: HttpFutureBuilder(
-      state: controller.mrState.value,
-      child: Scrollbar(
-        controller: controller.mrScrollController,
-        child: ListView.builder(
-            controller: controller.mrScrollController,
-            physics: const AlwaysScrollableScrollPhysics(),
-            itemCount: items.length,
-            itemBuilder: (context, index) {
-              var item = items[index];
-              return _buildListItem(controller, item, context);
-            }),
-      ),
-    ),
-  );
+    return Column(
+      children: [
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          child: Row(
+            children: [
+              FilterChip(
+                label: const Text('All States'),
+                selected: controller.mergeRequestsFilterState.value.isEmpty,
+                onSelected: (_) => controller.onMergeRequestStateChanged(''),
+              ),
+              const SizedBox(width: 6),
+              FilterChip(
+                label: const Text('Open'),
+                selected: controller.mergeRequestsFilterState.value == MergeRequestState.opened,
+                onSelected: (_) => controller.onMergeRequestStateChanged(MergeRequestState.opened),
+              ),
+              const SizedBox(width: 6),
+              FilterChip(
+                label: const Text('Closed'),
+                selected: controller.mergeRequestsFilterState.value == MergeRequestState.closed,
+                onSelected: (_) => controller.onMergeRequestStateChanged(MergeRequestState.closed),
+              ),
+              const SizedBox(width: 6),
+              FilterChip(
+                label: const Text('Merged'),
+                selected: controller.mergeRequestsFilterState.value == MergeRequestState.merged,
+                onSelected: (_) => controller.onMergeRequestStateChanged(MergeRequestState.merged),
+              ),
+              const SizedBox(width: 8),
+              Container(width: 1, height: 20, color: Colors.grey.withAlpha(100)),
+              const SizedBox(width: 8),
+              FilterChip(
+                label: const Text('All Scopes'),
+                selected: controller.mergeRequestsFilterScope.value == MergeRequestScope.all,
+                onSelected: (_) => controller.onMergeRequestScopeChanged(MergeRequestScope.all),
+              ),
+              const SizedBox(width: 6),
+              FilterChip(
+                label: const Text('Created'),
+                selected: controller.mergeRequestsFilterScope.value == MergeRequestScope.createdByMe,
+                onSelected: (_) => controller.onMergeRequestScopeChanged(MergeRequestScope.createdByMe),
+              ),
+              const SizedBox(width: 6),
+              FilterChip(
+                label: const Text('Assigned'),
+                selected: controller.mergeRequestsFilterScope.value == MergeRequestScope.assignedToMe,
+                onSelected: (_) => controller.onMergeRequestScopeChanged(MergeRequestScope.assignedToMe),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: RefreshIndicator(
+            onRefresh: () => controller.listMergeRequests(),
+            child: HttpFutureBuilder(
+              state: controller.mrState.value,
+              child: Scrollbar(
+                controller: controller.mrScrollController,
+                child: ListView.builder(
+                    controller: controller.mrScrollController,
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    itemCount: items.length,
+                    itemBuilder: (context, index) {
+                      var item = items[index];
+                      return _buildListItem(controller, item, context);
+                    }),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
 }
 
 Widget _buildListItem(

@@ -85,6 +85,21 @@ class PipelineListItem extends StatelessWidget {
         break;
     }
 
+    Widget? trailingAction;
+    if (item.status == 'running' || item.status == 'pending') {
+      trailingAction = IconButton(
+        icon: const Icon(Icons.cancel_outlined, color: Colors.red),
+        tooltip: 'Cancel Pipeline',
+        onPressed: () => controller.cancelPipeline(item.id!),
+      );
+    } else if (item.status == 'failed' || item.status == 'canceled' || item.status == 'success') {
+      trailingAction = IconButton(
+        icon: const Icon(Icons.refresh_outlined, color: Colors.blue),
+        tooltip: 'Retry Pipeline',
+        onPressed: () => controller.retryPipeline(item.id!),
+      );
+    }
+
     return CardListItem(
       child: ListTile(
         contentPadding: CommonConstants.contentPaddingLitTileLarge,
@@ -94,7 +109,13 @@ class PipelineListItem extends StatelessWidget {
               const TextStyle(fontWeight: CommonConstants.fontWeightListTile),
         ),
         leading: stateIcon,
-        trailing: const Icon(Icons.keyboard_arrow_right),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (trailingAction != null) trailingAction,
+            const Icon(Icons.keyboard_arrow_right),
+          ],
+        ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

@@ -271,6 +271,40 @@ int main() {
             ],
           ),
           const Divider(),
+          _sectionHeader('Custom Syntax Colors'),
+          ListTile(
+            leading: const Icon(Icons.color_lens_outlined),
+            title: const Text('Keyword Color'),
+            trailing: CircleAvatar(
+              radius: 12,
+              backgroundColor: Color(_controller.spStorage.prefs.getInt('syntax_keyword_color') ?? 0xFF9C27B0),
+            ),
+            onTap: () => _showSyntaxColorPicker('keyword', 'Keyword'),
+          ),
+          ListTile(
+            leading: const Icon(Icons.color_lens_outlined),
+            title: const Text('String Color'),
+            trailing: CircleAvatar(
+              radius: 12,
+              backgroundColor: Color(_controller.spStorage.prefs.getInt('syntax_string_color') ?? 0xFF43A047),
+            ),
+            onTap: () => _showSyntaxColorPicker('string', 'String'),
+          ),
+          ListTile(
+            leading: const Icon(Icons.color_lens_outlined),
+            title: const Text('Comment Color'),
+            trailing: CircleAvatar(
+              radius: 12,
+              backgroundColor: Color(_controller.spStorage.prefs.getInt('syntax_comment_color') ?? 0xFF9E9E9E),
+            ),
+            onTap: () => _showSyntaxColorPicker('comment', 'Comment'),
+          ),
+          ListTile(
+            title: const Text('Reset Syntax Colors', style: TextStyle(color: Colors.orange)),
+            trailing: const Icon(Icons.refresh, color: Colors.orange),
+            onTap: () => _controller.onResetSyntaxColors(),
+          ),
+          const Divider(),
           ListTile(
             title: Text('Reset defaults'.tr,
                 textAlign: TextAlign.center,
@@ -369,6 +403,46 @@ int main() {
                 Get.back();
               },
               child: Text('Apply'.tr),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showSyntaxColorPicker(String key, String title) {
+    int? currentVal = _controller.spStorage.prefs.getInt('syntax_${key}_color');
+    Color pickerColor = currentVal != null ? Color(currentVal) : Colors.blue;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Pick $title Color'),
+          content: SingleChildScrollView(
+            child: ColorPicker(
+              pickerColor: pickerColor,
+              onColorChanged: (Color color) {
+                pickerColor = color;
+              },
+              paletteType: PaletteType.hueWheel,
+              displayThumbColor: true,
+              enableAlpha: false,
+              pickerAreaHeightPercent: 0.8,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Get.back();
+              },
+              child: Text('Cancel'.tr),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                _controller.onSyntaxColorChanged(key, pickerColor);
+                Get.back();
+              },
+              child: Text('OK'.tr),
             ),
           ],
         );

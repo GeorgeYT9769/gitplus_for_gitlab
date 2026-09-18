@@ -305,5 +305,13 @@ class ApiProvider extends BaseProvider {
   Future<Response> getSingleJob(String path) {
     return dio.get(path);
   }
+
+  Future<Response> retryPipeline(String path) {
+    return dio.post(path);
+  }
+
+  Future<Response> cancelPipeline(String path) {
+    return dio.post(path);
+  }
 }
 

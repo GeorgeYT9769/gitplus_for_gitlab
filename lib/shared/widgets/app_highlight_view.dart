@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:gitplus_for_gitlab/shared/shared.dart';
 import 'package:gitplus_for_gitlab/shared/flutter_highlight/flutter_highlight.dart';
 import 'package:gitplus_for_gitlab/shared/flutter_highlight/theme_map.dart';
-import 'package:gitplus_for_gitlab/shared/utils/common_widget.dart';
 
 class AppHighlightView extends StatelessWidget {
   final String? content;
@@ -26,7 +26,26 @@ class AppHighlightView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final numLines = '\n'.allMatches(content ?? '').length + 1;
-    final themeData = themeMap[theme] ?? {};
+    final Map<String, TextStyle> themeData = Map<String, TextStyle>.from(themeMap[theme] ?? {});
+    
+    // Inject custom colors if configured
+    try {
+      final sp = Get.find<SPStorage>();
+      final customKeyword = sp.prefs.getInt('syntax_keyword_color');
+      final customString = sp.prefs.getInt('syntax_string_color');
+      final customComment = sp.prefs.getInt('syntax_comment_color');
+      
+      if (customKeyword != null) {
+        themeData['keyword'] = (themeData['keyword'] ?? const TextStyle()).copyWith(color: Color(customKeyword));
+      }
+      if (customString != null) {
+        themeData['string'] = (themeData['string'] ?? const TextStyle()).copyWith(color: Color(customString));
+      }
+      if (customComment != null) {
+        themeData['comment'] = (themeData['comment'] ?? const TextStyle()).copyWith(color: Color(customComment));
+      }
+    } catch (_) {}
+
     final style = TextStyle(
       fontFamily: 'SourceCodePro',
       fontSize: fontSize,

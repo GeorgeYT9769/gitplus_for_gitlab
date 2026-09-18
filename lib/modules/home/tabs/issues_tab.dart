@@ -15,22 +15,73 @@ class IssuesTab extends GetView<HomeController> {
   }
 
   Widget _buildList() {
-    return RefreshIndicator(
-      onRefresh: () => controller.listIssues(),
-      child: HttpFutureBuilder(
-        state: controller.issuesState.value,
-        child: Scrollbar(
-          controller: controller.issuesScrollController,
-          child: ListView.builder(
-              controller: controller.issuesScrollController,
-              physics: const AlwaysScrollableScrollPhysics(),
-              itemCount: controller.issues.length,
-              itemBuilder: (context, index) {
-                var item = controller.issues[index];
-                return _buildListItem(item, context);
-              }),
+    return Column(
+      children: [
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          child: Row(
+            children: [
+              FilterChip(
+                label: const Text('All States'),
+                selected: controller.issuesFilterState.value.isEmpty,
+                onSelected: (_) => controller.onIssuesStateChanged(''),
+              ),
+              const SizedBox(width: 6),
+              FilterChip(
+                label: const Text('Open'),
+                selected: controller.issuesFilterState.value == IssueState.opened,
+                onSelected: (_) => controller.onIssuesStateChanged(IssueState.opened),
+              ),
+              const SizedBox(width: 6),
+              FilterChip(
+                label: const Text('Closed'),
+                selected: controller.issuesFilterState.value == IssueState.closed,
+                onSelected: (_) => controller.onIssuesStateChanged(IssueState.closed),
+              ),
+              const SizedBox(width: 8),
+              Container(width: 1, height: 20, color: Colors.grey.withAlpha(100)),
+              const SizedBox(width: 8),
+              FilterChip(
+                label: const Text('All Scopes'),
+                selected: controller.issuesFilterScope.value == IssuesScope.all,
+                onSelected: (_) => controller.onIssuesScopeChanged(IssuesScope.all),
+              ),
+              const SizedBox(width: 6),
+              FilterChip(
+                label: const Text('Created'),
+                selected: controller.issuesFilterScope.value == IssuesScope.createdByMe,
+                onSelected: (_) => controller.onIssuesScopeChanged(IssuesScope.createdByMe),
+              ),
+              const SizedBox(width: 6),
+              FilterChip(
+                label: const Text('Assigned'),
+                selected: controller.issuesFilterScope.value == IssuesScope.assignedToMe,
+                onSelected: (_) => controller.onIssuesScopeChanged(IssuesScope.assignedToMe),
+              ),
+            ],
+          ),
         ),
-      ),
+        Expanded(
+          child: RefreshIndicator(
+            onRefresh: () => controller.listIssues(),
+            child: HttpFutureBuilder(
+              state: controller.issuesState.value,
+              child: Scrollbar(
+                controller: controller.issuesScrollController,
+                child: ListView.builder(
+                    controller: controller.issuesScrollController,
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    itemCount: controller.issues.length,
+                    itemBuilder: (context, index) {
+                      var item = controller.issues[index];
+                      return _buildListItem(item, context);
+                    }),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 

@@ -91,4 +91,16 @@ class SettingsController extends GetxController {
     fontSize.value = spStorage.getFontSize().value.toDouble();
     selectedLanguage.value = spStorage.getSelectedLanguage().value;
   }
+
+  void onSyntaxColorChanged(String key, Color color) {
+    spStorage.prefs.setInt('syntax_${key}_color', color.toARGB32());
+    updateUI.value++;
+  }
+
+  void onResetSyntaxColors() {
+    spStorage.prefs.remove('syntax_keyword_color');
+    spStorage.prefs.remove('syntax_string_color');
+    spStorage.prefs.remove('syntax_comment_color');
+    updateUI.value++;
+  }
 }

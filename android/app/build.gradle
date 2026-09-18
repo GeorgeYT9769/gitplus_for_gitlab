@@ -31,7 +31,7 @@ if (flutterVersionName == null) {
 android {
     namespace "com.gitlabplus.app"
     compileSdkVersion flutter.compileSdkVersion
-    ndkVersion "30.0.14904198"
+    ndkVersion "29.0.13846066"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_21

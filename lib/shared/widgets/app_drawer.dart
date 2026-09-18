@@ -20,6 +20,27 @@ class AppDrawer extends StatelessWidget {
     required this.repository,
   });
 
+  void _switchAccount(bool next) async {
+    var sstorage = Get.find<SecureStorage>();
+    var accounts = sstorage.getAccounts();
+    if (accounts.length <= 1) return;
+    var currentIndex = accounts.indexWhere((element) => element.userId == account.userId);
+    if (currentIndex == -1) return;
+
+    int newIndex;
+    if (next) {
+      newIndex = (currentIndex + 1) % accounts.length;
+    } else {
+      newIndex = (currentIndex - 1 + accounts.length) % accounts.length;
+    }
+
+    var newAcc = accounts[newIndex];
+    await sstorage.setDefaultAccount(newAcc);
+    repository.account.value = AppAccount.fromJson(sstorage.getDefaultAccount().toJson());
+    CommonWidget.toast("Account switched to ${newAcc.username!}");
+    Get.offAllNamed(Routes.home);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -31,54 +52,65 @@ class AppDrawer extends StatelessWidget {
               bottom: false,
               child: CardListItem(
                 margin: const EdgeInsets.fromLTRB(12, 12, 12, 10),
-                child: InkWell(
-                  onTap: () {
-                    Get.back();
-                    Get.toNamed(Routes.accounts);
+                child: GestureDetector(
+                  onVerticalDragEnd: (details) {
+                    if (details.primaryVelocity != null) {
+                      if (details.primaryVelocity! > 0) {
+                        _switchAccount(true);
+                      } else if (details.primaryVelocity! < 0) {
+                        _switchAccount(false);
+                      }
+                    }
                   },
-                  borderRadius: BorderRadius.circular(12),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      children: [
-                        CircleAvatar(
-                          maxRadius: 30,
-                          backgroundColor: Colors.transparent,
-                          child: CachedNetworkImage(
-                            imageUrl: account.avatarUrl ?? "",
-                            imageBuilder: (context, imageProvider) => Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(50),
-                                image: DecorationImage(image: imageProvider),
+                  child: InkWell(
+                    onTap: () {
+                      Get.back();
+                      Get.toNamed(Routes.accounts);
+                    },
+                    borderRadius: BorderRadius.circular(12),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            maxRadius: 30,
+                            backgroundColor: Colors.transparent,
+                            child: CachedNetworkImage(
+                              imageUrl: account.avatarUrl ?? "",
+                              imageBuilder: (context, imageProvider) => Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  image: DecorationImage(image: imageProvider),
+                                ),
                               ),
+                              placeholder: (context, url) =>
+                                  const CircularProgressIndicator(
+                                year2023: false,
+                              ),
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.person),
                             ),
-                            placeholder: (context, url) =>
-                                const CircularProgressIndicator(
-                              year2023: false,
+                          ),
+                          const SizedBox(width: 15),
+                          Expanded(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(account.name ?? "",
+                                    style: const TextStyle(
+                                        fontSize: 18, fontWeight: FontWeight.bold)),
+                                Text(account.username ?? "",
+                                    style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurfaceVariant)),
+                              ],
                             ),
-                            errorWidget: (context, url, error) =>
-                                const Icon(Icons.person),
                           ),
-                        ),
-                        const SizedBox(width: 15),
-                        Expanded(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(account.name ?? "",
-                                  style: const TextStyle(
-                                      fontSize: 18, fontWeight: FontWeight.bold)),
-                              Text(account.username ?? "",
-                                  style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurfaceVariant)),
-                            ],
-                          ),
-                        ),
-                        const Icon(Icons.keyboard_arrow_right),
-                      ],
+                          const Icon(Icons.keyboard_arrow_right),
+                        ],
+                      ),
                     ),
                   ),
                 ),

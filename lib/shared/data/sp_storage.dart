@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SPStorage {
   late SharedPreferences _storage;
+  SharedPreferences get prefs => _storage;
 
   /// settings
   late final _theme = 0.obs;
