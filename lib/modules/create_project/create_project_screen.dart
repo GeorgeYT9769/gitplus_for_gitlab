@@ -48,103 +48,117 @@ class CreateProjectScreen extends GetView<CreateProjectController> {
     return Form(
       key: controller.registerFormKey,
       child: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Column(
-                children: [
-                  InputField(
-                    labelText: "Name",
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Name is required.';
-                      }
-                      return null;
-                    },
-                    autofocus: true,
-                    context: context,
-                    controller: controller.nameController,
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.next,
-                    onChanged: (value) => controller.nameChanged(value),
-                  ),
-                  MultilineInputField(
+            const SizedBox(height: 16),
+            _sectionHeader('Project Details'),
+            CardListItem(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  children: [
+                    InputField(
+                      labelText: "Name",
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Name is required.';
+                        }
+                        return null;
+                      },
+                      autofocus: true,
                       context: context,
-                      labelText: "Description",
-                      controller: controller.descriptionController),
-                ],
+                      controller: controller.nameController,
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.next,
+                      onChanged: (value) => controller.nameChanged(value),
+                    ),
+                    const SizedBox(height: 8),
+                    MultilineInputField(
+                        context: context,
+                        labelText: "Description",
+                        controller: controller.descriptionController),
+                  ],
+                ),
               ),
             ),
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.visibility),
-              title: Text('Visibility'.tr),
-              subtitle: Text(vis),
-              trailing: const Icon(Icons.keyboard_arrow_right),
-              onTap: () {
-                AppFocus.nextFocus(context);
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text('Visibility'.tr),
-                      content: SingleChildScrollView(
-                        child: Column(
+            const SizedBox(height: 16),
+            _sectionHeader('Access Control'),
+            CardListItem(
+              child: ListTile(
+                leading: const Icon(Icons.visibility_outlined),
+                title: Text('Visibility'.tr),
+                subtitle: Text(vis),
+                trailing: const Icon(Icons.chevron_right, size: 20),
+                onTap: () {
+                  AppFocus.nextFocus(context);
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Visibility'.tr),
+                        content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Divider(),
                             ListTile(
                               selected: controller.visibility.value ==
                                   GitLabVisibility.private,
                               title: Text('Private'.tr),
+                              trailing: controller.visibility.value == GitLabVisibility.private ? const Icon(Icons.check) : null,
                               onTap: () {
                                 controller.onVisibilityChanged(
                                     GitLabVisibility.private);
                                 Get.back();
                               },
                             ),
-                            const Divider(),
                             ListTile(
                               selected: controller.visibility.value ==
                                   GitLabVisibility.internal,
                               title: Text('Internal'.tr),
+                              trailing: controller.visibility.value == GitLabVisibility.internal ? const Icon(Icons.check) : null,
                               onTap: () {
                                 controller.onVisibilityChanged(
                                     GitLabVisibility.internal);
                                 Get.back();
                               },
                             ),
-                            const Divider(),
                             ListTile(
                               selected: controller.visibility.value ==
                                   GitLabVisibility.public,
                               title: Text('Public'.tr),
+                              trailing: controller.visibility.value == GitLabVisibility.public ? const Icon(Icons.check) : null,
                               onTap: () {
                                 controller.onVisibilityChanged(
                                     GitLabVisibility.public);
                                 Get.back();
                               },
                             ),
-                            const Divider(),
                           ],
                         ),
-                      ),
-                      actions: [
-                        ElevatedButton(
-                            onPressed: () {
-                              Get.back();
-                            },
-                            child: Text('Cancel'.tr))
-                      ],
-                    );
-                  },
-                );
-              },
+                      );
+                    },
+                  );
+                },
+              ),
             ),
-            const Divider(),
             const SizedBox(height: 100)
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _sectionHeader(String text) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+      child: Text(
+        text.tr,
+        style: TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.bold,
+          color: Get.theme.colorScheme.primary,
+          letterSpacing: 0.5,
         ),
       ),
     );

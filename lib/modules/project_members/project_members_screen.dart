@@ -124,6 +124,21 @@ class MembersDataSearch extends SearchDelegate<String> {
         );
 
   @override
+  ThemeData appBarTheme(BuildContext context) {
+    final theme = Theme.of(context);
+    return theme.copyWith(
+      appBarTheme: theme.appBarTheme.copyWith(
+        backgroundColor: theme.colorScheme.surface,
+        elevation: 0,
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        hintStyle: const TextStyle(color: Colors.grey, fontSize: 16),
+        border: InputBorder.none,
+      ),
+    );
+  }
+
+  @override
   List<Widget>? buildActions(BuildContext context) {
     return [
       IconButton(

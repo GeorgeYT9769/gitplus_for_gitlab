@@ -16,6 +16,7 @@ class SPStorage {
   late final _useDynamicColor = true.obs;
   late final _customColorSeed = 0.obs;
   late final _selectedLanguage = "".obs;
+  late final _monochromeIcons = false.obs;
 
   /// auth
   late int _authDefaultTab;
@@ -41,6 +42,7 @@ class SPStorage {
     _useDynamicColor.value = _storage.getBool(SPStorageConstants.useDynamicColor) ?? true;
     _customColorSeed.value = _storage.getInt(SPStorageConstants.customColorSeed) ?? 4280391411; // Colors.lightBlue.value
     _selectedLanguage.value = _storage.getString(SPStorageConstants.selectedLanguage) ?? 'Dart';
+    _monochromeIcons.value = _storage.getBool(SPStorageConstants.monochromeIcons) ?? false;
 
     /// auth
 
@@ -106,6 +108,13 @@ class SPStorage {
 
   RxString getSelectedLanguage() => _selectedLanguage;
 
+  Future<void> setMonochromeIcons(bool value) async {
+    _monochromeIcons.value = value;
+    await _storage.setBool(SPStorageConstants.monochromeIcons, value);
+  }
+
+  RxBool getMonochromeIcons() => _monochromeIcons;
+
   /// auth
 
   Future<void> setAuthDefaultTab(int value) async {
@@ -159,6 +168,7 @@ class SPStorage {
     await setUseDynamicColor(true);
     await setCustomColorSeed(4280391411);
     await setSelectedLanguage('Dart');
+    await setMonochromeIcons(false);
   }
 }
 

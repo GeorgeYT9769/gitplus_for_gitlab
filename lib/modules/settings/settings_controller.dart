@@ -85,6 +85,11 @@ class SettingsController extends GetxController {
     spStorage.setSelectedLanguage(value);
   }
 
+  void onMonochromeIconsChanged(bool value) {
+    spStorage.setMonochromeIcons(value);
+    updateUI.value++;
+  }
+
   Future<void> onResetDefault() async {
     await spStorage.resetSettings();
     changeThemeValue(spStorage.getTheme().value);

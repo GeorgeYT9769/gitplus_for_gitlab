@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:grouped_list/grouped_list.dart';
 
 import 'commits.dart';
+import 'package:gitplus_for_gitlab/theme/theme.dart';
 
 class CommitsScreen extends GetView<CommitsController> {
   const CommitsScreen({super.key});
@@ -160,27 +161,27 @@ class _CommitsListItem extends StatelessWidget {
     if (commit.lastPipeline != null) {
       switch (commit.status) {
         case "success":
-          return const Icon(Icons.check, color: Colors.green);
+          return Icon(Icons.check, color: ThemeUtils.themedIconColor(Colors.green));
         case "failed":
-          return const Icon(Icons.close, color: Colors.red);
+          return Icon(Icons.close, color: ThemeUtils.themedIconColor(Colors.red));
         case "created":
-          return const Icon(Icons.schedule_outlined, color: Colors.yellow);
+          return Icon(Icons.schedule_outlined, color: ThemeUtils.themedIconColor(Colors.yellow));
         case "waiting_for_resource":
-          return const Icon(Icons.schedule_outlined, color: Colors.yellow);
+          return Icon(Icons.schedule_outlined, color: ThemeUtils.themedIconColor(Colors.yellow));
         case "preparing":
-          return const Icon(Icons.schedule_outlined, color: Colors.yellow);
+          return Icon(Icons.schedule_outlined, color: ThemeUtils.themedIconColor(Colors.yellow));
         case "pending":
-          return const Icon(Icons.schedule_outlined, color: Colors.yellow);
+          return Icon(Icons.schedule_outlined, color: ThemeUtils.themedIconColor(Colors.yellow));
         case "scheduled":
-          return const Icon(Icons.schedule_outlined, color: Colors.yellow);
+          return Icon(Icons.schedule_outlined, color: ThemeUtils.themedIconColor(Colors.yellow));
         case "skipped":
-          return const Icon(Icons.remove, color: Colors.grey);
+          return Icon(Icons.remove, color: ThemeUtils.themedIconColor(Colors.grey));
         case "canceled":
-          return const Icon(Icons.remove, color: Colors.grey);
+          return Icon(Icons.remove, color: ThemeUtils.themedIconColor(Colors.grey));
         case "running":
-          return const Icon(Icons.cached, color: Colors.blue);
+          return Icon(Icons.cached, color: ThemeUtils.themedIconColor(Colors.blue));
         case "manual":
-          return const Icon(Icons.cached, color: Colors.blue);
+          return Icon(Icons.cached, color: ThemeUtils.themedIconColor(Colors.blue));
         default:
           return const Icon(Icons.question_mark);
       }

@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gitplus_for_gitlab/shared/shared.dart';
 
@@ -55,81 +54,55 @@ class AddMembersScreen extends GetView<AddMembersController> {
 
   Widget _formWidget(context) {
     return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Members:'),
-          const SizedBox(height: 5),
-          Container(
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade200),
-                borderRadius: BorderRadius.circular(5)),
-            height: 200,
-            child: controller.addedUsers.isNotEmpty
-                ? ListView.builder(
-                    itemCount: controller.addedUsers.length,
-                    itemBuilder: (context, index) {
-                      var item = controller.addedUsers[index];
-                      return Column(
-                        children: [
-                          ListTile(
-                            title: Text(item.name!),
-                            leading: CircleAvatar(
-                              child: CachedNetworkImage(
-                                imageUrl: item.avatarUrl!,
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(50),
-                                    image: DecorationImage(
-                                      image: imageProvider,
-                                    ),
-                                  ),
-                                ),
-                                errorWidget: (context, url, error) => Row(
-                                  children: [
-                                    Icon(Icons.error),
-                                    Text(
-                                        'Failed to load image.',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600,
-                                          color: Theme.of(context).colorScheme.onSurface,
-                                        )
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            trailing: IconButton(
-                              onPressed: () {
-                                controller.onItemRemove(item);
-                              },
-                              icon: const Icon(Icons.remove_circle_outline,
-                                  color: Colors.red),
-                            ),
-                          ),
-                          const Divider(),
-                        ],
-                      );
-                    })
-                : const Padding(
-                    padding: EdgeInsets.all(15.0),
+          const SizedBox(height: 16),
+          _sectionHeader('Members'),
+          CardListItem(
+            child: Column(
+              children: [
+                if (controller.addedUsers.isEmpty)
+                  const Padding(
+                    padding: EdgeInsets.all(24.0),
                     child: Align(
                         alignment: Alignment.center,
                         child: Text(
-                          'Tapping on the "search button" icon will open up search box, where you can find members. You can add one or more members here.',
+                          'Tapping on the search icon will open up the member search box. You can add one or more members here.',
                           textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.grey, fontSize: 16),
+                          style: TextStyle(color: Colors.grey, fontSize: 14, height: 1.4),
                         )),
-                  ),
+                  )
+                else
+                  ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: controller.addedUsers.length,
+                      itemBuilder: (context, index) {
+                        var item = controller.addedUsers[index];
+                        return ListTile(
+                          title: Text(item.name!, style: const TextStyle(fontWeight: FontWeight.w500)),
+                          leading: ListAvatar(avatarUrl: item.avatarUrl!),
+                          trailing: IconButton(
+                            onPressed: () {
+                              controller.onItemRemove(item);
+                            },
+                            icon: const Icon(Icons.remove_circle_outline,
+                                color: Colors.red),
+                          ),
+                        );
+                      }),
+              ],
+            ),
           ),
-          const SizedBox(height: 15),
-          const Divider(),
-          ListTile(
+          const SizedBox(height: 16),
+          _sectionHeader('Permission Level'),
+          CardListItem(
+            child: ListTile(
               title: const Text('Access level'),
               trailing: DropdownButton<AccessLevelItem>(
+                  underline: Container(),
                   items: controller.accessLevels.map((e) {
                     return DropdownMenuItem<AccessLevelItem>(
                         value: e, child: Text(e.name));
@@ -137,9 +110,26 @@ class AddMembersScreen extends GetView<AddMembersController> {
                   value: controller.selectedAccessLevel.value,
                   onChanged: (value) {
                     controller.onAccessLevelChanged(value);
-                  })),
-          const Divider(),
+                  }),
+            ),
+          ),
+          const SizedBox(height: 100),
         ],
+      ),
+    );
+  }
+
+  Widget _sectionHeader(String text) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+      child: Text(
+        text.tr,
+        style: TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.bold,
+          color: Get.theme.colorScheme.primary,
+          letterSpacing: 0.5,
+        ),
       ),
     );
   }
@@ -153,6 +143,21 @@ class DataSearch extends SearchDelegate<String> {
           searchFieldStyle: const TextStyle(color: Colors.grey),
           searchFieldLabel: 'Search',
         );
+
+  @override
+  ThemeData appBarTheme(BuildContext context) {
+    final theme = Theme.of(context);
+    return theme.copyWith(
+      appBarTheme: theme.appBarTheme.copyWith(
+        backgroundColor: theme.colorScheme.surface,
+        elevation: 0,
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        hintStyle: const TextStyle(color: Colors.grey, fontSize: 16),
+        border: InputBorder.none,
+      ),
+    );
+  }
 
   @override
   List<Widget>? buildActions(BuildContext context) {
@@ -198,45 +203,14 @@ Widget _listWidget(BuildContext context, AddMembersController controller) {
             itemBuilder: (context, index) {
               var item = controller.users[index];
 
-              return Column(
-                children: [
-                  ListTile(
-                    leading: CircleAvatar(
-                      child: CachedNetworkImage(
-                        imageUrl: item.avatarUrl!,
-                        imageBuilder: (context, imageProvider) => Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            image: DecorationImage(
-                              image: imageProvider,
-                            ),
-                          ),
-                        ),
-                        errorWidget: (context, url, error) => Row(
-                          children: [
-                            Icon(Icons.error),
-                            Text(
-                                'Failed to load image.',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                  color: Theme.of(context).colorScheme.onSurface,
-                                )
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    title: Text(item.name!),
-                    subtitle: Text(item.username!),
-                    onTap: () {
-                      controller.onItemAdd(item);
-                      Get.back();
-                    },
-                  ),
-                  const Divider(),
-                ],
+              return ListTile(
+                leading: ListAvatar(avatarUrl: item.avatarUrl!),
+                title: Text(item.name!),
+                subtitle: Text(item.username!),
+                onTap: () {
+                  controller.onItemAdd(item);
+                  Get.back();
+                },
               );
             })),
   );

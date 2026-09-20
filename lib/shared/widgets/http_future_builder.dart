@@ -4,15 +4,21 @@ import 'package:gitplus_for_gitlab/shared/shared.dart';
 class HttpFutureBuilder extends StatelessWidget {
   final HttpState state;
   final Widget child;
+  final Widget? emptyWidget;
 
-  const HttpFutureBuilder({super.key, required this.state, required this.child});
+  const HttpFutureBuilder({
+    super.key,
+    required this.state,
+    required this.child,
+    this.emptyWidget,
+  });
 
   @override
   Widget build(BuildContext context) {
     if (state == HttpState.loading) {
       return const LoadingWidget();
     } else if (state == HttpState.empty) {
-      return const EmptyWidget();
+      return emptyWidget ?? const EmptyWidget();
     } else if (state == HttpState.ok) {
       return child;
     } else if (state == HttpState.tokenExpired) {

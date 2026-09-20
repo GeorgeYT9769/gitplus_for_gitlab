@@ -4,6 +4,7 @@ import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 
 import 'package:get/get.dart';
 import 'package:gitplus_for_gitlab/shared/shared.dart';
+import 'package:gitplus_for_gitlab/theme/theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:gitplus_for_gitlab/shared/utils/legal_texts.dart';
@@ -58,6 +59,9 @@ class AboutScreen extends GetView<AboutController> {
                     "././assets/logo/2.svg",
                     width: 100,
                     height: 100,
+                    colorFilter: Get.find<SPStorage>().getMonochromeIcons().value 
+                        ? ColorFilter.mode(Get.theme.colorScheme.primary, BlendMode.srcIn) 
+                        : null,
                   ),
                 ),
               ),
@@ -118,7 +122,7 @@ class AboutScreen extends GetView<AboutController> {
         
         CardListItem(
           child: ListTile(
-            leading: Icon(Octicons.mark_github, color: Get.theme.colorScheme.onSurface),
+            leading: Icon(Octicons.mark_github, color: ThemeUtils.themedIconColor(Get.theme.colorScheme.onSurface)),
             title: const Text(
               'Visit GitHub Repository',
               style: TextStyle(fontWeight: FontWeight.w500),
@@ -134,7 +138,7 @@ class AboutScreen extends GetView<AboutController> {
         
         CardListItem(
           child: ListTile(
-            leading: Icon(Icons.bug_report_outlined, color: Get.theme.colorScheme.error),
+            leading: Icon(Icons.bug_report_outlined, color: ThemeUtils.themedIconColor(Get.theme.colorScheme.error)),
             title: const Text(
               'Report an Issue',
               style: TextStyle(fontWeight: FontWeight.w500),
@@ -165,7 +169,7 @@ class AboutScreen extends GetView<AboutController> {
 
         CardListItem(
           child: ListTile(
-            leading: Icon(Icons.privacy_tip_outlined, color: Get.theme.colorScheme.primary),
+            leading: Icon(Icons.privacy_tip_outlined, color: ThemeUtils.themedIconColor(Get.theme.colorScheme.primary)),
             title: const Text('Privacy Policy', style: TextStyle(fontWeight: FontWeight.w500)),
             trailing: const Icon(Icons.chevron_right, size: 20),
             onTap: () => _showLegalDialog(context, 'Privacy Policy', LegalTexts.privacyPolicy),
@@ -174,7 +178,7 @@ class AboutScreen extends GetView<AboutController> {
 
         CardListItem(
           child: ListTile(
-            leading: Icon(Icons.description_outlined, color: Get.theme.colorScheme.primary),
+            leading: Icon(Icons.description_outlined, color: ThemeUtils.themedIconColor(Get.theme.colorScheme.primary)),
             title: const Text('Terms of Service', style: TextStyle(fontWeight: FontWeight.w500)),
             trailing: const Icon(Icons.chevron_right, size: 20),
             onTap: () => _showLegalDialog(context, 'Terms of Service', LegalTexts.termsOfService),

@@ -18,6 +18,11 @@ class ProjectsTab extends GetView<HomeController> {
       onRefresh: () => controller.listProjects(),
       child: HttpFutureBuilder(
         state: controller.projectsState.value,
+        emptyWidget: const EmptyWidget(
+          title: 'No Projects Found',
+          message: 'Your personal and shared project repositories will show up here.',
+          icon: Icons.source_outlined,
+        ),
         child: Scrollbar(
           controller: controller.projectsScrollController,
           child: ListView.builder(

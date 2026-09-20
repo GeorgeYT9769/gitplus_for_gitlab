@@ -129,6 +129,21 @@ class BranchesDataSearch extends SearchDelegate<String> {
       : super(searchFieldStyle: const TextStyle(color: Colors.grey));
 
   @override
+  ThemeData appBarTheme(BuildContext context) {
+    final theme = Theme.of(context);
+    return theme.copyWith(
+      appBarTheme: theme.appBarTheme.copyWith(
+        backgroundColor: theme.colorScheme.surface,
+        elevation: 0,
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        hintStyle: const TextStyle(color: Colors.grey, fontSize: 16),
+        border: InputBorder.none,
+      ),
+    );
+  }
+
+  @override
   List<Widget>? buildActions(BuildContext context) {
     return [
       IconButton(
@@ -168,6 +183,21 @@ class TagsDataSearch extends SearchDelegate<String> {
 
   TagsDataSearch(this.onSearchTextChanged, this.controller, this.args)
       : super(searchFieldStyle: const TextStyle(color: Colors.grey));
+
+  @override
+  ThemeData appBarTheme(BuildContext context) {
+    final theme = Theme.of(context);
+    return theme.copyWith(
+      appBarTheme: theme.appBarTheme.copyWith(
+        backgroundColor: theme.colorScheme.surface,
+        elevation: 0,
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        hintStyle: const TextStyle(color: Colors.grey, fontSize: 16),
+        border: InputBorder.none,
+      ),
+    );
+  }
 
   @override
   List<Widget>? buildActions(BuildContext context) {

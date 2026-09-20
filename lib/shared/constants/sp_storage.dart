@@ -12,4 +12,5 @@ class SPStorageConstants {
   static const String useDynamicColor = 'use_dynamic_color';
   static const String customColorSeed = 'custom_color_seed';
   static const String selectedLanguage = 'selected_language';
+  static const String monochromeIcons = 'monochrome_icons';
 }

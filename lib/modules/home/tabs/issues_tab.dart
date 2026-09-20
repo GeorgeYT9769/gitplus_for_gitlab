@@ -67,6 +67,11 @@ class IssuesTab extends GetView<HomeController> {
             onRefresh: () => controller.listIssues(),
             child: HttpFutureBuilder(
               state: controller.issuesState.value,
+              emptyWidget: const EmptyWidget(
+                title: 'No Issues Found',
+                message: 'All filtered active, closed, or assigned tasks appear here.',
+                icon: Icons.bug_report_outlined,
+              ),
               child: Scrollbar(
                 controller: controller.issuesScrollController,
                 child: ListView.builder(

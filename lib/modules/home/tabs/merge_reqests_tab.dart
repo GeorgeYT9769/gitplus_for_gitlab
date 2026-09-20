@@ -73,6 +73,11 @@ Widget _buildList(HomeController controller, List<MergeRequest> items) {
             onRefresh: () => controller.listMergeRequests(),
             child: HttpFutureBuilder(
               state: controller.mrState.value,
+              emptyWidget: const EmptyWidget(
+                title: 'No Merge Requests Found',
+                message: 'All open, closed, or integrated changes are monitored here.',
+                icon: Icons.merge_type_outlined,
+              ),
               child: Scrollbar(
                 controller: controller.mrScrollController,
                 child: ListView.builder(

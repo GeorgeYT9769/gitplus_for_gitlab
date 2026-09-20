@@ -50,57 +50,66 @@ class EditProjectLabelScreen extends GetView<EditProjectLabelController> {
   Widget _buildForm(context) {
     return Form(
       child: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Column(
-                children: [
-                  InputField(
-                    labelText: "Name".tr,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Name is required.'.tr;
-                      }
-                      return null;
-                    },
-                    context: context,
-                    controller: controller.editNameController,
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.next,
-                    onChanged: (value) => controller.editNameChanged(value),
-                  ),
-                  MultilineInputField(
+            const SizedBox(height: 16),
+            _sectionHeader('Label Information'),
+            CardListItem(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  children: [
+                    InputField(
+                      labelText: "Name".tr,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Name is required.'.tr;
+                        }
+                        return null;
+                      },
                       context: context,
-                      labelText: "Description".tr,
-                      controller: controller.editDescriptionController),
-                ],
-              ),
-            ),
-            const Divider(),
-            ListTile(
-              title: Align(
-                alignment: Alignment.topLeft,
-                child: ColorLabel(
-                  color: controller.editColor.string.isNotEmpty
-                      ? hexToColor(controller.editColor.string)
-                      : Colors.grey,
-                  text: controller.editName.string,
-                  padding: const EdgeInsets.only(
-                      left: 10, top: 3, right: 10, bottom: 3),
+                      controller: controller.editNameController,
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.next,
+                      onChanged: (value) => controller.editNameChanged(value),
+                    ),
+                    const SizedBox(height: 8),
+                    MultilineInputField(
+                        context: context,
+                        labelText: "Description".tr,
+                        controller: controller.editDescriptionController),
+                  ],
                 ),
               ),
-              onTap: () {
-                _showColorPicker(context);
-              },
-              trailing: IconButton(
-                  onPressed: () {
-                    _showColorPicker(context);
-                  },
-                  icon: const Icon(Icons.color_lens),
-                  tooltip: 'Change color'.tr),
             ),
-            const Divider(),
+            const SizedBox(height: 16),
+            _sectionHeader('Preview & Style'),
+            CardListItem(
+              child: ListTile(
+                title: Align(
+                  alignment: Alignment.topLeft,
+                  child: ColorLabel(
+                    color: controller.editColor.string.isNotEmpty
+                        ? hexToColor(controller.editColor.string)
+                        : Colors.grey,
+                    text: controller.editName.string,
+                    padding: const EdgeInsets.only(
+                        left: 10, top: 3, right: 10, bottom: 3),
+                  ),
+                ),
+                onTap: () {
+                  _showColorPicker(context);
+                },
+                trailing: IconButton(
+                    onPressed: () {
+                      _showColorPicker(context);
+                    },
+                    icon: const Icon(Icons.color_lens_outlined),
+                    tooltip: 'Change color'.tr),
+              ),
+            ),
             const SizedBox(height: 100)
           ],
         ),
@@ -108,7 +117,22 @@ class EditProjectLabelScreen extends GetView<EditProjectLabelController> {
     );
   }
 
-  _showColorPicker(context) {
+  Widget _sectionHeader(String text) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+      child: Text(
+        text.tr,
+        style: TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.bold,
+          color: Get.theme.colorScheme.primary,
+          letterSpacing: 0.5,
+        ),
+      ),
+    );
+  }
+
+  void _showColorPicker(context) {
     AppFocus.nextFocus(context);
 
     Color sc = Colors.red;

@@ -18,28 +18,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
   final Map<String, String> _codeSnippets = {
     'Dart': '''
 void main() {
-  var name = "John";
-  print(name);
+  final name = "Git+";
+  print("Hello \$name!");
+  // This is a comment
 }
 ''',
     'Python': '''
-def main():
-    name = "John"
-    print(name)
+def hello():
+    name = "Git+"
+    print(f"Hello {name}!")
+    # This is a comment
 ''',
     'Java': '''
 public class Main {
     public static void main(String[] args) {
-        String name = "John";
-        System.out.println(name);
+        String name = "Git+";
+        System.out.println("Hello " + name);
+        // This is a comment
     }
 }
 ''',
     'C': '''
 #include <stdio.h>
 int main() {
-    char name[] = "John";
-    printf("%s\\n", name);
+    char* name = "Git+";
+    printf("Hello %s\\n", name);
+    /* This is a comment */
     return 0;
 }
 ''',
@@ -80,235 +84,212 @@ int main() {
     return SafeArea(
       bottom: false,
       child: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
         children: [
+          const SizedBox(height: 12),
           _sectionHeader('General'),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.dark_mode),
-            title: const Text('Dark mode'),
-            subtitle: Text(_controller.theme.value),
-            trailing: const Icon(Icons.keyboard_arrow_right),
-            onTap: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text('Dark mode'.tr),
-                    content: SingleChildScrollView(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Divider(),
-                          ListTile(
-                            selected: _controller.spStorage.getTheme().value ==
-                                AppTheme.dark,
-                            title: Text('On'.tr),
-                            onTap: () {
-                              _controller.changeThemeValue(AppTheme.dark);
-                              Get.back();
-                            },
+          CardListItem(
+            child: Column(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.dark_mode_outlined),
+                  title: const Text('Dark mode'),
+                  subtitle: Text(_controller.theme.value),
+                  trailing: const Icon(Icons.chevron_right, size: 20),
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Dark mode'.tr),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ListTile(
+                                selected: _controller.spStorage.getTheme().value == AppTheme.dark,
+                                title: Text('On'.tr),
+                                trailing: _controller.spStorage.getTheme().value == AppTheme.dark ? const Icon(Icons.check) : null,
+                                onTap: () {
+                                  _controller.changeThemeValue(AppTheme.dark);
+                                  Get.back();
+                                },
+                              ),
+                              ListTile(
+                                selected: _controller.spStorage.getTheme().value == AppTheme.light,
+                                title: Text('Off'.tr),
+                                trailing: _controller.spStorage.getTheme().value == AppTheme.light ? const Icon(Icons.check) : null,
+                                onTap: () {
+                                  _controller.changeThemeValue(AppTheme.light);
+                                  Get.back();
+                                },
+                              ),
+                              ListTile(
+                                selected: _controller.spStorage.getTheme().value == AppTheme.system,
+                                title: Text('System'.tr),
+                                trailing: _controller.spStorage.getTheme().value == AppTheme.system ? const Icon(Icons.check) : null,
+                                onTap: () {
+                                  _controller.changeThemeValue(AppTheme.system);
+                                  Get.back();
+                                },
+                              ),
+                            ],
                           ),
-                          const Divider(),
-                          ListTile(
-                            selected: _controller.spStorage.getTheme().value ==
-                                AppTheme.light,
-                            title: Text('Off'.tr),
-                            onTap: () {
-                              _controller.changeThemeValue(AppTheme.light);
-                              Get.back();
-                            },
-                          ),
-                          const Divider(),
-                          ListTile(
-                            selected: _controller.spStorage.getTheme().value ==
-                                AppTheme.system,
-                            title: Text('System'.tr),
-                            onTap: () {
-                              _controller.changeThemeValue(AppTheme.system);
-                              Get.back();
-                            },
-                          ),
-                          const Divider(),
-                        ],
+                        );
+                      },
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.wallpaper_outlined),
+                  title: const Text('Use wallpaper colors'),
+                  subtitle: const Text('Use system dynamic color'),
+                  trailing: AppSwitch(
+                      value: _controller.spStorage.getUseDynamicColor().value,
+                      onChanged: (value) {
+                        _controller.onUseDynamicColorChanged(value);
+                      }),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.palette_outlined),
+                  title: const Text('Custom app color'),
+                  subtitle: const Text('Choose a custom seed color'),
+                  trailing: Container(
+                    width: 28,
+                    height: 28,
+                    decoration: BoxDecoration(
+                      color: Color(_controller.spStorage.getCustomColorSeed().value),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Theme.of(context).dividerColor,
+                        width: 1,
                       ),
                     ),
-                    actions: [
-                      ElevatedButton(
-                          onPressed: () {
-                            Get.back();
-                          },
-                          child: Text('Cancel'.tr))
-                    ],
-                  );
-                },
-              );
-            },
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.wallpaper),
-            title: const Text('Use wallpaper colors'),
-            subtitle: const Text('Use system dynamic color'),
-            trailing: AppSwitch(
-                value: _controller.spStorage.getUseDynamicColor().value,
-                onChanged: (value) {
-                  _controller.onUseDynamicColorChanged(value);
-                }),
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.palette),
-            title: const Text('Custom app color'),
-            subtitle: const Text('Choose a custom seed color'),
-            trailing: Container(
-              width: 32,
-              height: 32,
-              decoration: BoxDecoration(
-                color: Color(_controller.spStorage.getCustomColorSeed().value),
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: Theme.of(context).dividerColor,
-                  width: 1.5,
-                ),
-              ),
-            ),
-            enabled: !_controller.spStorage.getUseDynamicColor().value,
-            onTap: () {
-              _showColorPicker(context);
-            },
-          ),
-          const Divider(),
-          _sectionHeader('Code'),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.format_list_numbered),
-            title: const Text('Show line numbers'),
-            trailing: AppSwitch(
-                value: _controller.spStorage.getShowLineNumbers().value,
-                onChanged: (value) {
-                  _controller.onShowLineNumbersChanged(value);
-                }),
-          ),
-          const Divider(),
-          _fontSize(),
-          const Divider(),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: DropdownMenu<String>(
-                  initialSelection: _selectedLang,
-                  onSelected: (String? newLang) {
-                    if (newLang != null) {
-                      setState(() {
-                        _selectedLang = newLang;
-                      });
-                      _controller.onSelectedLanguageChanged(newLang);
-                    }
+                  ),
+                  enabled: !_controller.spStorage.getUseDynamicColor().value,
+                  onTap: () {
+                    _showColorPicker(context);
                   },
-                  dropdownMenuEntries: _codeSnippets.keys
-                      .map((lang) => DropdownMenuEntry<String>(
-                    value: lang,
-                    label: lang,
-                    style: ButtonStyle(
-                      textStyle: WidgetStateProperty.all(
-                        Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: Theme.of(context).colorScheme.primary,
+                ),
+                ListTile(
+                  leading: const Icon(Icons.tonality_outlined),
+                  title: const Text('Monochrome icons'),
+                  subtitle: const Text('Uniform icon colors based on theme'),
+                  trailing: AppSwitch(
+                      value: _controller.spStorage.getMonochromeIcons().value,
+                      onChanged: (value) {
+                        _controller.onMonochromeIconsChanged(value);
+                      }),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+          _sectionHeader('Code'),
+          CardListItem(
+            child: Column(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.format_list_numbered),
+                  title: const Text('Show line numbers'),
+                  trailing: AppSwitch(
+                      value: _controller.spStorage.getShowLineNumbers().value,
+                      onChanged: (value) {
+                        _controller.onShowLineNumbersChanged(value);
+                      }),
+                ),
+                _fontSize(),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+          _sectionHeader('Language & Preview'),
+          CardListItem(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.code_outlined, size: 20),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          'Language: $_selectedLang',
+                          style: const TextStyle(fontWeight: FontWeight.w500),
                         ),
                       ),
-                    ),
-                  ))
-                      .toList(),
-                  width: double.infinity,
-                  menuStyle: MenuStyle(
-                    backgroundColor: WidgetStateProperty.all(
-                      Theme.of(context).colorScheme.surface,
-                    ),
-                    elevation: WidgetStateProperty.all(3),
-                    shape: WidgetStateProperty.all(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                      TextButton(
+                        onPressed: _showLanguagePicker,
+                        child: const Text('Change'),
                       ),
-                    ),
-                  ),
-                  textStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  inputDecorationTheme: InputDecorationTheme(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: Theme.of(context).colorScheme.primary,
-                        width: 2,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: Theme.of(context).colorScheme.primary,
-                        width: 2,
-                      ),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    ],
                   ),
                 ),
-              ),
-              SafeArea(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: AppHighlightView(
-                    content: _codeSnippets[_selectedLang]!,
-                    lang: _selectedLang.toLowerCase(),
-                    fontSize: _controller.fontSize.value,
-                    theme: code,
-                    lineNumbers: _controller.spStorage.getShowLineNumbers().value,
+                ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(12),
+                    bottomRight: Radius.circular(12),
+                  ),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: AppHighlightView(
+                      content: _codeSnippets[_selectedLang]!,
+                      lang: _selectedLang.toLowerCase(),
+                      fontSize: _controller.fontSize.value,
+                      theme: code,
+                      lineNumbers: _controller.spStorage.getShowLineNumbers().value,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-          const Divider(),
+          const SizedBox(height: 12),
           _sectionHeader('Custom Syntax Colors'),
-          ListTile(
-            leading: const Icon(Icons.color_lens_outlined),
-            title: const Text('Keyword Color'),
-            trailing: CircleAvatar(
-              radius: 12,
-              backgroundColor: Color(_controller.spStorage.prefs.getInt('syntax_keyword_color') ?? 0xFF9C27B0),
+          CardListItem(
+            child: Column(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.color_lens_outlined),
+                  title: const Text('Keyword Color'),
+                  trailing: CircleAvatar(
+                    radius: 12,
+                    backgroundColor: Color(_controller.spStorage.prefs.getInt('syntax_keyword_color') ?? 0xFF569CD6),
+                  ),
+                  onTap: () => _showSyntaxColorPicker('keyword', 'Keyword', 0xFF569CD6),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.color_lens_outlined),
+                  title: const Text('String Color'),
+                  trailing: CircleAvatar(
+                    radius: 12,
+                    backgroundColor: Color(_controller.spStorage.prefs.getInt('syntax_string_color') ?? 0xFFCE9178),
+                  ),
+                  onTap: () => _showSyntaxColorPicker('string', 'String', 0xFFCE9178),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.color_lens_outlined),
+                  title: const Text('Comment Color'),
+                  trailing: CircleAvatar(
+                    radius: 12,
+                    backgroundColor: Color(_controller.spStorage.prefs.getInt('syntax_comment_color') ?? 0xFF6A9955),
+                  ),
+                  onTap: () => _showSyntaxColorPicker('comment', 'Comment', 0xFF6A9955),
+                ),
+                ListTile(
+                  title: const Text('Reset Syntax Colors', style: TextStyle(color: Colors.orange)),
+                  trailing: const Icon(Icons.refresh, color: Colors.orange),
+                  onTap: () => _controller.onResetSyntaxColors(),
+                ),
+              ],
             ),
-            onTap: () => _showSyntaxColorPicker('keyword', 'Keyword'),
           ),
-          ListTile(
-            leading: const Icon(Icons.color_lens_outlined),
-            title: const Text('String Color'),
-            trailing: CircleAvatar(
-              radius: 12,
-              backgroundColor: Color(_controller.spStorage.prefs.getInt('syntax_string_color') ?? 0xFF43A047),
-            ),
-            onTap: () => _showSyntaxColorPicker('string', 'String'),
-          ),
-          ListTile(
-            leading: const Icon(Icons.color_lens_outlined),
-            title: const Text('Comment Color'),
-            trailing: CircleAvatar(
-              radius: 12,
-              backgroundColor: Color(_controller.spStorage.prefs.getInt('syntax_comment_color') ?? 0xFF9E9E9E),
-            ),
-            onTap: () => _showSyntaxColorPicker('comment', 'Comment'),
-          ),
-          ListTile(
-            title: const Text('Reset Syntax Colors', style: TextStyle(color: Colors.orange)),
-            trailing: const Icon(Icons.refresh, color: Colors.orange),
-            onTap: () => _controller.onResetSyntaxColors(),
-          ),
-          const Divider(),
+          const SizedBox(height: 24),
           ListTile(
             title: Text('Reset defaults'.tr,
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.red)),
+                style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
             onTap: () {
               showDialog(
                 context: context,
@@ -323,8 +304,7 @@ int main() {
               );
             },
           ),
-          const Divider(),
-          const SizedBox(height: 25),
+          const SizedBox(height: 32),
         ],
       ),
     );
@@ -410,9 +390,37 @@ int main() {
     );
   }
 
-  void _showSyntaxColorPicker(String key, String title) {
+  void _showLanguagePicker() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Select Language'),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: ListView(
+            shrinkWrap: true,
+            children: _codeSnippets.keys.map((lang) {
+              return ListTile(
+                title: Text(lang),
+                trailing: _selectedLang == lang ? const Icon(Icons.check, color: Colors.green) : null,
+                onTap: () {
+                  setState(() {
+                    _selectedLang = lang;
+                  });
+                  _controller.onSelectedLanguageChanged(lang);
+                  Get.back();
+                },
+              );
+            }).toList(),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showSyntaxColorPicker(String key, String title, int defaultColor) {
     int? currentVal = _controller.spStorage.prefs.getInt('syntax_${key}_color');
-    Color pickerColor = currentVal != null ? Color(currentVal) : Colors.blue;
+    Color pickerColor = currentVal != null ? Color(currentVal) : Color(defaultColor);
     showDialog(
       context: context,
       builder: (BuildContext context) {

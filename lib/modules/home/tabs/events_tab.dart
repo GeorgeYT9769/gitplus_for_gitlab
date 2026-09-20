@@ -18,6 +18,11 @@ class ActivityTab extends GetView<HomeController> {
       onRefresh: () => controller.listEvents(),
       child: HttpFutureBuilder(
         state: controller.eventsState.value,
+        emptyWidget: const EmptyWidget(
+          title: 'No Recent Activity',
+          message: 'Commit pushes, issue updates, and collaboration events will list here.',
+          icon: Icons.history_toggle_off_outlined,
+        ),
         child: Scrollbar(
           controller: controller.eventsScrollController,
           child: ListView.builder(

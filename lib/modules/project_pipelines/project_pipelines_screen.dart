@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:gitplus_for_gitlab/models/models.dart';
 import 'package:gitplus_for_gitlab/modules/project_pipelines/project_pipelines.dart';
 import 'package:gitplus_for_gitlab/shared/shared.dart';
+import 'package:gitplus_for_gitlab/theme/theme.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
 
@@ -56,45 +57,45 @@ class PipelineListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget stateIcon =
-        const Icon(Icons.question_mark_outlined, color: Colors.yellow);
+        Icon(Icons.question_mark_outlined, color: ThemeUtils.themedIconColor(Colors.yellow));
     switch (item.status) {
       case 'success':
         stateIcon =
-            const Icon(Icons.check_circle_outline, color: Colors.green);
+            Icon(Icons.check_circle_outline, color: ThemeUtils.themedIconColor(Colors.green));
         break;
       case 'failed':
-        stateIcon = const Icon(Icons.error_outline, color: Colors.red);
+        stateIcon = Icon(Icons.error_outline, color: ThemeUtils.themedIconColor(Colors.red));
         break;
       case 'canceled':
       case 'skipped':
         stateIcon =
-            const Icon(Icons.do_not_disturb_on_outlined, color: Colors.grey);
+            Icon(Icons.do_not_disturb_on_outlined, color: ThemeUtils.themedIconColor(Colors.grey));
         break;
       case 'scheduled':
       case 'pending':
       case 'waiting_for_resource':
       case 'preparing':
-        stateIcon = const Icon(Icons.schedule, color: Colors.yellow);
+        stateIcon = Icon(Icons.schedule, color: ThemeUtils.themedIconColor(Colors.yellow));
         break;
       case 'running':
-        stateIcon = const Icon(Icons.sync, color: Colors.blue);
+        stateIcon = Icon(Icons.sync, color: ThemeUtils.themedIconColor(Colors.blue));
         break;
       default:
         stateIcon =
-            const Icon(Icons.question_mark_outlined, color: Colors.yellow);
+            Icon(Icons.question_mark_outlined, color: ThemeUtils.themedIconColor(Colors.yellow));
         break;
     }
 
     Widget? trailingAction;
     if (item.status == 'running' || item.status == 'pending') {
       trailingAction = IconButton(
-        icon: const Icon(Icons.cancel_outlined, color: Colors.red),
+        icon: Icon(Icons.cancel_outlined, color: ThemeUtils.themedIconColor(Colors.red)),
         tooltip: 'Cancel Pipeline',
         onPressed: () => controller.cancelPipeline(item.id!),
       );
     } else if (item.status == 'failed' || item.status == 'canceled' || item.status == 'success') {
       trailingAction = IconButton(
-        icon: const Icon(Icons.refresh_outlined, color: Colors.blue),
+        icon: Icon(Icons.refresh_outlined, color: ThemeUtils.themedIconColor(Colors.blue)),
         tooltip: 'Retry Pipeline',
         onPressed: () => controller.retryPipeline(item.id!),
       );

@@ -145,6 +145,21 @@ class DataSearchProjects extends SearchDelegate<String> {
         );
 
   @override
+  ThemeData appBarTheme(BuildContext context) {
+    final theme = Theme.of(context);
+    return theme.copyWith(
+      appBarTheme: theme.appBarTheme.copyWith(
+        backgroundColor: theme.colorScheme.surface,
+        elevation: 0,
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        hintStyle: const TextStyle(color: Colors.grey, fontSize: 16),
+        border: InputBorder.none,
+      ),
+    );
+  }
+
+  @override
   List<Widget>? buildActions(BuildContext context) {
     return [
       IconButton(
@@ -186,6 +201,21 @@ class DataSearchMembers extends SearchDelegate<String> {
       : super(
           searchFieldStyle: const TextStyle(color: Colors.grey),
         );
+
+  @override
+  ThemeData appBarTheme(BuildContext context) {
+    final theme = Theme.of(context);
+    return theme.copyWith(
+      appBarTheme: theme.appBarTheme.copyWith(
+        backgroundColor: theme.colorScheme.surface,
+        elevation: 0,
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        hintStyle: const TextStyle(color: Colors.grey, fontSize: 16),
+        border: InputBorder.none,
+      ),
+    );
+  }
 
   @override
   List<Widget>? buildActions(BuildContext context) {
@@ -242,28 +272,25 @@ Widget _projectsWidget(List<Project> projects, GroupsController controller) {
                     child: Text(item.name!.toUpperCase().substring(0, 2)));
               }
 
-              return Column(
-                children: [
-                  ListTile(
-                    contentPadding: CommonConstants.contentPaddingLitTileLarge,
-                    leading: avatar,
-                    title: Text(item.name ?? '', style: const TextStyle()),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (item.description != null &&
-                            item.description!.isNotEmpty)
-                          Text(item.description!),
-                        const SizedBox(height: 5),
-                        Text(timeago.format(item.lastActivityAt!)),
-                      ],
-                    ),
-                    onTap: () {
-                      controller.onProjectSelected(item);
-                    },
+              return CardListItem(
+                child: ListTile(
+                  contentPadding: CommonConstants.contentPaddingLitTileLarge,
+                  leading: avatar,
+                  title: Text(item.name ?? '', style: const TextStyle(fontWeight: FontWeight.bold)),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (item.description != null &&
+                          item.description!.isNotEmpty)
+                        Text(item.description!),
+                      const SizedBox(height: 5),
+                      Text(timeago.format(item.lastActivityAt!)),
+                    ],
                   ),
-                  const Divider(),
-                ],
+                  onTap: () {
+                    controller.onProjectSelected(item);
+                  },
+                ),
               );
             }),
       ),
@@ -301,35 +328,36 @@ Widget _membersWidget(List<Member> members, GroupsController controller) {
                 );
               }
 
-              return Column(
-                children: [
-                  ListTile(
-                    leading: ListAvatar(avatarUrl: item.avatarUrl!),
-                    title: Text(item.name!,
-                        style: const TextStyle(
-                            fontWeight: CommonConstants.fontWeightListTile)),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(item.username!),
-                        state,
-                      ],
-                    ),
-                    trailing: Container(
-                        padding: const EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                            color: Get.theme.highlightColor,
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(5))),
-                        child: Text(
-                            GitlabUtils.getAccessLevelName(item.accessLevel!),
-                            style: const TextStyle(fontSize: 12))),
-                    onTap: () {
-                      controller.onMemberSelected(item);
-                    },
+              return CardListItem(
+                child: ListTile(
+                  leading: ListAvatar(avatarUrl: item.avatarUrl!),
+                  title: Text(item.name!,
+                      style: const TextStyle(
+                          fontWeight: CommonConstants.fontWeightListTile)),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(item.username!),
+                      state,
+                    ],
                   ),
-                  const Divider(),
-                ],
+                  trailing: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                          color: Get.theme.colorScheme.primaryContainer,
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(8))),
+                      child: Text(
+                          GitlabUtils.getAccessLevelName(item.accessLevel!),
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: Get.theme.colorScheme.onPrimaryContainer,
+                          ))),
+                  onTap: () {
+                    controller.onMemberSelected(item);
+                  },
+                ),
               );
             }),
       ),

@@ -68,9 +68,23 @@ class AccountsScreen extends GetView<AccountsController> {
                     Text(item.baseUrl!),
                   ],
                 ),
-                trailing: item.userId == controller.defaultId.value
-                    ? Icon(Icons.done, color: Get.theme.colorScheme.secondary)
-                    : null,
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (item.userId == controller.defaultId.value)
+                      Icon(Icons.done, color: Get.theme.colorScheme.primary)
+                    else
+                      IconButton(
+                        icon: const Icon(Icons.swap_horiz, size: 20),
+                        tooltip: 'Switch to this profile',
+                        onPressed: () async {
+                          await controller.onSetDefault(item);
+                          CommonWidget.toast("Switched default to ${item.username}");
+                        },
+                      ),
+                    const Icon(Icons.chevron_right, size: 20),
+                  ],
+                ),
                 onTap: () {
                   controller.onAccountSelected(item);
                 },

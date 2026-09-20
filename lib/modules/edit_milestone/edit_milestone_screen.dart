@@ -34,36 +34,60 @@ class EditMilestoneScreen extends GetView<EditMilestoneController> {
   Widget _buildForm(context) {
     return Form(
       key: controller.registerFormKey,
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            children: [
-              InputField(
-                labelText: "Title".tr,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'this field is required.'.tr;
-                  }
-                  return null;
-                },
-                context: context,
-                controller: controller.titleController,
-                keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.next,
-                onChanged: (value) {},
+      child: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        children: [
+          const SizedBox(height: 16),
+          _sectionHeader('Milestone Information'),
+          CardListItem(
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                children: [
+                  InputField(
+                    labelText: "Title".tr,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'this field is required.'.tr;
+                      }
+                      return null;
+                    },
+                    context: context,
+                    controller: controller.titleController,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    onChanged: (value) {},
+                  ),
+                  const SizedBox(height: 8),
+                  DateTimeField(
+                    controller: controller.dueDateController,
+                    labelText: 'Due date'.tr,
+                  ),
+                  const SizedBox(height: 8),
+                  MultilineInputField(
+                      context: context,
+                      labelText: "Description".tr,
+                      controller: controller.descriptionController),
+                ],
               ),
-              DateTimeField(
-                controller: controller.dueDateController,
-                labelText: 'Due date'.tr,
-              ),
-              MultilineInputField(
-                  context: context,
-                  labelText: "Description".tr,
-                  controller: controller.descriptionController),
-              const SizedBox(height: 100),
-            ],
+            ),
           ),
+          const SizedBox(height: 100),
+        ],
+      ),
+    );
+  }
+
+  Widget _sectionHeader(String text) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+      child: Text(
+        text.tr,
+        style: TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.bold,
+          color: Get.theme.colorScheme.primary,
+          letterSpacing: 0.5,
         ),
       ),
     );

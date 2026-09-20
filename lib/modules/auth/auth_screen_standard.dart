@@ -37,6 +37,9 @@ class AuthScreenStandard extends GetView<AuthController> {
                   SvgPicture.asset(
                     "././assets/logo/2.svg",
                     height: 80,
+                    colorFilter: Get.find<SPStorage>().getMonochromeIcons().value 
+                        ? ColorFilter.mode(Get.theme.colorScheme.primary, BlendMode.srcIn) 
+                        : null,
                   ),
                   const SizedBox(height: 10),
                   const Row(

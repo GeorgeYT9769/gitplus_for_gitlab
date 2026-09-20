@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gitplus_for_gitlab/shared/shared.dart';
 
@@ -35,130 +34,155 @@ class CreateIssueScreen extends GetView<CreateIssueController> {
     return Form(
       key: controller.registerFormKey,
       child: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
         children: [
-          Padding(
-            padding: const EdgeInsets.all(15.0),
+          const SizedBox(height: 16),
+          _sectionHeader('Issue Details'),
+          CardListItem(
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                children: [
+                  InputField(
+                    labelText: "Title",
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Title is required.';
+                      }
+                      return null;
+                    },
+                    context: context,
+                    controller: controller.titleController,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    onChanged: (value) {},
+                  ),
+                  const SizedBox(height: 8),
+                  MultilineInputField(
+                      context: context,
+                      labelText: "Description",
+                      controller: controller.descriptionController),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          _sectionHeader('Assignment & Tracking'),
+          CardListItem(
             child: Column(
               children: [
-                InputField(
-                  labelText: "Title",
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Title is required.';
-                    }
-                    return null;
-                  },
-                  context: context,
-                  controller: controller.titleController,
-                  keyboardType: TextInputType.text,
-                  textInputAction: TextInputAction.next,
-                  onChanged: (value) {},
+                ListTile(
+                  title: const Text('Assigned'),
+                  trailing: IconButton(
+                    onPressed: () {
+                      AppFocus.nextFocus(context);
+                      showSearch(context: context, delegate: UserSearch(controller));
+                    },
+                    icon: controller.assignee.value.id == null
+                        ? const Icon(Icons.add)
+                        : const Icon(Icons.search),
+                    tooltip: controller.assignee.value.id == null ? 'Add'.tr : 'Change'.tr,
+                  ),
+                  subtitle: controller.assignee.value.id == null ? null : Wrap(
+                    spacing: 10,
+                    children: [
+                      if (controller.assignee.value.id != null &&
+                          controller.assignee.value.id! > 0)
+                        InputChip(
+                          avatar: ListAvatar(
+                              avatarUrl: controller.assignee.value.avatarUrl!),
+                          label: Text(controller.assignee.value.name!),
+                          deleteIcon: const Icon(Icons.remove_circle_outline,
+                              color: Colors.red),
+                          onDeleted: () {
+                            controller.onAssigeeDeleted();
+                          },
+                        ),
+                    ],
+                  ),
                 ),
-                MultilineInputField(
-                    context: context,
-                    labelText: "Description",
-                    controller: controller.descriptionController),
-              ],
-            ),
-          ),
-          const Divider(),
-          ListTile(
-            title: const Text('Assigned'),
-            trailing: IconButton(
-              onPressed: () {
-                AppFocus.nextFocus(context);
-
-                showSearch(context: context, delegate: UserSearch(controller));
-              },
-              icon: controller.assignee.value.id == null
-                  ? const Icon(Icons.add)
-                  : const Icon(Icons.search),
-              tooltip:
-                  controller.assignee.value.id == null ? 'Add'.tr : 'Change'.tr,
-            ),
-            subtitle: Wrap(
-              spacing: 10,
-              children: [
-                if (controller.assignee.value.id != null &&
-                    controller.assignee.value.id! > 0)
-                  InputChip(
-                    avatar: ListAvatar(
-                        avatarUrl: controller.assignee.value.avatarUrl!),
-                    label: Text(controller.assignee.value.name!),
-                    deleteIcon: const Icon(Icons.remove_circle_outline,
-                        color: Colors.red),
-                    onDeleted: () {
-                      controller.onAssigeeDeleted();
+                ListTile(
+                  title: const Text('Milestone'),
+                  trailing: IconButton(
+                    onPressed: () {
+                      AppFocus.nextFocus(context);
+                      controller.onNavToMilestone();
                     },
+                    icon: controller.milestone.value.id == null
+                        ? const Icon(Icons.add)
+                        : const Icon(Icons.search),
+                    tooltip: controller.milestone.value.id == null
+                        ? 'Add'.tr
+                        : 'Change'.tr,
                   ),
-              ],
-            ),
-          ),
-          const Divider(),
-          ListTile(
-            title: const Text('Milestone'),
-            trailing: IconButton(
-              onPressed: () {
-                AppFocus.nextFocus(context);
-                controller.onNavToMilestone();
-              },
-              icon: controller.milestone.value.id == null
-                  ? const Icon(Icons.add)
-                  : const Icon(Icons.search),
-              tooltip: controller.milestone.value.id == null
-                  ? 'Add'.tr
-                  : 'Change'.tr,
-            ),
-            subtitle: Wrap(
-              spacing: 10,
-              children: [
-                if (controller.milestone.value.id != null)
-                  InputChip(
-                    label: Text(controller.milestone.value.title!),
-                    deleteIcon: const Icon(Icons.remove_circle_outline,
-                        color: Colors.red),
-                    onDeleted: () {
-                      controller.onMilestoneDeleted();
+                  subtitle: controller.milestone.value.id == null ? null : Wrap(
+                    spacing: 10,
+                    children: [
+                      if (controller.milestone.value.id != null)
+                        InputChip(
+                          label: Text(controller.milestone.value.title!),
+                          deleteIcon: const Icon(Icons.remove_circle_outline,
+                              color: Colors.red),
+                          onDeleted: () {
+                            controller.onMilestoneDeleted();
+                          },
+                        ),
+                    ],
+                  ),
+                ),
+                ListTile(
+                  title: const Text('Labels'),
+                  trailing: IconButton(
+                    onPressed: () {
+                      AppFocus.nextFocus(context);
+                      controller.onNavToLabels();
                     },
+                    icon: const Icon(Icons.add),
+                    tooltip: 'Add',
                   ),
+                  subtitle: controller.labels.isEmpty ? null : Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Wrap(
+                      spacing: 10,
+                      children: [
+                        for (var item in controller.labels)
+                          InputChip(
+                            label: Text(item.name!,
+                                style: TextStyle(
+                                    color: ThemeUtils.computeIluminance(
+                                        hexToColor(item.color!)))),
+                            backgroundColor: hexToColor(item.color!),
+                            deleteIcon: Icon(Icons.remove_circle_outline,
+                                color: ThemeUtils.computeIluminance(
+                                    hexToColor(item.color!))),
+                            onDeleted: () {
+                              controller.onDeleteLabelAction(item);
+                            },
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
-          const Divider(),
-          ListTile(
-            title: const Text('Labels'),
-            trailing: IconButton(
-              onPressed: () {
-                AppFocus.nextFocus(context);
-
-                controller.onNavToLabels();
-              },
-              icon: const Icon(Icons.add),
-              tooltip: 'Add',
-            ),
-            subtitle: Wrap(
-              spacing: 10,
-              children: [
-                for (var item in controller.labels)
-                  InputChip(
-                    label: Text(item.name!,
-                        style: TextStyle(
-                            color: ThemeUtils.computeIluminance(
-                                hexToColor(item.color!)))),
-                    backgroundColor: hexToColor(item.color!),
-                    deleteIcon: Icon(Icons.remove_circle_outline,
-                        color: ThemeUtils.computeIluminance(
-                            hexToColor(item.color!))),
-                    onDeleted: () {
-                      controller.onDeleteLabelAction(item);
-                    },
-                  ),
-              ],
-            ),
-          ),
-          const Divider(),
           const SizedBox(height: 100),
         ],
+      ),
+    );
+  }
+
+  Widget _sectionHeader(String text) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+      child: Text(
+        text.tr,
+        style: TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.bold,
+          color: Get.theme.colorScheme.primary,
+          letterSpacing: 0.5,
+        ),
       ),
     );
   }
@@ -172,6 +196,21 @@ class UserSearch extends SearchDelegate<String> {
           searchFieldStyle: const TextStyle(color: Colors.grey),
           searchFieldLabel: 'Search',
         );
+
+  @override
+  ThemeData appBarTheme(BuildContext context) {
+    final theme = Theme.of(context);
+    return theme.copyWith(
+      appBarTheme: theme.appBarTheme.copyWith(
+        backgroundColor: theme.colorScheme.surface,
+        elevation: 0,
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        hintStyle: const TextStyle(color: Colors.grey, fontSize: 16),
+        border: InputBorder.none,
+      ),
+    );
+  }
 
   @override
   List<Widget>? buildActions(BuildContext context) {
@@ -215,45 +254,14 @@ Widget _listWidget(BuildContext context, CreateIssueController controller) {
       itemBuilder: (context, index) {
         var item = controller.users[index];
 
-        return Column(
-          children: [
-            ListTile(
-              leading: CircleAvatar(
-                child: CachedNetworkImage(
-                  imageUrl: item.avatarUrl!,
-                  imageBuilder: (context, imageProvider) => Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      image: DecorationImage(
-                        image: imageProvider,
-                      ),
-                    ),
-                  ),
-                  errorWidget: (context, url, error) => Row(
-                    children: [
-                      Icon(Icons.error),
-                      Text(
-                          'Failed to load image.',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: Theme.of(context).colorScheme.onSurface,
-                          )
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              title: Text(item.name!),
-              subtitle: Text(item.username!),
-              onTap: () {
-                controller.onUserSelected(item);
-                Get.back();
-              },
-            ),
-            const Divider(),
-          ],
+        return ListTile(
+          leading: ListAvatar(avatarUrl: item.avatarUrl!),
+          title: Text(item.name!),
+          subtitle: Text(item.username!),
+          onTap: () {
+            controller.onUserSelected(item);
+            Get.back();
+          },
         );
       },
     ),
